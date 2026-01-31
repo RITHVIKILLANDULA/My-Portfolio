@@ -11,35 +11,59 @@ import project10 from "../assets/projects/project-10.jpeg";
 import project11 from "../assets/projects/project-11.jpeg";
 import project12 from "../assets/projects/project-12.jpeg";
 
-export const HERO_CONTENT = `I am a passionate full-stack developer with a strong foundation in building efficient, user-centric applications. With hands-on experience spanning both professional work and internships, I specialize in front-end technologies such as React, HTML, CSS, and JavaScript, and back-end frameworks like Node.js,Django and Python. I have a proven track record of delivering impactful projects, such as enhancing GSLB operations at Verizon to prevent outages and developing automation tools like OneCLI for SRE engineers. Additionally, I have worked on various AI/ML projects, including a Resume Scorer, Text Rephraser/Humanizer, and Weather Prediction and Reporting using AI. My goal is to craft scalable and innovative solutions that solve real-world problems while enhancing user experiences.`;
+// Company logos
+import busynessLogo from "../assets/busyness-logo.jpeg";
+import wafuLogo from "../assets/wafu-logo.jpeg";
 
-export const ABOUT_TEXT = `I am a dedicated software engineer with 2 years of full-time experience and 8 months of internships across two companies. My journey in software engineering began with building web applications, which eventually led me to Verizon, where I worked on innovative projects that enhanced operational efficiency and reliability. Currently, I am pursuing a master's degree in Computer Science at the University at Buffalo, specializing in AI/ML.I have explored AI and machine learning through academic work and projects, incorporating LLMs into applications like resume scoring, text rephrasing, and weather prediction. These experiences have deepened my understanding of cutting-edge technologies and their practical applications.I enjoy learning new things, solving challenging problems, and staying curious about advancements in technology. In my free time, I love to cook, blending creativity with precision, much like my approach to coding. I am excited to continue tackling challenges and contributing to impactful solutions.`;
+export const HERO_CONTENT = `I am a data-driven analyst and aspiring data scientist with expertise in transforming complex operational data into actionable insights. With 3+ years of professional experience in data analysis, business intelligence, and machine learning, I specialize in SQL, Python, Power BI, and cloud platforms like AWS. I have a proven track record of designing and deploying end-to-end data solutions that drive operational efficiency, reduce costs, and enable data-informed decision-making. I combine technical expertise with strong communication skills to translate insights for both technical and non-technical stakeholders.`;
+
+export const ABOUT_TEXT = `I am a Business Data Analyst with 3+ years of hands-on experience at Busyness.app and WAFU Technologies, where I've built scalable data solutions that directly impact business outcomes. Currently pursuing a Master's degree in Computer Science at SUNY Buffalo, with a focus on advanced analytics and machine learning techniques.
+
+My expertise spans full-stack data analytics: from ETL pipeline development and data warehousing with Snowflake and AWS Glue, to building 10+ interactive Power BI and Tableau dashboards that serve 15+ stakeholders. I've optimized SQL queries processing 1M+ transactional records and developed machine learning models for churn prediction and demand forecasting.
+
+I'm passionate about solving real-world problems through data—whether it's identifying operational inefficiencies that improved output consistency by 10%, or building AI-powered tools that reduce analysis time by 40%. I thrive at the intersection of technical depth and business impact, translating complex analyses into actionable insights for non-technical audiences.`;
 
 export const EXPERIENCES = [
   {
-    year: "2022 JUL - 2024 JUL",
-    role: "Software Development Engineer",
-    company: "Verizon",
-    description: `Collaborated with a team to develop and enhance multiple pages in the SRE Portal, focusing on automation and reducing toil for SRE engineers. Played a key role in improving the GSLB operations page, achieving a 60% boost in efficiency by implementing locking mechanisms to prevent simultaneous outages across data centers, ensuring high reliability and availability. Contributed to the development of OneCLI, an automation tool that streamlined workflows and increased productivity for SRE teams. Leveraged technologies such as JavaScript, React, Python, and Node.js to deliver scalable, user-centric solutions. Regularly interacted with stakeholders to gather requirements and align project outcomes with business goals`,
-    technologies: ["Javascript", "React.js", "Node.js","Express.js", "MongoDB" ,"SQL","InfluxDB","Python","Jenkins","Ansible","HTML","CSS","Flask","AWS","Shell Scripting","Node-Red"],
+    year: "2022 JAN - 2024 DEC",
+    role: "Business Data Analyst II",
+    company: "Busyness.app",
+    logo: busynessLogo,
+    description: `Analyzed warehouse and fulfillment data across 6+ operational systems, translating operational metrics into actionable insights used in weekly and monthly performance reviews. Designed and maintained 10+ end-to-end Power BI solutions with complex data models and DAX measures to monitor productivity, throughput, labor utilization, and service-level adherence. Optimized SQL queries to extract, clean, and transform 1M+ transactional records, improving data reliability for downstream reporting. Identified recurring inefficiencies through historical trend analysis, contributing to process changes that improved daily output consistency by approximately 10%. Integrated data from warehouse management, timekeeping, and inventory systems into unified datasets, improving visibility into operational performance.`,
+    technologies: ["SQL", "T-SQL", "Power BI", "DAX", "Python", "AWS", "Excel", "Data Analysis", "ETL", "Business Intelligence"],
   },
   {
-    year: "2022 JAN - 2022 JUN",
-    role: "Software Engineer Intern",
-    company: "Ushur",
-    description: `Worked as a Software Engineer Intern at Ushur on SaaS platform, where I dedicated time to learning AWS services like EC2, SQS, SNS and S3 ,as well as the Go programming language, to effectively contribute to the Ushur platform. Leveraged these technologies to enhance platform functionality and improve system performance. Demonstrated adaptability and a commitment to learning new tools and technologies while working in a dynamic, fast-paced environment.`,
-    technologies: ["HTML", "CSS", "AWS", "GoLanguage","MicroServices","AWS-SQS","AWS-SNS","AWS-EC2","AWS-S3"],
-  },
-  {
-    year: "2021 MAY - 2021 JUN",
-    role: "Software Development Intern",
-    company: "Bioclinica",
-    description: `Worked as a Software Developer Intern at Bioclinica, where I designed and implemented a project called AUTOTRANSLATOR. This application utilized Django, Python, HTML, CSS, and JavaScript to enable users to upload document files, translate them from over 150 languages to English, and download the translated files. Integrated MySQL for efficient database management and ensured a seamless user experience with a robust front-end and back-end system. This application significantly simplified the process of proofreading documents and reduced toil, enhancing overall productivity and user efficiency. Demonstrated strong problem-solving skills and delivered a practical solution to address multilingual document management challenges.`,
-    technologies: ["Python", "Django", "HTML", "CSS","JavaScript","MYSQL"],
+    year: "2020 MAY - 2021 MAY",
+    role: "Data Analyst",
+    company: "WAFU Technologies",
+    logo: wafuLogo,
+    description: `Transformed raw application and operational data into structured, analysis-ready datasets through extraction, schema normalization, and data cleaning workflows. Unified data from multiple relational sources using SQL-based transformations, enabling consistent reporting and cross-team analysis. Produced and maintained 8+ Excel and Power BI reports to monitor system usage patterns, operational trends, and recurring issues for stakeholders. Investigated data inconsistencies using targeted SQL queries, resolving discrepancies surfaced during reporting. Responded to 10+ ad-hoc analytical requests from operations and support teams, delivering timely insights to support decision-making.`,
+    technologies: ["SQL", "Python", "Power BI", "Excel", "Data Engineering", "Database Management", "Business Analysis"],
   },
 ];
 
 export const PROJECTS = [
+  {
+    title: "Telco Customer Churn Prediction",
+    image: project1,
+    description:
+      "Built churn prediction models using Logistic Regression, XGBoost, and Random Forest, analyzing 500,000+ customer records to identify key behavioral churn drivers. Launched an HTML-based web application to surface churn risk insights with an intuitive UI, supporting targeted retention strategies. This project demonstrates expertise in classification modeling, feature engineering, and deploying ML solutions for real-world business impact.",
+    technologies: ["Python", "Scikit-learn", "XGBoost", "Random Forest", "Pandas", "Logistic Regression", "HTML", "Machine Learning"],
+  },
+  {
+    title: "Exploratory Data Analysis using LangChain",
+    image: project2,
+    description:
+      "Conducted exploratory data analysis on 14,000+ data science job listings, identifying trends in salary, role seniority, and remote work adoption. Leveraged LangChain and OpenAI APIs to generate natural-language insights, reducing manual exploratory analysis time by approximately 40%. This project showcases the integration of LLMs with data analysis workflows for accelerated insights generation.",
+    technologies: ["Python", "LangChain", "OpenAI API", "Pandas", "Data Analysis", "Natural Language Processing", "Exploratory Data Analysis"],
+  },
+  {
+    title: "Citi Bike Trip Demand Prediction System",
+    image: project3,
+    description:
+      "Designed an end-to-end machine learning pipeline to forecast hourly Citi Bike demand using Python, Pandas, and LightGBM, processing 1M+ historical trip records. Built baseline and advanced models using lag features and PCA-based feature reduction, evaluating 20+ experiment runs in MLflow and achieving a 12-15% MAE improvement. Deployed interactive Streamlit dashboards to visualize hourly demand predictions, providing actionable insights for resource allocation.",
+    technologies: ["Python", "LightGBM", "Pandas", "Scikit-learn", "PCA", "MLflow", "Streamlit", "Time Series Forecasting", "Machine Learning"],
+  },
   {
     title: "Personal Portfolio Website",
     image: project5,
@@ -108,18 +132,12 @@ export const PROJECTS = [
       "The Personal AI Trainer is an innovative project developed in response to the need for contactless solutions during the COVID-19 pandemic. Leveraging the MediaPipe framework and OpenCV tools, the system enables interactive, hands-free device control and serves as a personalized training assistant. By incorporating machine learning models, it enhances user interaction, making the system intuitive and responsive to movements. The project addresses the demand for hygienic, touch-free interaction, especially in environments requiring physical distancing or fitness training. Using Python as the programming language, along with MediaPipe and OpenCV, this project leverages expertise in computer vision and AI, offering a seamless, safe, and convenient user experience.",
     technologies: ["Machine Learning","OpenCV","MediaPipe","Python"],
   },
-
-  {
-    title: "FrontEnd for E-Commerce Webiste",
-    image: project11,
-    description:
-      "Designed and Developed frontend for an E-Commerce Webiste",
-    technologies: ["HTML", "CSS", "Javascript"],
-  },
 ];
 
 export const CONTACT = {
-  address: "1525 Amherst Manor Drive ,Buffalo ,NY ",
-  // phoneNo: "",
-  email: "likhithakodali@gmail.com",
+  address: "Buffalo, New York",
+  phoneNo: "+1-971-264-8878",
+  email: "rithvik.illandula@gmail.com",
+  linkedin: "https://www.linkedin.com/in/rithvik-illandula/",
+  github: "https://github.com/RITHVIKILLANDULA",
 };

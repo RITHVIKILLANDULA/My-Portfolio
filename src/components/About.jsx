@@ -1,5 +1,5 @@
 import React from 'react'
-import aboutImg from "../assets/About.jpeg";
+import aboutImg from "../assets/about-cover.jpg";
 import { ABOUT_TEXT } from '../constants';
 import {motion} from 'framer-motion'
 export default function About() {
