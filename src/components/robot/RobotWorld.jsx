@@ -235,18 +235,45 @@ function Platform() {
   );
 }
 
+// a clean glowing hologram base under the docked companion (not a dark blob)
+function CompanionBase() {
+  const ref = useRef();
+  useFrame((s) => {
+    if (ref.current)
+      ref.current.material.opacity = 0.22 + Math.sin(s.clock.elapsedTime * 2) * 0.08;
+  });
+  return (
+    <group position={[0, -1.22, 0]}>
+      <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[1.35, 48]} />
+        <meshBasicMaterial
+          color={CYAN}
+          transparent
+          opacity={0.22}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
+        <ringGeometry args={[1.25, 1.4, 48]} />
+        <meshBasicMaterial color={CYAN} transparent opacity={0.6} toneMapped={false} />
+      </mesh>
+    </group>
+  );
+}
+
 function CameraDolly({ scrolled }) {
   const look = useRef(new THREE.Vector3(0, 0, 0));
   useFrame((state, dt) => {
     easing.damp3(
       state.camera.position,
-      scrolled ? [1.45, 1.7, 8.2] : [0, 0.4, 9],
+      scrolled ? [2.2, 2.45, 14] : [0, 0.4, 9],
       0.5,
       dt
     );
     easing.damp3(
       look.current,
-      scrolled ? [1.95, 1.95, 0] : [0, 0, 0],
+      scrolled ? [3.0, 2.7, 0] : [0, 0, 0],
       0.5,
       dt
     );
@@ -276,7 +303,11 @@ function Scene({ gesture, gKey, speaking, scrolled }) {
           <Lightformer intensity={1.5} position={[4, 2, -2]} scale={[3, 3, 1]} color={INDIGO} />
         </Environment>
       </Suspense>
-      <ContactShadows position={[0, -1.18, 0]} opacity={0.5} scale={9} blur={2.6} far={4} color="#020308" />
+      {!scrolled ? (
+        <ContactShadows position={[0, -1.18, 0]} opacity={0.5} scale={9} blur={2.6} far={4} color="#020308" />
+      ) : (
+        <CompanionBase />
+      )}
     </>
   );
 }
@@ -370,9 +401,11 @@ export default function RobotWorld({ onOpenResume }) {
                 speaking={voice.speaking}
                 scrolled={docked}
               />
-              <EffectComposer multisampling={4} disableNormalPass>
-                <Bloom luminanceThreshold={0.85} luminanceSmoothing={0.3} intensity={0.7} mipmapBlur radius={0.55} />
-              </EffectComposer>
+              {!docked && (
+                <EffectComposer multisampling={4} disableNormalPass>
+                  <Bloom luminanceThreshold={0.85} luminanceSmoothing={0.3} intensity={0.7} mipmapBlur radius={0.55} />
+                </EffectComposer>
+              )}
             </Canvas>
           </Boundary>
         </div>
