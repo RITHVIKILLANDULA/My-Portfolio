@@ -9,16 +9,26 @@ export default {
         mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       colors: {
-        // Data-world palette — deep space + electric data accents
+        // "The Observatory" — calm instrument-grade lab at night
         void: {
-          950: "#04050a",
-          900: "#070912",
-          850: "#0a0d1a",
-          800: "#0e1222",
-          700: "#151a30",
+          950: "#06080f", // page base
+          900: "#0a0e1a", // section
+          850: "#111626", // panel
+          800: "#1a2138", // hover
+          700: "#2a3354", // border / divider
+        },
+        accent: {
+          600: "#4f46e5",
+          500: "#6366f1", // the one hero accent
+          400: "#818cf8",
+        },
+        ink: {
+          hi: "#f3f5fb",
+          mid: "#a6aec6",
+          lo: "#5e6783",
         },
         data: {
-          cyan: "#22d3ee",
+          cyan: "#22d3ee", // only where AI is computing
           sky: "#38bdf8",
           indigo: "#6366f1",
           violet: "#a78bfa",

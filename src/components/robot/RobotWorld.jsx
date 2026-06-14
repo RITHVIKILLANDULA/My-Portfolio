@@ -35,6 +35,7 @@ const ROBOT_URL = `${import.meta.env.BASE_URL}robot.glb`;
 useGLTF.preload(ROBOT_URL);
 const CYAN = "#22d3ee";
 const INDIGO = "#6366f1";
+const BG = "#06080f"; // Observatory void
 const CLIP = {
   idle: "Idle",
   wave: "Wave",
@@ -56,9 +57,7 @@ function RobotModel({ gesture, gKey, speaking }) {
   const { actions } = useAnimations(animations, outer);
   const clip = useRef("idle");
   const talking = useRef(false);
-  const targetX = useRef(0);
-  const targetZ = useRef(0);
-  const nextWander = useRef(3);
+  const entrance = useRef(0); // 0→1 cinematic descent on arrival
   const tt = useRef(0);
   const headMats = useRef([]);
 
@@ -93,6 +92,11 @@ function RobotModel({ gesture, gKey, speaking }) {
     });
   }, [scene]);
 
+  // start high so the robot descends into frame on arrival
+  useEffect(() => {
+    if (outer.current) outer.current.position.set(0, 6, -1.6);
+  }, []);
+
   const play = (name) => {
     if (clip.current === name) return;
     const next = actions[CLIP[name]] || actions[CLIP.idle];
@@ -123,6 +127,15 @@ function RobotModel({ gesture, gKey, speaking }) {
     const o = outer.current;
     const inn = inner.current;
     if (!o || !inn) return;
+
+    // cinematic arrival: descend from above, ease to a soft landing
+    if (entrance.current < 1) {
+      entrance.current = Math.min(1, entrance.current + dt / 1.5);
+      const e = 1 - Math.pow(1 - entrance.current, 3); // easeOutCubic
+      o.position.set(0, 6 * (1 - e), -1.6 * (1 - e));
+      easing.dampAngle(inn.rotation, "y", state.pointer.x * 0.3, 0.3, dt);
+      return;
+    }
 
     // keep the robot grounded at the origin (the camera frames it) + face you
     easing.damp3(o.position, [0, 0, 0], 0.5, dt);
@@ -211,6 +224,97 @@ function Aura() {
   );
 }
 
+// distant AI-city skyline fading into the night — gives the world a "place"
+function CityArrival() {
+  const grp = useRef();
+  const towers = useMemo(() => {
+    const arr = [];
+    const N = 52;
+    for (let i = 0; i < N; i++) {
+      const a = (i / N) * Math.PI * 2 + (Math.random() - 0.5) * 0.06;
+      const r = 14 + Math.random() * 9;
+      arr.push({
+        x: Math.cos(a) * r,
+        z: Math.sin(a) * r,
+        h: 1 + Math.random() * 4.5,
+        w: 0.42 + Math.random() * 0.7,
+        lit: Math.random() > 0.5,
+      });
+    }
+    return arr;
+  }, []);
+  useFrame((_, dt) => {
+    if (grp.current) grp.current.rotation.y += dt * 0.01;
+  });
+  return (
+    <group ref={grp} position={[0, -1.2, 0]}>
+      {towers.map((t, i) => (
+        <group key={i} position={[t.x, t.h / 2, t.z]}>
+          <mesh>
+            <boxGeometry args={[t.w, t.h, t.w]} />
+            <meshStandardMaterial
+              color="#0a1024"
+              metalness={0.6}
+              roughness={0.55}
+              emissive={t.lit ? INDIGO : CYAN}
+              emissiveIntensity={0.14}
+            />
+          </mesh>
+          {/* beacon cap — a lit data centre on the skyline */}
+          <mesh position={[0, t.h / 2 + 0.03, 0]}>
+            <boxGeometry args={[t.w * 0.45, 0.06, t.w * 0.45]} />
+            <meshBasicMaterial color={t.lit ? CYAN : INDIGO} toneMapped={false} />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
+// thin columns of data rising from the city into the night sky
+function DataStreams() {
+  const N = 260;
+  const geom = useMemo(() => {
+    const pos = new Float32Array(N * 3);
+    const spd = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const r = 4 + Math.random() * 13;
+      pos[i * 3] = Math.cos(a) * r;
+      pos[i * 3 + 1] = -1.2 + Math.random() * 9;
+      pos[i * 3 + 2] = Math.sin(a) * r;
+      spd[i] = 0.6 + Math.random() * 1.7;
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    g.userData.spd = spd;
+    return g;
+  }, []);
+  useFrame((_, dt) => {
+    const p = geom.attributes.position.array;
+    const spd = geom.userData.spd;
+    for (let i = 0; i < N; i++) {
+      p[i * 3 + 1] += spd[i] * dt;
+      if (p[i * 3 + 1] > 8) p[i * 3 + 1] = -1.2;
+    }
+    geom.attributes.position.needsUpdate = true;
+  });
+  return (
+    <points geometry={geom}>
+      <pointsMaterial
+        color={CYAN}
+        size={0.05}
+        sizeAttenuation
+        transparent
+        opacity={0.7}
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        toneMapped={false}
+      />
+    </points>
+  );
+}
+
 function Platform() {
   const rings = useRef();
   useFrame((_, dt) => {
@@ -286,6 +390,7 @@ function Scene({ gesture, gKey, speaking, scrolled }) {
   return (
     <>
       {/* transparent canvas — the robot lives over the page, not in a box */}
+      {!scrolled && <fog attach="fog" args={[BG, 11, 30]} />}
       <ambientLight intensity={0.45} />
       <directionalLight position={[5, 8, 5]} intensity={2.1} color="#eaf0ff" castShadow />
       <directionalLight position={[-6, 3, -4]} intensity={1.4} color={CYAN} />
@@ -293,6 +398,8 @@ function Scene({ gesture, gKey, speaking, scrolled }) {
       <CameraDolly scrolled={scrolled} />
       <Suspense fallback={null}>
         <RobotModel gesture={gesture} gKey={gKey} speaking={speaking} />
+        {!scrolled && <CityArrival />}
+        {!scrolled && <DataStreams />}
         {!scrolled && <OrbitRings />}
         {!scrolled && <Platform />}
         {!scrolled && <Floor />}
@@ -414,7 +521,7 @@ export default function RobotWorld({ onOpenResume }) {
       {/* hero readability veil (fades out as you scroll) */}
       {show3D && (
         <div
-          className="pointer-events-none fixed inset-0 z-[15] bg-gradient-to-b from-[#04050c]/55 via-transparent to-[#04050c]/75"
+          className="pointer-events-none fixed inset-0 z-[15] bg-gradient-to-b from-[#06080f]/55 via-transparent to-[#06080f]/80"
           style={{ opacity: heroFade }}
         />
       )}
@@ -446,6 +553,13 @@ export default function RobotWorld({ onOpenResume }) {
             ▶ Résumé Reel
           </button>
         </div>
+        <a
+          href="#snapshot"
+          data-cursor
+          className="mono-label mt-5 inline-flex items-center gap-1.5 text-[0.6rem] text-neutral-400 transition-colors hover:text-data-cyan"
+        >
+          <FiArrowDownRight /> recruiter? skip to the 60-second brief
+        </a>
       </div>
 
       {/* scroll cue */}
