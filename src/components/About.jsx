@@ -1,5 +1,4 @@
 import { HiAcademicCap, HiCheckBadge } from "react-icons/hi2";
-import heroImg from "../assets/Hero-portrait.jpg";
 import {
   ABOUT_TEXT,
   IMPACT,
@@ -9,7 +8,6 @@ import {
 } from "../constants";
 import SectionHeading from "./ui/SectionHeading";
 import Reveal from "./ui/Reveal";
-import HoloPortrait from "./ui/HoloPortrait";
 
 export default function About() {
   return (
@@ -21,13 +19,8 @@ export default function About() {
         subtitle="A quick read on the human behind the dashboards."
       />
 
-      <div className="grid items-center gap-12 lg:grid-cols-[0.85fr_1.15fr]">
-        {/* animated holographic portrait */}
-        <Reveal from="left" className="relative mx-auto max-w-sm">
-          <HoloPortrait src={heroImg} alt="Rithvik Illandula" />
-        </Reveal>
-
-        {/* text + console */}
+      <div className="mx-auto max-w-3xl">
+        {/* text + console (no photo — identity rendered as the data-cloud behind) */}
         <div>
           <Reveal from="right">
             <div className="glass rounded-2xl p-6 sm:p-8">
