@@ -8,37 +8,140 @@ import project7 from "../assets/projects/project-7.jpeg";
 import project8 from "../assets/projects/project-8.jpeg";
 import project9 from "../assets/projects/project-9.jpeg";
 import project10 from "../assets/projects/project-10.jpeg";
-import project11 from "../assets/projects/project-11.jpeg";
 import project12 from "../assets/projects/project-12.jpeg";
 
 // Company logos
 import busynessLogo from "../assets/busyness-logo.jpeg";
 import wafuLogo from "../assets/wafu-logo.jpeg";
 
-export const HERO_CONTENT = `I am a data-driven analyst and aspiring data scientist with expertise in transforming complex operational data into actionable insights. With 3+ years of professional experience in data analysis, business intelligence, and machine learning, I specialize in SQL, Python, Power BI, and cloud platforms like AWS. I have a proven track record of designing and deploying end-to-end data solutions that drive operational efficiency, reduce costs, and enable data-informed decision-making. I combine technical expertise with strong communication skills to translate insights for both technical and non-technical stakeholders.`;
+export const RESUME_URL = import.meta.env.BASE_URL + "Rithvik_Illandula_Resume.pdf";
 
-export const ABOUT_TEXT = `I am a Business Data Analyst with 3+ years of hands-on experience at Busyness.app and WAFU Technologies, where I've built scalable data solutions that directly impact business outcomes. Currently pursuing a Master's degree in Computer Science at SUNY Buffalo, with a focus on advanced analytics and machine learning techniques.
+export const NAV_LINKS = [
+  { id: "home", label: "Home" },
+  { id: "about", label: "About" },
+  { id: "skills", label: "Skills" },
+  { id: "experience", label: "Experience" },
+  { id: "projects", label: "Projects" },
+  { id: "contact", label: "Contact" },
+];
 
-My expertise spans full-stack data analytics: from ETL pipeline development and data warehousing with Snowflake and AWS Glue, to building 10+ interactive Power BI and Tableau dashboards that serve 15+ stakeholders. I've optimized SQL queries processing 1M+ transactional records and developed machine learning models for churn prediction and demand forecasting.
+export const HERO_NAME = "Rithvik Illandula";
+export const HERO_ROLES = [
+  "Business Data Analyst",
+  "Machine Learning Engineer",
+  "Data Storyteller",
+  "BI & Dashboard Architect",
+];
 
-I'm passionate about solving real-world problems through data—whether it's identifying operational inefficiencies that improved output consistency by 10%, or building AI-powered tools that reduce analysis time by 40%. I thrive at the intersection of technical depth and business impact, translating complex analyses into actionable insights for non-technical audiences.`;
+export const HERO_CONTENT = `I turn complex operational data into decisions. 3+ years building end-to-end data solutions — SQL, Python, Power BI, AWS, and machine learning that cut costs, lift efficiency, and make the numbers speak.`;
+
+export const ABOUT_TEXT = `I am a Business Data Analyst with 3+ years of hands-on experience at Busyness.app and WAFU Technologies, where I've built scalable data solutions that directly impact business outcomes. Currently pursuing a Master's degree in Computer Science at SUNY Buffalo, with a focus on advanced analytics and machine learning.
+
+My expertise spans full-stack data analytics: from ETL pipeline development and data warehousing with Snowflake and AWS Glue, to building 10+ interactive Power BI and Tableau dashboards serving 15+ stakeholders. I've optimized SQL queries processing 1M+ transactional records and shipped machine learning models for churn prediction and demand forecasting.
+
+I'm driven by real-world impact — identifying inefficiencies that improved output consistency by ~10%, or building AI tools that cut analysis time by 40%. I live at the intersection of technical depth and business impact, translating complex analyses into insight anyone can act on.`;
+
+// Animated headline counters
+export const STATS = [
+  { value: 3, suffix: "+", label: "Years in Data", decimals: 0 },
+  { value: 1, suffix: "M+", label: "Records Processed", decimals: 0 },
+  { value: 10, suffix: "+", label: "Dashboards Shipped", decimals: 0 },
+  { value: 40, suffix: "%", label: "Analysis Time Cut", decimals: 0 },
+];
+
+// Secondary impact metrics (shown in About)
+export const IMPACT = [
+  { k: "500K+", v: "Customer records modeled for churn" },
+  { k: "15+", v: "Stakeholders served with live BI" },
+  { k: "6+", v: "Operational systems unified" },
+  { k: "12–15%", v: "MAE improvement on forecasts" },
+];
+
+// Skill categories with proficiency for the animated visualization
+export const SKILL_CATEGORIES = [
+  {
+    name: "Languages & Query",
+    accent: "#22d3ee",
+    skills: [
+      { name: "Python", level: 95 },
+      { name: "SQL", level: 95 },
+      { name: "T-SQL", level: 88 },
+      { name: "R", level: 70 },
+      { name: "JavaScript", level: 64 },
+    ],
+  },
+  {
+    name: "Data & BI",
+    accent: "#38bdf8",
+    skills: [
+      { name: "Power BI", level: 92 },
+      { name: "DAX", level: 88 },
+      { name: "Tableau", level: 85 },
+      { name: "Excel", level: 90 },
+      { name: "Snowflake", level: 82 },
+      { name: "ETL / AWS Glue", level: 80 },
+    ],
+  },
+  {
+    name: "Machine Learning",
+    accent: "#6366f1",
+    skills: [
+      { name: "Scikit-learn", level: 90 },
+      { name: "Random Forest", level: 88 },
+      { name: "XGBoost", level: 85 },
+      { name: "LightGBM", level: 82 },
+      { name: "MLflow", level: 78 },
+      { name: "Time Series", level: 80 },
+    ],
+  },
+  {
+    name: "AI & LLMs",
+    accent: "#a78bfa",
+    skills: [
+      { name: "LangChain", level: 85 },
+      { name: "OpenAI API", level: 88 },
+      { name: "NLP", level: 84 },
+      { name: "HuggingFace", level: 80 },
+      { name: "RAG / FAISS", level: 78 },
+      { name: "OpenCV", level: 72 },
+    ],
+  },
+];
+
+// Flat tag list for the 3D rotating skill-sphere
+export const SKILL_TAGS = [
+  "Python", "SQL", "Power BI", "Tableau", "Snowflake", "AWS", "Pandas",
+  "NumPy", "Scikit-learn", "XGBoost", "LightGBM", "MLflow", "LangChain",
+  "OpenAI", "NLP", "HuggingFace", "FAISS", "Streamlit", "DAX", "ETL",
+  "T-SQL", "Git", "Random Forest", "OpenCV", "PCA", "Time Series",
+  "RAG", "Excel",
+];
 
 export const EXPERIENCES = [
   {
-    year: "2022 JAN - 2024 DEC",
+    year: "2022 JAN — 2024 DEC",
     role: "Business Data Analyst II",
     company: "Busyness.app",
     logo: busynessLogo,
-    description: `Analyzed warehouse and fulfillment data across 6+ operational systems, translating operational metrics into actionable insights used in weekly and monthly performance reviews. Designed and maintained 10+ end-to-end Power BI solutions with complex data models and DAX measures to monitor productivity, throughput, labor utilization, and service-level adherence. Optimized SQL queries to extract, clean, and transform 1M+ transactional records, improving data reliability for downstream reporting. Identified recurring inefficiencies through historical trend analysis, contributing to process changes that improved daily output consistency by approximately 10%. Integrated data from warehouse management, timekeeping, and inventory systems into unified datasets, improving visibility into operational performance.`,
-    technologies: ["SQL", "T-SQL", "Power BI", "DAX", "Python", "AWS", "Excel", "Data Analysis", "ETL", "Business Intelligence"],
+    description: `Analyzed warehouse and fulfillment data across 6+ operational systems, translating operational metrics into insights used in weekly and monthly performance reviews. Designed and maintained 10+ end-to-end Power BI solutions with complex data models and DAX measures monitoring productivity, throughput, labor utilization, and SLA adherence. Optimized SQL queries to extract, clean, and transform 1M+ transactional records, improving data reliability for downstream reporting. Identified recurring inefficiencies through historical trend analysis, contributing to process changes that improved daily output consistency by ~10%. Integrated warehouse-management, timekeeping, and inventory data into unified datasets, sharpening visibility into operational performance.`,
+    technologies: ["SQL", "T-SQL", "Power BI", "DAX", "Python", "AWS", "ETL", "Business Intelligence"],
   },
   {
-    year: "2020 MAY - 2021 MAY",
+    year: "2020 MAY — 2021 MAY",
     role: "Data Analyst",
     company: "WAFU Technologies",
     logo: wafuLogo,
-    description: `Transformed raw application and operational data into structured, analysis-ready datasets through extraction, schema normalization, and data cleaning workflows. Unified data from multiple relational sources using SQL-based transformations, enabling consistent reporting and cross-team analysis. Produced and maintained 8+ Excel and Power BI reports to monitor system usage patterns, operational trends, and recurring issues for stakeholders. Investigated data inconsistencies using targeted SQL queries, resolving discrepancies surfaced during reporting. Responded to 10+ ad-hoc analytical requests from operations and support teams, delivering timely insights to support decision-making.`,
-    technologies: ["SQL", "Python", "Power BI", "Excel", "Data Engineering", "Database Management", "Business Analysis"],
+    description: `Transformed raw application and operational data into analysis-ready datasets through extraction, schema normalization, and data-cleaning workflows. Unified data from multiple relational sources using SQL transformations, enabling consistent reporting and cross-team analysis. Produced and maintained 8+ Excel and Power BI reports tracking system usage patterns, operational trends, and recurring issues. Investigated data inconsistencies with targeted SQL queries, resolving discrepancies surfaced during reporting. Responded to 10+ ad-hoc analytical requests from operations and support teams, delivering timely insight for decisions.`,
+    technologies: ["SQL", "Python", "Power BI", "Excel", "Data Engineering", "Database Management"],
+  },
+];
+
+export const EDUCATION = [
+  {
+    year: "2024 — 2026",
+    title: "M.S. Computer Science",
+    school: "University at Buffalo, SUNY",
+    detail: "Focus: advanced analytics & machine learning",
   },
 ];
 
@@ -46,92 +149,111 @@ export const PROJECTS = [
   {
     title: "Telco Customer Churn Prediction",
     image: project1,
+    category: "Machine Learning",
+    featured: true,
     description:
-      "Built churn prediction models using Logistic Regression, XGBoost, and Random Forest, analyzing 500,000+ customer records to identify key behavioral churn drivers. Launched an HTML-based web application to surface churn risk insights with an intuitive UI, supporting targeted retention strategies. This project demonstrates expertise in classification modeling, feature engineering, and deploying ML solutions for real-world business impact.",
-    technologies: ["Python", "Scikit-learn", "XGBoost", "Random Forest", "Pandas", "Logistic Regression", "HTML", "Machine Learning"],
+      "Built churn prediction models using Logistic Regression, XGBoost, and Random Forest, analyzing 500,000+ customer records to surface the behavioral drivers of churn. Shipped a web app to expose churn-risk insights through an intuitive UI, supporting targeted retention. Demonstrates classification modeling, feature engineering, and deploying ML for real business impact.",
+    technologies: ["Python", "Scikit-learn", "XGBoost", "Random Forest", "Logistic Regression", "ML"],
   },
   {
-    title: "Exploratory Data Analysis using LangChain",
-    image: project2,
-    description:
-      "Conducted exploratory data analysis on 14,000+ data science job listings, identifying trends in salary, role seniority, and remote work adoption. Leveraged LangChain and OpenAI APIs to generate natural-language insights, reducing manual exploratory analysis time by approximately 40%. This project showcases the integration of LLMs with data analysis workflows for accelerated insights generation.",
-    technologies: ["Python", "LangChain", "OpenAI API", "Pandas", "Data Analysis", "Natural Language Processing", "Exploratory Data Analysis"],
-  },
-  {
-    title: "Citi Bike Trip Demand Prediction System",
+    title: "Citi Bike Trip Demand Prediction",
     image: project3,
+    category: "Machine Learning",
+    featured: true,
     description:
-      "Designed an end-to-end machine learning pipeline to forecast hourly Citi Bike demand using Python, Pandas, and LightGBM, processing 1M+ historical trip records. Built baseline and advanced models using lag features and PCA-based feature reduction, evaluating 20+ experiment runs in MLflow and achieving a 12-15% MAE improvement. Deployed interactive Streamlit dashboards to visualize hourly demand predictions, providing actionable insights for resource allocation.",
-    technologies: ["Python", "LightGBM", "Pandas", "Scikit-learn", "PCA", "MLflow", "Streamlit", "Time Series Forecasting", "Machine Learning"],
+      "Designed an end-to-end ML pipeline forecasting hourly Citi Bike demand with Python, Pandas, and LightGBM over 1M+ historical trips. Built baseline and advanced models with lag features and PCA reduction, ran 20+ experiments in MLflow, and achieved a 12–15% MAE improvement. Deployed Streamlit dashboards to visualize hourly predictions for resource allocation.",
+    technologies: ["Python", "LightGBM", "PCA", "MLflow", "Streamlit", "Time Series"],
   },
   {
-    title: "Personal Portfolio Website",
-    image: project5,
+    title: "PDF-Insight · RAG Q&A Assistant",
+    image: project9,
+    category: "GenAI / LLM",
+    featured: true,
     description:
-      "Developed a fully functional and responsive portfolio website showcasing projects, professional experiences, and personal details. The website features dedicated sections for projects, work experience, contact information, and an About Me page. Designed an intuitive and user-friendly interface using HTML, CSS, and JavaScript, ensuring seamless navigation across devices. Incorporated modern design principles and interactive elements to provide an engaging user experience. The website serves as a comprehensive platform for showcasing skills and achievements, offering a professional online presence.",
-    technologies: ["HTML", "CSS", "React", "Node.js", "Javascript","Framer Motion"],
+      "A Streamlit app that lets users upload multiple PDFs and ask detailed questions about their content. Extracted text is vectorized with OpenAI Embeddings and stored in FAISS for fast retrieval; Google Gemini-Pro generates context-aware answers, orchestrated end-to-end by LangChain. Built for document analysis over research papers, legal docs, and manuals.",
+    technologies: ["Python", "LangChain", "Gemini-Pro", "FAISS", "OpenAI Embeddings", "RAG"],
   },
   {
-    title: "Imagify SaaS Platform",
-    image: project6,
+    title: "EDA with LangChain + LLMs",
+    image: project2,
+    category: "GenAI / LLM",
     description:
-      "Imagify is a full-stack web application built using the MERN stack (MongoDB, Express.js, React.js, Node.js) that allows users to convert text prompts into images using the Clipdrop API. The platform features secure user authentication with account management, a credit-based system for generating images, and planned integration with payment gateways like Razorpay or Stripe for purchasing additional credits. Users can input text descriptions to generate images instantly, with credits deducted for each generation. You can try it at https://frontend-verse2vision.onrender.com/",
-    technologies: ["HTML", "CSS", "Angular", "Firebase"],
+      "Exploratory data analysis on 14,000+ data-science job listings, surfacing trends in salary, seniority, and remote adoption. Used LangChain and OpenAI APIs to generate natural-language insight, cutting manual EDA time by ~40%. Showcases integrating LLMs into data-analysis workflows for accelerated insight.",
+    technologies: ["Python", "LangChain", "OpenAI API", "Pandas", "NLP", "EDA"],
+  },
+  {
+    title: "NLP Toolkit",
+    image: project8,
+    category: "GenAI / LLM",
+    description:
+      "A customizable NLP tool powered by Hugging Face Transformers for code summarization, text summarization, sentiment analysis, rephrasing, and humanizing text. Built with Streamlit for an easy, interactive interface that returns concise summaries, sentiment with confidence scores, and clearer rewrites of technical language.",
+    technologies: ["Python", "Streamlit", "HuggingFace", "BART", "GenAI"],
   },
   {
     title: "WeatherWise",
     image: project7,
+    category: "GenAI / LLM",
     description:
-      "WeatherWise is an interactive weather application that not only provides real-time weather updates and a 5-day forecast for any city but also leverages AI to generate dynamic, human-like descriptions of the weather. By integrating the OpenAI API, WeatherWise transforms standard weather data into engaging, AI-powered summaries that provide users with a richer, more personalized weather experience. The app uses the OpenWeatherMap API for accurate weather data and Streamlit for a simple, intuitive interface. Key features include detailed current weather updates (temperature, humidity, pressure, and wind speed) and a comprehensive weekly forecast with daily descriptions and temperature ranges. ",
-    technologies: ["Python", "Streamlit", "OpenAI"],
+      "An interactive weather app delivering real-time updates and a 5-day forecast for any city, with AI-generated, human-like descriptions of the weather. Combines the OpenWeatherMap API for accurate data and the OpenAI API to turn raw metrics into engaging, personalized summaries — temperature, humidity, pressure, wind, and a weekly outlook.",
+    technologies: ["Python", "Streamlit", "OpenAI", "OpenWeatherMap"],
   },
   {
     title: "Fake News Prediction",
     image: project4,
+    category: "Machine Learning",
     description:
-      "The Fake News Prediction Model is an application of machine learning and natural language processing (NLP) to identify whether a news article is real or fake. Using Python and libraries like NLTK, scikit-learn, and pandas, I processed and analyzed text data through techniques such as stopword removal, stemming, and TF-IDF vectorization. The model utilizes a Logistic Regression classifier, trained on a Kaggle dataset containing labeled news articles, with an 80-20 train-test split for evaluation. To make the model interactive, I integrated it into a Streamlit web application, enabling real-time predictions. This project demonstrates my ability to apply NLP and machine learning techniques to solve real-world problems related to misinformation and showcases my skills in text data processing and model building.",
-    technologies: ["Python","Pandas","Numpy","NLTK","Scikit-Learn","Streamlit","Machine Learning","Supervised Learning"],
+      "An ML + NLP system that classifies news articles as real or fake. Processed text with NLTK (stopword removal, stemming, TF-IDF), trained a Logistic Regression classifier on a labeled Kaggle dataset with an 80/20 split, and shipped a Streamlit app for real-time predictions. Demonstrates applied NLP against misinformation.",
+    technologies: ["Python", "NLTK", "Scikit-learn", "TF-IDF", "Streamlit", "NLP"],
   },
-
   {
-    title: "NLP ToolKit",
-    image: project8,
-    description:
-      "The NLP Toolkit is a customized natural language processing tool powered by Hugging Face Transformers, designed to perform a variety of tasks including code summarization, text summarization, sentiment analysis, text rephrasing, and humanizing text. Built using Streamlit, this interactive web application provides users with easy-to-use features for different NLP needs. The toolkit allows users to input code or text, and it generates outputs such as concise code summaries, clear text summaries, sentiment analysis with confidence scores, rephrased text for clarity, and more conversational or human-like alternatives for technical language. This project leverages advanced NLP models to solve real-world text processing challenges, providing high-quality and user-friendly solutions.",
-    technologies: ["Python","Streamlit","HuggingFace transformers","facebook/bart-large-cnn","GEN AI","ML"],
-  },
-
-  {
-    title: "PDF-Insight",
-    image: project9,
-    description:
-      "The PDF Query Assistant is a Streamlit-based web application that enables users to upload multiple PDF files and ask detailed questions about their content. Leveraging powerful AI models and frameworks, this app processes the extracted text using OpenAI Embeddings for vectorization and FAISS for efficient storage and retrieval of relevant text chunks. The app employs Google Gemini-Pro for generating context-aware, detailed responses to user queries, ensuring accurate answers from the PDF data. Additionally, LangChain orchestrates the integration of these components for seamless query handling. This project is designed for document analysis, making it particularly useful for extracting and interacting with information from large documents, such as research papers, legal documents, or technical manuals. Users can easily upload PDFs, interact with the content, and receive precise answers based on the document's text.",
-    technologies: ["Python","LangChain","Google-Gemini-Pro","FAISS","OpenAI Embeddings","GEN AI"],
-  },
-
-  {
-    title: "Diabetics Disease Risk Prediction Model",
+    title: "Diabetes Risk Prediction",
     image: project4,
+    category: "Machine Learning",
     description:
-      "The Diabetes Risk Prediction model was developed as part of coursework of Data Intensive Computing at the University at Buffalo, using a diabetes dataset from Kaggle.The project involved performing exploratory data analysis (EDA) and data preprocessing to clean and prepare the data for modeling. Various machine learning algorithms were tested, including Logistic Regression, Random Forest, Support Vector Machines, Neural Networks, and K-Nearest Neighbors. After evaluating the performance of these models, the Random Forest model, when tuned for optimal performance, provided the best results for predicting the risk of diabetes. This project applies machine learning techniques to real-world healthcare data to make accurate predictions.",
-    technologies: ["Python","Pandas","Numpy","Seaborn","Scikit-learn","Matplotlib","Logistic Regression","SVM","Random Forest,Neural Network","Random Forest(Tuned)","K-NN","Machine Learning"],
+      "Built for Data Intensive Computing at the University at Buffalo on a Kaggle diabetes dataset. Performed EDA and preprocessing, then benchmarked Logistic Regression, Random Forest, SVM, Neural Networks, and K-NN. A tuned Random Forest delivered the best risk-prediction performance — applied ML on real-world healthcare data.",
+    technologies: ["Python", "Scikit-learn", "Random Forest", "SVM", "Neural Network", "K-NN"],
   },
-
   {
-    title: "Reinforcement Learning Project",
+    title: "Reinforcement Learning · Grid World",
     image: project10,
+    category: "Machine Learning",
     description:
-      "As part of the Introduction to Machine Learning coursework at the University at Buffalo, we developed a reinforcement learning project exploring SARSA and Double Q-Learning in a custom-designed grid-world environment.The environment featured a 5x5 grid representing a grid world with various states, actions, rewards and penalities. Elements like traps added complexity, while the agent aimed to reach the goal state while avoiding termination states.The project involved implementing SARSA to update Q-values and employing an epsilon-greedy policy for action selection, balancing exploration and exploitation. We analyzed the impact of hyperparameters, including learning rate, discount factor, and epsilon decay, on the agent's performance. Additionally, we visualized the learned policy and evaluated a greedy policy derived from the trained Q-table. Through experimentation, we gained insights into reinforcement learning dynamics, the importance of hyperparameter tuning, and the effectiveness of SARSA and Double Q-Learning for policy optimization in deterministic/stochastic environments",
-    technologies: ["Python","Gym","Pandas","Numpy","Matplotlib","Machine Learning","Reinforcement Learning"],
+      "Explored SARSA and Double Q-Learning in a custom 5×5 grid-world with traps, rewards, and termination states. Implemented epsilon-greedy action selection, analyzed how learning rate, discount factor, and epsilon decay shape performance, and visualized the learned policy — building intuition for exploration vs. exploitation.",
+    technologies: ["Python", "Gym", "NumPy", "SARSA", "Q-Learning", "RL"],
   },
-
   {
     title: "Personal AI Trainer",
     image: project12,
+    category: "Computer Vision",
     description:
-      "The Personal AI Trainer is an innovative project developed in response to the need for contactless solutions during the COVID-19 pandemic. Leveraging the MediaPipe framework and OpenCV tools, the system enables interactive, hands-free device control and serves as a personalized training assistant. By incorporating machine learning models, it enhances user interaction, making the system intuitive and responsive to movements. The project addresses the demand for hygienic, touch-free interaction, especially in environments requiring physical distancing or fitness training. Using Python as the programming language, along with MediaPipe and OpenCV, this project leverages expertise in computer vision and AI, offering a seamless, safe, and convenient user experience.",
-    technologies: ["Machine Learning","OpenCV","MediaPipe","Python"],
+      "A contactless, hands-free training assistant built during COVID-19 using MediaPipe and OpenCV. Tracks body pose to enable touch-free device control and personalized workout guidance, making interaction intuitive and responsive to movement — a hygienic, real-time computer-vision experience.",
+    technologies: ["Python", "OpenCV", "MediaPipe", "Computer Vision"],
   },
+  {
+    title: "Imagify · Text-to-Image SaaS",
+    image: project6,
+    category: "Web App",
+    link: "https://frontend-verse2vision.onrender.com/",
+    description:
+      "A full-stack MERN application turning text prompts into images via the Clipdrop API. Features secure authentication with account management, a credit-based generation system, and planned payment-gateway integration (Razorpay / Stripe). Users describe an image and generate it instantly, with credits deducted per render.",
+    technologies: ["React", "Node.js", "Express", "MongoDB", "Clipdrop API"],
+  },
+  {
+    title: "Personal Portfolio · Data World",
+    image: project5,
+    category: "Web App",
+    description:
+      "This site — an immersive, interactive portfolio built as a 3D 'data world.' A live WebGL particle constellation, a rotating data-core, decode-text animations, an interactive skill-sphere, and animated data visualizations bring the work to life. Built with React, Vite, Three.js, Tailwind, and Framer Motion.",
+    technologies: ["React", "Three.js", "Framer Motion", "Tailwind", "Vite"],
+  },
+];
+
+export const PROJECT_FILTERS = [
+  "All",
+  "Machine Learning",
+  "GenAI / LLM",
+  "Computer Vision",
+  "Web App",
 ];
 
 export const CONTACT = {

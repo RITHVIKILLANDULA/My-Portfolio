@@ -1,53 +1,83 @@
-import React from 'react'
-import { EXPERIENCES } from '../constants'
-import {motion} from 'framer-motion'
+import { EXPERIENCES } from "../constants";
+import SectionHeading from "./ui/SectionHeading";
+import Reveal from "./ui/Reveal";
+import useReveal from "../hooks/useReveal";
 
 export default function Experience() {
+  const [railRef, railShown] = useReveal({ amount: 0.05 });
+
   return (
-    <div className='border-b border-neutral-900 pb-4'>
-        <motion.h1 
-        whileInView={{opacity:1,y:0}}
-        initial={{opacity:0,y:-100}}
-        transition={{duration:0.5}}
-        className='my-20 text-center text-4xl;'>Experience</motion.h1>
-        <div>
-            {EXPERIENCES.map((experience,index)=>(
-            <div key={index} className='mb-12 flex flex-wrap lg:flex-nowrap gap-8 items-start'>
-                <motion.div 
-                whileInView={{opacity:1,x:0}}
-                initial={{opacity:0,x:-100}}
-                transition={{duration:1}}
-                className='flex flex-col items-center gap-3 min-w-max'>
-                    {experience.logo && (
-                        <img 
-                            src={experience.logo} 
-                            alt={`${experience.company} logo`}
-                            className='w-20 h-20 rounded-lg object-contain bg-white p-2'
-                        />
-                    )}
-                    <p className='text-xs text-neutral-400 text-center whitespace-nowrap'>{experience.year}</p>
-                </motion.div>
-                <motion.div
-                whileInView={{opacity:1,x:0}}
-                initial={{opacity:0,x:100}}
-                transition={{duration:1}}
-                className='flex-1'>
-                    <h6 className='mb-1 font-semibold text-lg'>
-                        {experience.role}
-                    </h6>
-                    <p className='text-sm text-purple-100 mb-4'>
-                        {experience.company}
-                    </p>
-                    <p className='mb-4 text-neutral-400 text-sm leading-relaxed'>{experience.description}</p>
-                    <div className='flex flex-wrap gap-2'>
-                    {experience.technologies.map((tech,index)=>(
-                        <span key={index} className='rounded bg-neutral-900 px-2 py-1 text-xs font-medium text-purple-300'>{tech}</span>
-                    ))}
-                    </div>
-                </motion.div>
-             </div>
+    <section id="experience" className="scroll-mt-24 py-24">
+      <SectionHeading
+        index="03"
+        kicker="career_log"
+        title="Experience"
+        subtitle="Where the data work has shipped real outcomes."
+      />
+
+      <div className="relative mx-auto max-w-4xl pl-8 sm:pl-12">
+        {/* timeline rail */}
+        <div className="absolute left-2 top-2 h-full w-px sm:left-4">
+          <div
+            ref={railRef}
+            style={{
+              transform: railShown ? "scaleY(1)" : "scaleY(0)",
+              transformOrigin: "top",
+              transition: "transform 1.4s ease-in-out",
+            }}
+            className="h-full w-full bg-gradient-to-b from-data-cyan via-data-indigo to-transparent"
+          />
+        </div>
+
+        {EXPERIENCES.map((exp, index) => (
+          <Reveal
+            as="div"
+            from="up"
+            delay={index * 0.1}
+            key={index}
+            className="relative mb-12 last:mb-0"
+          >
+            {/* node */}
+            <span className="absolute -left-[1.65rem] top-2 grid h-4 w-4 place-items-center sm:-left-[2.15rem]">
+              <span className="absolute h-4 w-4 animate-ping rounded-full bg-data-cyan/40" />
+              <span className="h-3 w-3 rounded-full border-2 border-void-950 bg-data-cyan shadow-[0_0_12px_2px_rgba(34,211,238,0.7)]" />
+            </span>
+
+            <div className="glass glass-hover group rounded-2xl p-5 sm:p-7">
+              <div className="mb-4 flex flex-wrap items-center gap-4">
+                {exp.logo && (
+                  <img
+                    src={exp.logo}
+                    alt={`${exp.company} logo`}
+                    className="h-12 w-12 rounded-lg bg-white object-contain p-1.5"
+                  />
+                )}
+                <div className="flex-1">
+                  <h3 className="text-lg font-medium text-neutral-100">
+                    {exp.role}
+                  </h3>
+                  <p className="text-sm text-data-violet">{exp.company}</p>
+                </div>
+                <span className="mono-label rounded-full border border-data-cyan/25 bg-data-cyan/5 px-3 py-1 text-[0.55rem] text-data-cyan">
+                  {exp.year}
+                </span>
+              </div>
+
+              <p className="mb-5 text-sm font-light leading-relaxed text-neutral-400">
+                {exp.description}
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                {exp.technologies.map((t) => (
+                  <span key={t} className="chip">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </Reveal>
         ))}
-        </div>      
-    </div>
-  )
+      </div>
+    </section>
+  );
 }

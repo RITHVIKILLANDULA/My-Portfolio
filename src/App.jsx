@@ -1,33 +1,49 @@
-import React from "react";
+import { lazy, Suspense, useState } from "react";
+import { NAV_LINKS } from "./constants";
+import useScrollSpy from "./hooks/useScrollSpy";
+
+import Preloader from "./components/Preloader";
+const DataBackground = lazy(() => import("./components/DataBackground"));
+import CustomCursor from "./components/CustomCursor";
+import ScrollProgress from "./components/ScrollProgress";
+import SoundToggle from "./components/SoundToggle";
+
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
-import Technologies from "./components/Technologies";
+import Skills from "./components/Skills";
 import Experience from "./components/Experience";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 
-const App=()=>{
+const SECTION_IDS = NAV_LINKS.map((l) => l.id);
+
+export default function App() {
+  const [booted, setBooted] = useState(false);
+  const active = useScrollSpy(SECTION_IDS);
+
   return (
-    <div className="overflow-x-hidden text-neutral-300 antialiased selection:bg-cyan-300 selection:text-cyan-900">
-      <div className="fixed top-0 -z-10 h-full w-full">
-      <div className="absolute top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
-   
-      </div>
-   
-    <div className="container mx-auto px-8">
-    <Navbar />
-    <Hero/>
-    <About/>
-    <Technologies/>
-    <Experience/>
-    <Projects/>
-    <Contact/>
-    </div >
+    <div className="relative min-h-screen text-neutral-300 antialiased">
+      <Preloader onDone={() => setBooted(true)} />
+      <Suspense fallback={<div className="fixed inset-0 -z-10 bg-void-950" />}>
+        <DataBackground />
+      </Suspense>
+      <CustomCursor />
+      <ScrollProgress active={active} />
+      <SoundToggle />
 
-  </div>
+      <Navbar active={active} />
+
+      <main className="mx-auto max-w-6xl px-5 sm:px-8">
+        <Hero booted={booted} />
+        <About />
+        <Skills />
+        <Experience />
+        <Projects />
+        <Contact />
+        <Footer />
+      </main>
+    </div>
   );
-};
-export default App
-
-
+}
