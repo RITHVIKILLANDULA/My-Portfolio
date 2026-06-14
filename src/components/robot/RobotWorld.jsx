@@ -24,11 +24,12 @@ import {
 } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
 import { easing } from "maath";
-import { FiSend, FiArrowDownRight } from "react-icons/fi";
+import { FiSend, FiArrowDownRight, FiMic, FiVolume2, FiVolumeX } from "react-icons/fi";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { HERO_NAME } from "../../constants";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import { answerFor, SUGGESTIONS, GREETING } from "./knowledge";
+import useVoice from "./useVoice";
 
 const ROBOT_URL = `${import.meta.env.BASE_URL}robot.glb`;
 useGLTF.preload(ROBOT_URL);
@@ -44,7 +45,7 @@ const CLIP = {
 };
 
 /* -------- the robot: auto-fit + metal reskin + walk/wander + gesture -------- */
-function RobotModel({ gesture, gKey }) {
+function RobotModel({ gesture, gKey, speaking }) {
   const outer = useRef(); // walk position
   const inner = useRef(); // facing yaw
   const { scene, animations } = useGLTF(ROBOT_URL);
@@ -55,6 +56,7 @@ function RobotModel({ gesture, gKey }) {
   const targetZ = useRef(0);
   const nextWander = useRef(3);
   const tt = useRef(0);
+  const headMats = useRef([]);
 
   useEffect(() => {
     const box = new THREE.Box3().setFromObject(scene);
@@ -75,6 +77,7 @@ function RobotModel({ gesture, gKey }) {
       if (/Head/i.test(o.name)) {
         m.emissive = new THREE.Color(CYAN);
         m.emissiveIntensity = 0.95;
+        headMats.current.push(m);
       } else {
         m.color = new THREE.Color("#aeb6d6").lerp(m.color, 0.35);
         m.emissive = new THREE.Color(INDIGO);
@@ -104,6 +107,12 @@ function RobotModel({ gesture, gKey }) {
 
   useFrame((state, dt) => {
     tt.current += dt;
+    // eyes flicker while the robot is speaking
+    const glow = speaking
+      ? 0.95 + Math.abs(Math.sin(state.clock.elapsedTime * 17)) * 1.1
+      : 0.95;
+    for (const m of headMats.current) m.emissiveIntensity = glow;
+
     const o = outer.current;
     const inn = inner.current;
     if (!o || !inn) return;
@@ -233,7 +242,7 @@ function Platform() {
   );
 }
 
-function Scene({ gesture, gKey }) {
+function Scene({ gesture, gKey, speaking }) {
   return (
     <>
       <color attach="background" args={["#04050c"]} />
@@ -243,7 +252,7 @@ function Scene({ gesture, gKey }) {
       <directionalLight position={[-6, 3, -4]} intensity={1.4} color={CYAN} />
       <spotLight position={[0, 8, 3]} angle={0.5} penumbra={1} intensity={3} color={INDIGO} />
       <Suspense fallback={null}>
-        <RobotModel gesture={gesture} gKey={gKey} />
+        <RobotModel gesture={gesture} gKey={gKey} speaking={speaking} />
         <OrbitRings />
         <Platform />
         <Floor />
@@ -288,6 +297,7 @@ export default function RobotWorld({ onOpenResume }) {
   const [reply, setReply] = useState({ ...GREETING, key: 0 });
   const [input, setInput] = useState("");
   const typed = useTyped(reply.answer);
+  const voice = useVoice();
 
   const ask = (q) => {
     const text = (q || "").trim();
@@ -295,6 +305,7 @@ export default function RobotWorld({ onOpenResume }) {
     const { answer, gesture } = answerFor(text);
     setReply((r) => ({ answer, gesture, key: r.key + 1 }));
     setInput("");
+    voice.speak(answer);
   };
 
   return (
@@ -310,7 +321,7 @@ export default function RobotWorld({ onOpenResume }) {
               gl={{ antialias: true, powerPreference: "high-performance" }}
               camera={{ position: [0, 0.4, 9], fov: 38 }}
             >
-              <Scene gesture={reply.gesture} gKey={reply.key} />
+              <Scene gesture={reply.gesture} gKey={reply.key} speaking={voice.speaking} />
               <EffectComposer multisampling={4} disableNormalPass>
                 <Bloom luminanceThreshold={0.9} luminanceSmoothing={0.3} intensity={0.85} mipmapBlur radius={0.6} />
                 <ChromaticAberration blendFunction={BlendFunction.NORMAL} offset={[0.0005, 0.0005]} />
@@ -351,9 +362,37 @@ export default function RobotWorld({ onOpenResume }) {
       {/* robot speech bubble — upper right near the robot */}
       <div className="absolute right-5 top-28 z-10 hidden max-w-xs lg:block xl:right-16">
         <div className="rounded-2xl border border-data-indigo/30 bg-[#0a0d1c]/80 p-4 backdrop-blur-md">
-          <span className="mono-label text-[0.5rem] text-data-indigo/80">
-            <span className="text-emerald-400">● </span>ai guide
-          </span>
+          <div className="flex items-center justify-between">
+            <span className="mono-label text-[0.5rem] text-data-indigo/80">
+              <span className="text-emerald-400">● </span>ai guide
+            </span>
+            <div className="flex items-center gap-2">
+              {voice.speaking && (
+                <span className="flex h-3 items-end gap-0.5">
+                  {[0, 1, 2, 3].map((i) => (
+                    <span
+                      key={i}
+                      className="w-0.5 rounded-full bg-data-cyan"
+                      style={{
+                        height: "12px",
+                        transformOrigin: "bottom",
+                        animation: `soundbar .5s ease-in-out ${i * 0.1}s infinite`,
+                      }}
+                    />
+                  ))}
+                </span>
+              )}
+              {voice.supportsTTS && (
+                <button
+                  onClick={voice.toggleMute}
+                  aria-label={voice.muted ? "Unmute" : "Mute"}
+                  className="text-neutral-400 transition-colors hover:text-data-cyan"
+                >
+                  {voice.muted ? <FiVolumeX className="text-xs" /> : <FiVolume2 className="text-xs" />}
+                </button>
+              )}
+            </div>
+          </div>
           <p className="mt-1.5 min-h-[4.5em] text-sm leading-snug text-neutral-100">{typed}</p>
         </div>
       </div>
@@ -383,9 +422,23 @@ export default function RobotWorld({ onOpenResume }) {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask my AI anything about me…"
+            placeholder={voice.listening ? "Listening…" : "Ask my AI anything about me…"}
             className="flex-1 bg-transparent text-sm text-neutral-100 placeholder:text-neutral-500 focus:outline-none"
           />
+          {voice.supportsSTT && (
+            <button
+              type="button"
+              onClick={() => voice.listen((t) => ask(t))}
+              aria-label="Speak to the robot"
+              className={`grid h-9 w-9 place-items-center rounded-xl border transition-colors ${
+                voice.listening
+                  ? "animate-pulse border-data-cyan bg-data-cyan/20 text-data-cyan"
+                  : "border-white/10 text-neutral-300 hover:border-data-cyan/50 hover:text-data-cyan"
+              }`}
+            >
+              <FiMic className="text-sm" />
+            </button>
+          )}
           <button type="submit" aria-label="Ask" className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-r from-data-cyan to-data-indigo text-void-950">
             <FiSend className="text-sm" />
           </button>

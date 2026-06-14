@@ -556,6 +556,17 @@ body {
   }
 }
 
+/* ---------- Robot voice sound-wave ---------- */
+@keyframes soundbar {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
 /* ---------- Guided experience section transition ---------- */
 @keyframes guidedEnter {
   from {
