@@ -9,7 +9,7 @@ import ScrollProgress from "./components/ScrollProgress";
 import ResumeExperience from "./components/ResumeExperience";
 
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
+import RobotWorld from "./components/robot/RobotWorld";
 import About from "./components/About";
 import Skills from "./components/Skills";
 import AgentBots from "./components/AgentBots";
@@ -35,8 +35,10 @@ export default function ImmersiveSite({ smooth = true }) {
 
       <Navbar active={active} onOpenResume={openResume} />
 
+      {/* full-bleed interactive robot world */}
+      <RobotWorld onOpenResume={openResume} />
+
       <main className="mx-auto max-w-6xl px-5 sm:px-8">
-        <Hero booted onOpenResume={openResume} />
         <About />
         <Skills />
         <AgentBots />
