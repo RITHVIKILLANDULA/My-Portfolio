@@ -126,8 +126,8 @@ function RobotModel({ gesture, gKey, speaking }) {
 
     // wander the stage
     if (tt.current > nextWander.current) {
-      targetX.current = (Math.random() * 2 - 1) * 1.8;
-      targetZ.current = (Math.random() * 2 - 1) * 0.8;
+      targetX.current = (Math.random() * 2 - 1) * 0.9;
+      targetZ.current = (Math.random() * 2 - 1) * 0.45;
       nextWander.current = tt.current + 4 + Math.random() * 4;
     }
     const dx = targetX.current - o.position.x;
@@ -242,7 +242,20 @@ function Platform() {
   );
 }
 
-function Scene({ gesture, gKey, speaking }) {
+function CameraDolly({ compact }) {
+  useFrame((state, dt) => {
+    easing.damp3(
+      state.camera.position,
+      compact ? [0, 0.05, 5.6] : [0, 0.4, 9],
+      0.5,
+      dt
+    );
+    state.camera.lookAt(0, 0, 0);
+  });
+  return null;
+}
+
+function Scene({ gesture, gKey, speaking, compact }) {
   return (
     <>
       <color attach="background" args={["#04050c"]} />
@@ -251,12 +264,13 @@ function Scene({ gesture, gKey, speaking }) {
       <directionalLight position={[5, 8, 5]} intensity={2} color="#eaf0ff" />
       <directionalLight position={[-6, 3, -4]} intensity={1.4} color={CYAN} />
       <spotLight position={[0, 8, 3]} angle={0.5} penumbra={1} intensity={3} color={INDIGO} />
+      <CameraDolly compact={compact} />
       <Suspense fallback={null}>
         <RobotModel gesture={gesture} gKey={gKey} speaking={speaking} />
-        <OrbitRings />
+        {!compact && <OrbitRings />}
         <Platform />
-        <Floor />
-        <Aura />
+        {!compact && <Floor />}
+        {!compact && <Aura />}
         <Environment resolution={256}>
           <Lightformer intensity={3} position={[0, 3, 4]} scale={[7, 7, 1]} color="#aebfff" />
           <Lightformer intensity={2} position={[-4, 1, 2]} scale={[3, 5, 1]} color={CYAN} />
@@ -298,6 +312,30 @@ export default function RobotWorld({ onOpenResume }) {
   const [input, setInput] = useState("");
   const typed = useTyped(reply.answer);
   const voice = useVoice();
+  const [docked, setDocked] = useState(false);
+  const [heroFade, setHeroFade] = useState(1);
+  const show3D = isDesktop && !reduced;
+
+  // scroll → dock the robot into the corner + fade the hero copy
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      const y = window.scrollY || 0;
+      const vh = window.innerHeight || 1;
+      setDocked(y > vh * 0.42);
+      setHeroFade(Math.max(0, Math.min(1, 1 - y / (vh * 0.55))));
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
 
   const ask = (q) => {
     const text = (q || "").trim();
@@ -309,10 +347,16 @@ export default function RobotWorld({ onOpenResume }) {
   };
 
   return (
-    <section id="home" className="relative h-[100svh] w-full overflow-hidden">
-      {/* full-bleed 3D world */}
-      {isDesktop && !reduced && (
-        <div className="absolute inset-0 z-0">
+    <>
+      {/* PERSISTENT robot — full-screen in the hero, docks to the corner on scroll */}
+      {show3D && (
+        <div
+          className={`fixed z-10 transition-all duration-[600ms] ease-[cubic-bezier(.22,1,.36,1)] ${
+            docked
+              ? "bottom-5 right-5 h-[360px] w-[300px] overflow-hidden rounded-3xl border border-data-indigo/30 bg-[#04050c] shadow-2xl shadow-black/60"
+              : "inset-0"
+          }`}
+        >
           <Boundary fallback={null}>
             <Canvas
               shadows
@@ -321,7 +365,7 @@ export default function RobotWorld({ onOpenResume }) {
               gl={{ antialias: true, powerPreference: "high-performance" }}
               camera={{ position: [0, 0.4, 9], fov: 38 }}
             >
-              <Scene gesture={reply.gesture} gKey={reply.key} speaking={voice.speaking} />
+              <Scene gesture={reply.gesture} gKey={reply.key} speaking={voice.speaking} compact={docked} />
               <EffectComposer multisampling={4} disableNormalPass>
                 <Bloom luminanceThreshold={0.9} luminanceSmoothing={0.3} intensity={0.85} mipmapBlur radius={0.6} />
                 <ChromaticAberration blendFunction={BlendFunction.NORMAL} offset={[0.0005, 0.0005]} />
@@ -329,15 +373,30 @@ export default function RobotWorld({ onOpenResume }) {
               </EffectComposer>
             </Canvas>
           </Boundary>
+          {docked && (
+            <span className="pointer-events-none absolute left-3 top-3 mono-label text-[0.5rem] text-data-cyan/90">
+              <span className="text-emerald-400">● </span>ai · online
+            </span>
+          )}
         </div>
       )}
 
-      {/* readability veils */}
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-[#04050c]/85 via-transparent to-[#04050c]/95" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-40 bg-gradient-to-b from-[#04050c] to-transparent" />
+      {/* hero readability veil (fades out as you scroll) */}
+      {show3D && (
+        <div
+          className="pointer-events-none fixed inset-0 z-[15] bg-gradient-to-b from-[#04050c]/55 via-transparent to-[#04050c]/75"
+          style={{ opacity: heroFade }}
+        />
+      )}
 
-      {/* identity — top-left */}
-      <div className="absolute left-5 top-28 z-10 max-w-md sm:left-10">
+      {/* hero copy — in flow, fades + scrolls away */}
+      <section id="home" className="relative h-[100svh] w-full">
+        <div
+          style={{ opacity: heroFade }}
+          className={`absolute left-5 top-28 z-20 max-w-md transition-opacity duration-300 sm:left-10 ${
+            heroFade < 0.05 ? "pointer-events-none" : ""
+          }`}
+        >
         <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-data-cyan/30 bg-data-cyan/5 px-4 py-1.5">
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
@@ -359,9 +418,25 @@ export default function RobotWorld({ onOpenResume }) {
         </div>
       </div>
 
-      {/* robot speech bubble — upper right near the robot */}
-      <div className="absolute right-5 top-28 z-10 hidden max-w-xs lg:block xl:right-16">
-        <div className="rounded-2xl border border-data-indigo/30 bg-[#0a0d1c]/80 p-4 backdrop-blur-md">
+      {/* scroll cue */}
+        <a
+          href="#about"
+          style={{ opacity: heroFade }}
+          className="absolute bottom-3 left-1/2 z-20 hidden -translate-x-1/2 items-center gap-1 text-[0.55rem] text-neutral-600 lg:flex"
+        >
+          <FiArrowDownRight /> scroll — the robot comes with you
+        </a>
+      </section>
+
+      {/* speech bubble — top-right in hero, above the docked robot on scroll */}
+      <div
+        className={`fixed z-30 transition-all duration-500 ${
+          docked
+            ? "bottom-[23.25rem] right-5 w-[300px]"
+            : "right-5 top-28 hidden max-w-xs lg:block xl:right-16"
+        }`}
+      >
+        <div className="rounded-2xl border border-data-indigo/30 bg-[#0a0d1c]/85 p-4 backdrop-blur-md">
           <div className="flex items-center justify-between">
             <span className="mono-label text-[0.5rem] text-data-indigo/80">
               <span className="text-emerald-400">● </span>ai guide
@@ -397,20 +472,28 @@ export default function RobotWorld({ onOpenResume }) {
         </div>
       </div>
 
-      {/* ASK interface — bottom center */}
-      <div className="absolute inset-x-0 bottom-7 z-10 mx-auto flex w-full max-w-2xl flex-col items-center gap-3 px-5">
-        <div className="flex flex-wrap justify-center gap-2">
-          {SUGGESTIONS.map((s) => (
-            <button
-              key={s.label}
-              onClick={() => ask(s.q)}
-              data-cursor
-              className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 font-mono text-[0.65rem] text-neutral-300 transition-colors hover:border-data-cyan/50 hover:text-data-cyan"
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
+      {/* ask — full bar in hero, compact pill once docked (always reachable) */}
+      <div
+        className={`fixed z-30 transition-all duration-500 ${
+          docked
+            ? "bottom-6 left-6 w-[min(380px,38vw)]"
+            : "inset-x-0 bottom-7 mx-auto w-full max-w-2xl px-5"
+        }`}
+      >
+        {!docked && (
+          <div className="mb-3 flex flex-wrap justify-center gap-2">
+            {SUGGESTIONS.map((s) => (
+              <button
+                key={s.label}
+                onClick={() => ask(s.q)}
+                data-cursor
+                className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 font-mono text-[0.65rem] text-neutral-300 transition-colors hover:border-data-cyan/50 hover:text-data-cyan"
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+        )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -444,11 +527,6 @@ export default function RobotWorld({ onOpenResume }) {
           </button>
         </form>
       </div>
-
-      {/* scroll cue */}
-      <a href="#about" className="absolute bottom-2 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-1 text-[0.55rem] text-neutral-600 lg:flex">
-        <FiArrowDownRight /> scroll for the full story
-      </a>
-    </section>
+    </>
   );
 }
