@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { NAV_LINKS } from "./constants";
 import useScrollSpy from "./hooks/useScrollSpy";
+import useSmoothScroll from "./hooks/useSmoothScroll";
 
-import Preloader from "./components/Preloader";
-import HoloBackground from "./components/HoloBackground";
+import AISystemBoot from "./components/world/AISystemBoot";
+import GuideBackdrop from "./components/guided/GuideBackdrop";
 import ScrollProgress from "./components/ScrollProgress";
 import ResumeExperience from "./components/ResumeExperience";
 
@@ -19,27 +20,23 @@ import Footer from "./components/Footer";
 
 const SECTION_IDS = NAV_LINKS.map((l) => l.id);
 
-/**
- * Readable, accessible document — served on mobile / reduced-motion / no-WebGL.
- * (The desktop immersive descent lives in ImmersiveExperience.)
- */
-export default function ClassicSite() {
-  const [booted, setBooted] = useState(false);
+export default function ImmersiveSite({ smooth = true }) {
   const [resumeOpen, setResumeOpen] = useState(false);
   const active = useScrollSpy(SECTION_IDS);
+  useSmoothScroll(smooth);
   const openResume = () => setResumeOpen(true);
 
   return (
     <div className="relative min-h-screen text-neutral-300 antialiased">
-      <Preloader onDone={() => setBooted(true)} />
-      <HoloBackground />
+      <GuideBackdrop />
+      <AISystemBoot />
       <ScrollProgress active={active} />
       <ResumeExperience open={resumeOpen} onClose={() => setResumeOpen(false)} />
 
       <Navbar active={active} onOpenResume={openResume} />
 
       <main className="mx-auto max-w-6xl px-5 sm:px-8">
-        <Hero booted={booted} onOpenResume={openResume} />
+        <Hero booted onOpenResume={openResume} />
         <About />
         <Skills />
         <AgentBots />

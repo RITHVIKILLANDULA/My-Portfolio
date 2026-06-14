@@ -53,26 +53,25 @@ function Bot({ accent }) {
       }}
       aria-hidden="true"
     >
-      {/* antenna */}
-      <line x1="32" y1="6" x2="32" y2="14" stroke="currentColor" strokeWidth="2" />
-      <circle cx="32" cy="5" r="2.4" fill="currentColor">
-        <animate attributeName="r" values="1.6;2.8;1.6" dur="1.6s" repeatCount="indefinite" />
+      {/* rotating signal ring */}
+      <circle cx="32" cy="32" r="21" fill="none" stroke="currentColor" strokeWidth="1.2" strokeOpacity="0.3" strokeDasharray="3 5">
+        <animateTransform attributeName="transform" type="rotate" from="0 32 32" to="360 32 32" dur="16s" repeatCount="indefinite" />
       </circle>
-      {/* head */}
-      <rect x="14" y="14" width="36" height="28" rx="9" fill={`${accent}1f`} stroke="currentColor" strokeWidth="2" />
-      {/* side sensors */}
-      <rect x="9" y="22" width="4" height="10" rx="2" fill="currentColor" opacity="0.7" />
-      <rect x="51" y="22" width="4" height="10" rx="2" fill="currentColor" opacity="0.7" />
-      {/* eyes */}
-      <circle className="agent-eye" cx="25" cy="27" r="3.4" fill="currentColor" />
-      <circle className="agent-eye" cx="39" cy="27" r="3.4" fill="currentColor" style={{ animationDelay: "0.2s" }} />
-      {/* mouth / data bar */}
-      <rect x="23" y="35" width="18" height="3" rx="1.5" fill="currentColor" opacity="0.6" />
-      {/* body / core */}
-      <rect x="20" y="44" width="24" height="14" rx="5" fill={`${accent}14`} stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="32" cy="51" r="2.6" fill="currentColor">
-        <animate attributeName="opacity" values="0.4;1;0.4" dur="1.4s" repeatCount="indefinite" />
+      {/* hexagonal agent core */}
+      <path d="M32 13 L48 22 L48 42 L32 51 L16 42 L16 22 Z" fill={`${accent}1f`} stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M32 21 L41 26 L41 38 L32 43 L23 38 L23 26 Z" fill="none" stroke="currentColor" strokeWidth="1" strokeOpacity="0.5" />
+      {/* pulsing inference core */}
+      <circle cx="32" cy="32" r="5" fill="currentColor">
+        <animate attributeName="r" values="4;7;4" dur="1.8s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="1;0.5;1" dur="1.8s" repeatCount="indefinite" />
       </circle>
+      {/* orbiting data nodes */}
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 32 32" to="360 32 32" dur="6s" repeatCount="indefinite" />
+        <circle cx="32" cy="13" r="2.4" fill="currentColor" />
+        <circle cx="49.6" cy="42" r="2.4" fill="currentColor" />
+        <circle cx="14.4" cy="42" r="2.4" fill="currentColor" />
+      </g>
     </svg>
   );
 }

@@ -11,8 +11,6 @@ export default defineConfig(({ command }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          three: ['three'],
-          r3f: ['@react-three/fiber', '@react-three/drei'],
           motion: ['framer-motion'],
           vendor: ['react', 'react-dom', 'react-icons'],
         },

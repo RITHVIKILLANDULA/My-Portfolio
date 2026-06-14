@@ -4,7 +4,7 @@ import { FiArrowUpRight, FiExternalLink } from "react-icons/fi";
 import { PROJECTS, PROJECT_FILTERS } from "../constants";
 import SectionHeading from "./ui/SectionHeading";
 import TiltCard from "./ui/TiltCard";
-import ProjectVisual from "./ui/ProjectVisual";
+import ProjectAnim from "./ui/ProjectAnim";
 
 export default function Projects() {
   const [filter, setFilter] = useState("All");
@@ -77,7 +77,7 @@ export default function Projects() {
                   {/* generated animated visual */}
                   <div className="relative h-40 overflow-hidden">
                     <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
-                      <ProjectVisual category={project.category} />
+                      <ProjectAnim title={project.title} category={project.category} />
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-void-900 via-void-900/30 to-transparent" />
                     {project.featured && (
