@@ -45,12 +45,16 @@ export default function Experience() {
 
             <div className="glass glass-hover group rounded-2xl p-5 sm:p-7">
               <div className="mb-4 flex flex-wrap items-center gap-4">
-                {exp.logo && (
+                {exp.logo ? (
                   <img
                     src={exp.logo}
                     alt={`${exp.company} logo`}
                     className="h-12 w-12 rounded-lg bg-white object-contain p-1.5"
                   />
+                ) : (
+                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg border border-data-cyan/40 bg-void-850 font-mono text-sm font-bold text-data-cyan shadow-glow">
+                    {exp.mono}
+                  </span>
                 )}
                 <div className="flex-1">
                   <h3 className="text-lg font-medium text-neutral-100">

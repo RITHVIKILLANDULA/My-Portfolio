@@ -99,7 +99,10 @@ export default function Skills() {
             </AnimatePresence>
 
             <div className="mono-label mt-6 flex items-center justify-between border-t border-void-700 pt-4 text-[0.55rem] text-neutral-500">
-              <span>category {String(tab + 1).padStart(2, "0")}/04</span>
+              <span>
+                category {String(tab + 1).padStart(2, "0")}/
+                {String(SKILL_CATEGORIES.length).padStart(2, "0")}
+              </span>
               <span className="text-data-cyan">{cat.name}</span>
             </div>
           </div>

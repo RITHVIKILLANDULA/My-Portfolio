@@ -1,6 +1,12 @@
-import { HiAcademicCap } from "react-icons/hi2";
+import { HiAcademicCap, HiCheckBadge } from "react-icons/hi2";
 import aboutImg from "../assets/about-cover.jpg";
-import { ABOUT_TEXT, IMPACT, EDUCATION } from "../constants";
+import {
+  ABOUT_TEXT,
+  IMPACT,
+  EDUCATION,
+  COURSEWORK,
+  CERTIFICATIONS,
+} from "../constants";
 import SectionHeading from "./ui/SectionHeading";
 import Reveal from "./ui/Reveal";
 
@@ -65,24 +71,55 @@ export default function About() {
           {/* education */}
           {EDUCATION.map((e) => (
             <Reveal key={e.title} from="up" delay={0.1}>
-              <div className="mt-5 flex items-center gap-4 rounded-xl border border-void-700 bg-void-900/50 p-4">
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-data-violet/40 bg-data-violet/10 text-data-violet">
-                  <HiAcademicCap className="text-xl" />
+              <div className="mt-5 rounded-xl border border-void-700 bg-void-900/50 p-4">
+                <div className="flex items-center gap-4">
+                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-data-violet/40 bg-data-violet/10 text-data-violet">
+                    <HiAcademicCap className="text-xl" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-neutral-100">
+                      {e.title}
+                    </p>
+                    <p className="text-xs text-neutral-400">
+                      {e.school} · {e.detail}
+                    </p>
+                  </div>
+                  <span className="mono-label hidden text-[0.55rem] text-neutral-500 sm:block">
+                    {e.year}
+                  </span>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-neutral-100">
-                    {e.title}
-                  </p>
-                  <p className="text-xs text-neutral-400">
-                    {e.school} · {e.detail}
-                  </p>
+                <div className="mt-3 flex flex-wrap gap-1.5 border-t border-void-700 pt-3">
+                  {COURSEWORK.map((c) => (
+                    <span
+                      key={c}
+                      className="rounded border border-void-700 bg-void-900/60 px-1.5 py-0.5 font-mono text-[0.58rem] text-neutral-400"
+                    >
+                      {c}
+                    </span>
+                  ))}
                 </div>
-                <span className="mono-label hidden text-[0.55rem] text-neutral-500 sm:block">
-                  {e.year}
-                </span>
               </div>
             </Reveal>
           ))}
+
+          {/* certifications */}
+          <Reveal from="up" delay={0.15}>
+            <div className="mt-5 rounded-xl border border-void-700 bg-void-900/50 p-4">
+              <p className="mono-label mb-3 text-[0.55rem] text-data-cyan/80">
+                certifications
+              </p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {CERTIFICATIONS.map((c) => (
+                  <div key={c} className="flex items-start gap-2">
+                    <HiCheckBadge className="mt-0.5 shrink-0 text-data-cyan" />
+                    <span className="text-xs leading-tight text-neutral-300">
+                      {c}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
 
           {/* impact metrics */}
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">

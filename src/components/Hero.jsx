@@ -43,7 +43,7 @@ export default function Hero({ booted }) {
             <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
           </span>
           <span className="mono-label text-[0.6rem] text-neutral-300">
-            Open to Data / ML roles · Buffalo, NY
+            Open to Data Analyst roles · Buffalo, NY
           </span>
         </motion.div>
 
