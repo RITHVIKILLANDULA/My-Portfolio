@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { pickExperience } from "./state/perf";
-import ImmersiveExperience from "./ImmersiveExperience";
+import GuidedExperience from "./GuidedExperience";
 import ClassicSite from "./ClassicSite";
 
 export default function App() {
@@ -9,5 +9,5 @@ export default function App() {
   useEffect(() => {
     setMode(pickExperience());
   }, []);
-  return mode === "immersive" ? <ImmersiveExperience /> : <ClassicSite />;
+  return mode === "immersive" ? <GuidedExperience /> : <ClassicSite />;
 }
