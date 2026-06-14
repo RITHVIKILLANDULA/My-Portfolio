@@ -2,18 +2,12 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiArrowDownRight, FiArrowUpRight } from "react-icons/fi";
 import { HiOutlineSparkles } from "react-icons/hi2";
-import {
-  HERO_NAME,
-  HERO_ROLES,
-  HERO_CONTENT,
-  STATS,
-  RESUME_URL,
-} from "../constants";
+import { HERO_NAME, HERO_ROLES, HERO_CONTENT, STATS } from "../constants";
 import DecodeText from "./ui/DecodeText";
 import Counter from "./ui/Counter";
 import Magnetic from "./ui/Magnetic";
 
-export default function Hero({ booted }) {
+export default function Hero({ booted, onOpenResume }) {
   const [roleIdx, setRoleIdx] = useState(0);
 
   useEffect(() => {
@@ -98,16 +92,14 @@ export default function Hero({ booted }) {
             </a>
           </Magnetic>
           <Magnetic strength={0.25}>
-            <a
-              href={RESUME_URL}
-              target="_blank"
-              rel="noreferrer"
+            <button
+              onClick={onOpenResume}
               data-cursor
               className="group inline-flex items-center gap-2 rounded-xl border border-neutral-700 px-6 py-3 text-sm font-medium text-neutral-200 transition-colors hover:border-data-cyan/60 hover:text-data-cyan"
             >
-              Download Résumé
+              ▶ Résumé Reel
               <FiArrowUpRight className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
+            </button>
           </Magnetic>
         </motion.div>
 

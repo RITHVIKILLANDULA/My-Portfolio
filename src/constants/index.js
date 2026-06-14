@@ -26,10 +26,10 @@ export const NAV_LINKS = [
 
 export const HERO_NAME = "Rithvik Illandula";
 export const HERO_ROLES = [
-  "Data Analyst",
+  "AI Data Analyst",
+  "Data Analytics Engineer",
   "BI & Dashboard Developer",
   "Data Quality Specialist",
-  "Analytics Storyteller",
 ];
 
 export const HERO_CONTENT = `I turn TV/media, adtech, and operational data into dashboards, data-quality controls, and decisions. 4+ years across Deloitte, WAFU, and the University at Buffalo — using Python, SQL, BigQuery, and Tableau/Power BI to make messy, multi-source data legible and client-ready.`;
@@ -132,29 +132,35 @@ export const SKILL_TAGS = [
 export const EXPERIENCES = [
   {
     year: "2025 FEB — 2026 MAY",
-    role: "Data Analyst",
+    role: "AI Data Analyst",
     company: "University at Buffalo",
     mono: "UB",
     description: `Built Python, SQL, Airflow, and BigQuery workflows that collect, cleanse, validate, and prepare 25+ operational and research datasets for reporting and exploratory analysis. Defined data-collection standards and quality procedures with faculty and SMEs across 5 recurring controls — completeness, duplicates, schema drift, late files, and exception trends. Profiled datasets with Python, R, SQL, Pandas, and NumPy to surface outliers, compare baselines, and evaluate correlations for stakeholder review. Optimized recurring SQL jobs and partitioned BigQuery tables, cutting nightly processing from 2 hours to 35 minutes while preserving audit logs and recovery steps.`,
     technologies: ["Python", "SQL", "Airflow", "BigQuery", "R", "Pandas", "Data Quality"],
+    metrics: ["25+ datasets prepared", "2h → 35m nightly runtime", "5 recurring quality controls"],
   },
   {
     year: "2022 JAN — 2024 DEC",
-    role: "Data Analyst II",
+    role: "Data Analytics Engineer",
     company: "Deloitte",
     mono: "De",
     description: `Analyzed TV/media datasets for entertainment and news clients — audience, campaign, customer, transaction, and reference data from 6 source systems — using Python, SQL, Spark, Databricks, and Airflow for client reporting and KPI analysis. Built 15+ Tableau and Power BI dashboards tracking audience-segment trends, campaign KPI movement, delayed events, and data completeness. Partnered with SMEs, engineers, client teams, and agency reporting teams to clarify requirements and document 40+ source-to-target mappings. Implemented reconciliation, cleansing, and data-quality rules for volume shifts, missing/duplicate events, and threshold breaches — cutting manual review effort by 80% — and translated audience, campaign, and transaction trends into client-ready insight summaries.`,
     technologies: ["Python", "SQL", "Spark", "Databricks", "Airflow", "Tableau", "Power BI", "Reconciliation"],
+    metrics: ["15+ dashboards shipped", "6 source systems unified", "80% less manual review", "40+ source-to-target mappings"],
   },
   {
     year: "2020 DEC — 2021 AUG",
     role: "Data Analyst",
     company: "WAFU Technologies",
+    mono: "W",
     logo: wafuLogo,
     description: `Analyzed adtech event, campaign, customer-transaction, order, inventory, and payment-workflow data across 4 client applications using SQL, Python, and NoSQL to surface reporting gaps, failed events, and operational exceptions. Built monitoring queries covering 5 categories of operational and ad-event exceptions — event mismatches, order issues, rejected records, inventory gaps, and recurring process failures. Modeled 6+ reporting tables and optimized MySQL queries for agency reporting, campaign visibility, customer-transaction analysis, and operational performance monitoring.`,
     technologies: ["SQL", "Python", "NoSQL", "MySQL", "Adtech", "Monitoring"],
+    metrics: ["4 client applications", "5 exception categories", "6+ reporting tables modeled"],
   },
 ];
+
+export const RESUME_SUMMARY = `Data Analyst with 4+ years turning TV/media, adtech, customer, campaign, and operational data into dashboards, data-quality controls, and business insight — across Deloitte, WAFU, and the University at Buffalo.`;
 
 export const EDUCATION = [
   {

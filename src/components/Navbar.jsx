@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import { HiOutlineMenuAlt4, HiX } from "react-icons/hi";
 import { FiArrowUpRight } from "react-icons/fi";
-import { NAV_LINKS, CONTACT, RESUME_URL } from "../constants";
+import { NAV_LINKS, CONTACT } from "../constants";
 import Magnetic from "./ui/Magnetic";
 
-export default function Navbar({ active }) {
+export default function Navbar({ active, onOpenResume }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -84,16 +84,14 @@ export default function Navbar({ active }) {
                 </a>
               </Magnetic>
             </div>
-            <a
-              href={RESUME_URL}
-              target="_blank"
-              rel="noreferrer"
+            <button
+              onClick={onOpenResume}
               data-cursor
               className="group hidden items-center gap-1.5 rounded-lg border border-data-indigo/40 bg-data-indigo/10 px-3 py-2 text-xs font-medium text-data-violet transition-all hover:border-data-cyan/60 hover:text-data-cyan sm:flex"
             >
               Résumé
               <FiArrowUpRight className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
+            </button>
             <button
               onClick={() => setOpen(true)}
               data-cursor
@@ -150,14 +148,15 @@ export default function Navbar({ active }) {
                   {String(i + 1).padStart(2, "0")} · {l.label}
                 </motion.a>
               ))}
-              <a
-                href={RESUME_URL}
-                target="_blank"
-                rel="noreferrer"
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  onOpenResume?.();
+                }}
                 className="mt-4 flex items-center justify-center gap-1.5 rounded-lg border border-data-cyan/40 bg-data-cyan/10 px-3 py-3 text-sm text-data-cyan"
               >
-                Download Résumé <FiArrowUpRight />
-              </a>
+                View Résumé <FiArrowUpRight />
+              </button>
               <div className="mt-auto flex gap-5 pt-6 text-xl text-neutral-300">
                 <a href={CONTACT.linkedin} target="_blank" rel="noreferrer">
                   <FaLinkedin />

@@ -7,6 +7,7 @@ const DataBackground = lazy(() => import("./components/DataBackground"));
 import CustomCursor from "./components/CustomCursor";
 import ScrollProgress from "./components/ScrollProgress";
 import SoundToggle from "./components/SoundToggle";
+import ResumeExperience from "./components/ResumeExperience";
 
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -21,7 +22,9 @@ const SECTION_IDS = NAV_LINKS.map((l) => l.id);
 
 export default function App() {
   const [booted, setBooted] = useState(false);
+  const [resumeOpen, setResumeOpen] = useState(false);
   const active = useScrollSpy(SECTION_IDS);
+  const openResume = () => setResumeOpen(true);
 
   return (
     <div className="relative min-h-screen text-neutral-300 antialiased">
@@ -32,11 +35,12 @@ export default function App() {
       <CustomCursor />
       <ScrollProgress active={active} />
       <SoundToggle />
+      <ResumeExperience open={resumeOpen} onClose={() => setResumeOpen(false)} />
 
-      <Navbar active={active} />
+      <Navbar active={active} onOpenResume={openResume} />
 
       <main className="mx-auto max-w-6xl px-5 sm:px-8">
-        <Hero booted={booted} />
+        <Hero booted={booted} onOpenResume={openResume} />
         <About />
         <Skills />
         <Experience />
