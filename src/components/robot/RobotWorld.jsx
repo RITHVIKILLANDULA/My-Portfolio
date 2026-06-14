@@ -42,7 +42,11 @@ const CLIP = {
   thumbsUp: "ThumbsUp",
   no: "No",
   walk: "Walking",
+  run: "Running",
 };
+
+// scroll velocity (px/ms) shared with the robot so it walks/runs as you scroll
+const scrollSig = { vel: 0 };
 
 /* -------- the robot: auto-fit + metal reskin + walk/wander + gesture -------- */
 function RobotModel({ gesture, gKey, speaking }) {
@@ -120,33 +124,19 @@ function RobotModel({ gesture, gKey, speaking }) {
     const inn = inner.current;
     if (!o || !inn) return;
 
-    if (talking.current) {
-      // stop, face the visitor (slight cursor lean)
-      easing.dampAngle(inn.rotation, "y", state.pointer.x * 0.35, 0.3, dt);
-      easing.damp3(o.position, [o.position.x, 0, o.position.z], 0.4, dt);
-      return;
-    }
+    // keep the robot grounded at the origin (the camera frames it) + face you
+    easing.damp3(o.position, [0, 0, 0], 0.5, dt);
+    easing.dampAngle(inn.rotation, "y", state.pointer.x * 0.3, 0.3, dt);
 
-    // wander the stage
-    if (tt.current > nextWander.current) {
-      targetX.current = (Math.random() * 2 - 1) * 0.9;
-      targetZ.current = (Math.random() * 2 - 1) * 0.45;
-      nextWander.current = tt.current + 4 + Math.random() * 4;
-    }
-    const dx = targetX.current - o.position.x;
-    const dz = targetZ.current - o.position.z;
-    const dist = Math.hypot(dx, dz);
-    if (dist > 0.12) {
-      play("walk");
-      o.position.x += (dx / dist) * dt * 0.9;
-      o.position.z += (dz / dist) * dt * 0.9;
-      // face direction of travel, but clamped so it never fully turns away
-      const yaw = THREE.MathUtils.clamp(Math.atan2(dx, dz + 4), -0.7, 0.7);
-      easing.dampAngle(inn.rotation, "y", yaw, 0.25, dt);
-    } else {
-      play("idle");
-      easing.dampAngle(inn.rotation, "y", state.pointer.x * 0.3, 0.3, dt);
-    }
+    if (talking.current) return;
+
+    // gait reacts to how fast you scroll — runs when you fling, walks when you
+    // browse, idles when you stop: it walks through the page with you.
+    scrollSig.vel *= Math.max(0, 1 - dt * 3.5);
+    const v = scrollSig.vel;
+    if (v > 1.6) play("run");
+    else if (v > 0.16) play("walk");
+    else play("idle");
   });
 
   return (
@@ -245,35 +235,41 @@ function Platform() {
   );
 }
 
-function CameraDolly({ compact }) {
+function CameraDolly({ scrolled }) {
+  const look = useRef(new THREE.Vector3(0, 0, 0));
   useFrame((state, dt) => {
     easing.damp3(
       state.camera.position,
-      compact ? [0, 0.05, 5.6] : [0, 0.4, 9],
+      scrolled ? [1.45, 1.7, 8.2] : [0, 0.4, 9],
       0.5,
       dt
     );
-    state.camera.lookAt(0, 0, 0);
+    easing.damp3(
+      look.current,
+      scrolled ? [1.95, 1.95, 0] : [0, 0, 0],
+      0.5,
+      dt
+    );
+    state.camera.lookAt(look.current);
   });
   return null;
 }
 
-function Scene({ gesture, gKey, speaking, compact }) {
+function Scene({ gesture, gKey, speaking, scrolled }) {
   return (
     <>
-      <color attach="background" args={["#04050c"]} />
-      <fog attach="fog" args={["#04050c", 9, 22]} />
-      <ambientLight intensity={0.35} />
-      <directionalLight position={[5, 8, 5]} intensity={2} color="#eaf0ff" />
+      {/* transparent canvas — the robot lives over the page, not in a box */}
+      <ambientLight intensity={0.45} />
+      <directionalLight position={[5, 8, 5]} intensity={2.1} color="#eaf0ff" castShadow />
       <directionalLight position={[-6, 3, -4]} intensity={1.4} color={CYAN} />
       <spotLight position={[0, 8, 3]} angle={0.5} penumbra={1} intensity={3} color={INDIGO} />
-      <CameraDolly compact={compact} />
+      <CameraDolly scrolled={scrolled} />
       <Suspense fallback={null}>
         <RobotModel gesture={gesture} gKey={gKey} speaking={speaking} />
-        {!compact && <OrbitRings />}
-        <Platform />
-        {!compact && <Floor />}
-        {!compact && <Aura />}
+        {!scrolled && <OrbitRings />}
+        {!scrolled && <Platform />}
+        {!scrolled && <Floor />}
+        {!scrolled && <Aura />}
         <Environment resolution={256}>
           <Lightformer intensity={3} position={[0, 3, 4]} scale={[7, 7, 1]} color="#aebfff" />
           <Lightformer intensity={2} position={[-4, 1, 2]} scale={[3, 5, 1]} color={CYAN} />
@@ -322,10 +318,16 @@ export default function RobotWorld({ onOpenResume }) {
   // scroll → dock the robot into the corner + fade the hero copy
   useEffect(() => {
     let raf = 0;
+    let lastY = window.scrollY || 0;
+    let lastT = performance.now();
     const update = () => {
       const y = window.scrollY || 0;
       const vh = window.innerHeight || 1;
-      setDocked(y > vh * 0.42);
+      const now = performance.now();
+      scrollSig.vel = Math.min(6, Math.abs(y - lastY) / Math.max(1, now - lastT));
+      lastY = y;
+      lastT = now;
+      setDocked(y > vh * 0.4);
       setHeroFade(Math.max(0, Math.min(1, 1 - y / (vh * 0.55))));
     };
     const onScroll = () => {
@@ -351,36 +353,28 @@ export default function RobotWorld({ onOpenResume }) {
 
   return (
     <>
-      {/* PERSISTENT robot — full-screen in the hero, docks to the corner on scroll */}
+      {/* PERSISTENT robot — a real companion living over the page (no box) */}
       {show3D && (
-        <div
-          className={`fixed z-10 transition-all duration-[600ms] ease-[cubic-bezier(.22,1,.36,1)] ${
-            docked
-              ? "bottom-5 right-5 h-[360px] w-[300px] overflow-hidden rounded-3xl border border-data-indigo/30 bg-[#04050c] shadow-2xl shadow-black/60"
-              : "inset-0"
-          }`}
-        >
+        <div className="pointer-events-none fixed inset-0 z-[12]">
           <Boundary fallback={null}>
             <Canvas
               shadows
               frameloop="always"
               dpr={[1, 2]}
-              gl={{ antialias: true, powerPreference: "high-performance" }}
+              gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
               camera={{ position: [0, 0.4, 9], fov: 38 }}
             >
-              <Scene gesture={reply.gesture} gKey={reply.key} speaking={voice.speaking} compact={docked} />
+              <Scene
+                gesture={reply.gesture}
+                gKey={reply.key}
+                speaking={voice.speaking}
+                scrolled={docked}
+              />
               <EffectComposer multisampling={4} disableNormalPass>
-                <Bloom luminanceThreshold={0.9} luminanceSmoothing={0.3} intensity={0.85} mipmapBlur radius={0.6} />
-                <ChromaticAberration blendFunction={BlendFunction.NORMAL} offset={[0.0005, 0.0005]} />
-                <Vignette eskil={false} offset={0.28} darkness={0.82} />
+                <Bloom luminanceThreshold={0.85} luminanceSmoothing={0.3} intensity={0.7} mipmapBlur radius={0.55} />
               </EffectComposer>
             </Canvas>
           </Boundary>
-          {docked && (
-            <span className="pointer-events-none absolute left-3 top-3 mono-label text-[0.5rem] text-data-cyan/90">
-              <span className="text-emerald-400">● </span>ai · online
-            </span>
-          )}
         </div>
       )}
 
@@ -435,7 +429,7 @@ export default function RobotWorld({ onOpenResume }) {
       <div
         className={`fixed z-30 transition-all duration-500 ${
           docked
-            ? "bottom-[23.25rem] right-5 w-[300px]"
+            ? "bottom-48 left-6 w-[min(300px,26vw)]"
             : "right-5 top-28 hidden max-w-xs lg:block xl:right-16"
         }`}
       >
@@ -479,7 +473,7 @@ export default function RobotWorld({ onOpenResume }) {
       <div
         className={`fixed z-30 transition-all duration-500 ${
           docked
-            ? "bottom-6 left-6 w-[min(380px,38vw)]"
+            ? "bottom-6 right-6 w-[min(380px,34vw)]"
             : "inset-x-0 bottom-7 mx-auto w-full max-w-2xl px-5"
         }`}
       >
