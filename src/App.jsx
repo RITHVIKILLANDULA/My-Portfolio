@@ -3,7 +3,8 @@ import { NAV_LINKS } from "./constants";
 import useScrollSpy from "./hooks/useScrollSpy";
 
 import Preloader from "./components/Preloader";
-import DataObservatory from "./components/DataObservatory";
+import HoloBackground from "./components/HoloBackground";
+import AgentCompanion from "./components/AgentCompanion";
 import CustomCursor from "./components/CustomCursor";
 import ScrollProgress from "./components/ScrollProgress";
 import SoundToggle from "./components/SoundToggle";
@@ -30,7 +31,8 @@ export default function App() {
   return (
     <div className="relative min-h-screen text-neutral-300 antialiased">
       <Preloader onDone={() => setBooted(true)} />
-      <DataObservatory />
+      <HoloBackground />
+      <AgentCompanion active={active} />
       <CustomCursor />
       <ScrollProgress active={active} />
       <SoundToggle />
