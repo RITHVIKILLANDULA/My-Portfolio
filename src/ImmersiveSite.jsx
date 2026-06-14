@@ -12,7 +12,7 @@ import Navbar from "./components/Navbar";
 import RobotWorld from "./components/robot/RobotWorld";
 import RecruiterSnapshot from "./components/RecruiterSnapshot";
 import About from "./components/About";
-import Skills from "./components/Skills";
+import MissionControl from "./components/skills/MissionControl";
 import AgentBots from "./components/AgentBots";
 import Experience from "./components/Experience";
 import Projects from "./components/Projects";
@@ -42,7 +42,7 @@ export default function ImmersiveSite({ smooth = true }) {
       <main className="mx-auto max-w-6xl px-5 sm:px-8">
         <RecruiterSnapshot onOpenResume={openResume} />
         <About />
-        <Skills />
+        <MissionControl />
         <AgentBots />
         <Experience />
         <Projects />
