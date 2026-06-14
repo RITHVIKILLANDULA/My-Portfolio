@@ -46,8 +46,14 @@ const CLIP = {
   run: "Running",
 };
 
-// scroll velocity (px/ms) shared with the robot so it walks/runs as you scroll
-const scrollSig = { vel: 0 };
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+// shared scroll signal: gait velocity, page progress (0..1) and dock state —
+// lets the robot WALK DOWN the page with you through the text-free whitespace
+// (never over content), instead of sitting in a fixed corner box.
+const scrollSig = { vel: 0, progress: 0, docked: false };
+// width of the centered content column (max-w-6xl) in px — the robot stays in
+// the whitespace OUTSIDE this column so it can never overlap readable text.
+const CONTENT_W = 1152;
 
 /* -------- the robot: auto-fit + metal reskin + walk/wander + gesture -------- */
 function RobotModel({ gesture, gKey, speaking }) {
@@ -60,6 +66,9 @@ function RobotModel({ gesture, gKey, speaking }) {
   const entrance = useRef(0); // 0→1 cinematic descent on arrival
   const tt = useRef(0);
   const headMats = useRef([]);
+  const bodyMats = useRef([]); // body materials — self-glow boosted while walking
+  const robotW = useRef(1.1); // natural world-width (measured) for gutter fit
+  const disc = useRef(); // glow disc that travels under the feet while walking
 
   useEffect(() => {
     const box = new THREE.Box3().setFromObject(scene);
@@ -70,6 +79,9 @@ function RobotModel({ gesture, gKey, speaking }) {
     const b2 = new THREE.Box3().setFromObject(scene);
     const c = new THREE.Vector3();
     b2.getCenter(c);
+    const s2 = new THREE.Vector3();
+    b2.getSize(s2);
+    robotW.current = Math.max(0.5, s2.x); // natural width for gutter-fit scaling
     // centre the robot on the origin so the camera (which looks at 0,0,0)
     // frames the whole body, head included
     scene.position.set(-c.x, -c.y, -c.z);
@@ -88,6 +100,8 @@ function RobotModel({ gesture, gKey, speaking }) {
         m.emissive = new THREE.Color(CYAN);
         m.emissiveIntensity = 0.25;
         headMats.current.push(m);
+      } else {
+        bodyMats.current.push(m);
       }
     });
   }, [scene]);
@@ -123,12 +137,20 @@ function RobotModel({ gesture, gKey, speaking }) {
       ? 0.35 + Math.abs(Math.sin(state.clock.elapsedTime * 17)) * 1.0
       : 0.25;
     for (const m of headMats.current) m.emissiveIntensity = glow;
+    // body self-illuminates while walking so it reads as a lively companion
+    // even when small/at the page edge; near-matte in the lit hero
+    const bodyGlow = scrollSig.docked ? 0.3 : 0.07;
+    const k = Math.min(1, dt * 4);
+    for (const m of bodyMats.current)
+      m.emissiveIntensity += (bodyGlow - m.emissiveIntensity) * k;
 
     const o = outer.current;
     const inn = inner.current;
     if (!o || !inn) return;
 
-    // cinematic arrival: descend from above, ease to a soft landing
+    // cinematic arrival: descend from above, ease to a soft landing.
+    // skipped if the page opens (or scrolls) into the docked walk state.
+    if (scrollSig.docked) entrance.current = 1;
     if (entrance.current < 1) {
       entrance.current = Math.min(1, entrance.current + dt / 1.5);
       const e = 1 - Math.pow(1 - entrance.current, 3); // easeOutCubic
@@ -137,16 +159,61 @@ function RobotModel({ gesture, gKey, speaking }) {
       return;
     }
 
-    // keep the robot grounded at the origin (the camera frames it) + face you
-    easing.damp3(o.position, [0, 0, 0], 0.5, dt);
-    easing.dampAngle(inn.rotation, "y", state.pointer.x * 0.3, 0.3, dt);
-
-    if (talking.current) return;
-
-    // gait reacts to how fast you scroll — runs when you fling, walks when you
-    // browse, idles when you stop: it walks through the page with you.
+    // decay scroll velocity (drives gait in both modes)
     scrollSig.vel *= Math.max(0, 1 - dt * 3.5);
     const v = scrollSig.vel;
+
+    if (scrollSig.docked) {
+      /* WALK MODE — descend the page through the side whitespace, never over
+         text. Scaled to FIT the gutter beside the centered content column, so
+         overlap is structurally impossible at any width. */
+      const vp = state.viewport; // world units across the canvas at z=0
+      const pxPerWorld = state.size.width / Math.max(0.001, vp.width);
+      const vpHalfW = vp.width / 2;
+      const contentHalfW = CONTENT_W / 2 / pxPerWorld; // half the text column
+      const gutterW = Math.max(0, vpHalfW - contentHalfW); // one side's gap
+      const natW = robotW.current;
+      const fit = clamp((gutterW * 0.9) / natW, 0.16, 0.72);
+      easing.damp(o.scale, "x", fit, 0.4, dt);
+      easing.damp(o.scale, "y", fit, 0.4, dt);
+      easing.damp(o.scale, "z", fit, 0.4, dt);
+
+      // park hard against the right whitespace, just clear of the text column
+      const halfBody = (natW * fit) / 2;
+      const parkX = vpHalfW - halfBody - 0.05;
+      // descend in lockstep with scroll — the robot literally comes down with you
+      const vpHalfH = vp.height / 2;
+      const padY = (2.45 * fit) / 2 + 0.25;
+      const topY = vpHalfH - padY;
+      const botY = -vpHalfH + padY;
+      const targetY = topY + (botY - topY) * clamp(scrollSig.progress, 0, 1);
+      const bob = Math.sin(tt.current * 7) * 0.05 * clamp(v * 4, 0, 1);
+      easing.damp3(o.position, [parkX, targetY + bob, 0], 0.3, dt);
+      // face slightly inward (toward the content it's narrating), not the cursor
+      easing.dampAngle(inn.rotation, "y", -0.4, 0.4, dt);
+      easing.dampAngle(inn.rotation, "x", 0.05 * clamp(v * 3, 0, 1), 0.4, dt);
+      // glow disc travels under the feet; fades up only while docked
+      if (disc.current)
+        easing.damp(disc.current.material, "opacity", gutterW < 0.2 ? 0 : 0.42, 0.4, dt);
+
+      if (!talking.current) {
+        if (v > 1.6) play("run");
+        else if (v > 0.16) play("walk");
+        else play("idle");
+      }
+      return;
+    }
+
+    // HERO MODE — grounded at the origin, full size, gently facing you
+    easing.damp(o.scale, "x", 1, 0.4, dt);
+    easing.damp(o.scale, "y", 1, 0.4, dt);
+    easing.damp(o.scale, "z", 1, 0.4, dt);
+    easing.damp3(o.position, [0, 0, 0], 0.5, dt);
+    easing.dampAngle(inn.rotation, "y", state.pointer.x * 0.3, 0.3, dt);
+    easing.dampAngle(inn.rotation, "x", 0, 0.3, dt);
+    if (disc.current) easing.damp(disc.current.material, "opacity", 0, 0.4, dt);
+
+    if (talking.current) return;
     if (v > 1.6) play("run");
     else if (v > 0.16) play("walk");
     else play("idle");
@@ -154,6 +221,18 @@ function RobotModel({ gesture, gKey, speaking }) {
 
   return (
     <group ref={outer}>
+      {/* glow disc under the feet — travels with the robot while it walks */}
+      <mesh ref={disc} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.24, 0]}>
+        <circleGeometry args={[1.0, 44]} />
+        <meshBasicMaterial
+          color={CYAN}
+          transparent
+          opacity={0}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          toneMapped={false}
+        />
+      </mesh>
       <Float speed={1.1} rotationIntensity={0.06} floatIntensity={0.3}>
         <group ref={inner}>
           <primitive object={scene} />
@@ -339,48 +418,13 @@ function Platform() {
   );
 }
 
-// a clean glowing hologram base under the docked companion (not a dark blob)
-function CompanionBase() {
-  const ref = useRef();
-  useFrame((s) => {
-    if (ref.current)
-      ref.current.material.opacity = 0.22 + Math.sin(s.clock.elapsedTime * 2) * 0.08;
-  });
-  return (
-    <group position={[0, -1.22, 0]}>
-      <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.35, 48]} />
-        <meshBasicMaterial
-          color={CYAN}
-          transparent
-          opacity={0.22}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-        <ringGeometry args={[1.25, 1.4, 48]} />
-        <meshBasicMaterial color={CYAN} transparent opacity={0.6} toneMapped={false} />
-      </mesh>
-    </group>
-  );
-}
-
-function CameraDolly({ scrolled }) {
+function CameraDolly() {
+  // static frontal framing — the robot's own world-Y does the on-screen travel
+  // (a corner camera move would make it "walk in place" / read as a box).
   const look = useRef(new THREE.Vector3(0, 0, 0));
   useFrame((state, dt) => {
-    easing.damp3(
-      state.camera.position,
-      scrolled ? [2.2, 2.45, 14] : [0, 0.4, 9],
-      0.5,
-      dt
-    );
-    easing.damp3(
-      look.current,
-      scrolled ? [3.0, 2.7, 0] : [0, 0, 0],
-      0.5,
-      dt
-    );
+    easing.damp3(state.camera.position, [0, 0.4, 9], 0.5, dt);
+    easing.damp3(look.current, [0, 0, 0], 0.5, dt);
     state.camera.lookAt(look.current);
   });
   return null;
@@ -395,7 +439,7 @@ function Scene({ gesture, gKey, speaking, scrolled }) {
       <directionalLight position={[5, 8, 5]} intensity={2.1} color="#eaf0ff" castShadow />
       <directionalLight position={[-6, 3, -4]} intensity={1.4} color={CYAN} />
       <spotLight position={[0, 8, 3]} angle={0.5} penumbra={1} intensity={3} color={INDIGO} />
-      <CameraDolly scrolled={scrolled} />
+      <CameraDolly />
       <Suspense fallback={null}>
         <RobotModel gesture={gesture} gKey={gKey} speaking={speaking} />
         {!scrolled && <CityArrival />}
@@ -410,10 +454,8 @@ function Scene({ gesture, gKey, speaking, scrolled }) {
           <Lightformer intensity={1.5} position={[4, 2, -2]} scale={[3, 3, 1]} color={INDIGO} />
         </Environment>
       </Suspense>
-      {!scrolled ? (
+      {!scrolled && (
         <ContactShadows position={[0, -1.18, 0]} opacity={0.5} scale={9} blur={2.6} far={4} color="#020308" />
-      ) : (
-        <CompanionBase />
       )}
     </>
   );
@@ -461,11 +503,17 @@ export default function RobotWorld({ onOpenResume }) {
     const update = () => {
       const y = window.scrollY || 0;
       const vh = window.innerHeight || 1;
+      const docH = document.documentElement.scrollHeight || vh;
       const now = performance.now();
       scrollSig.vel = Math.min(6, Math.abs(y - lastY) / Math.max(1, now - lastT));
       lastY = y;
       lastT = now;
-      setDocked(y > vh * 0.4);
+      // dock only AFTER the hero has scrolled past, so the full-bleed arrival
+      // canvas never sits over the first section
+      const isDocked = y > vh * 0.85;
+      scrollSig.docked = isDocked;
+      scrollSig.progress = clamp(y / Math.max(1, docH - vh), 0, 1);
+      setDocked(isDocked);
       setHeroFade(Math.max(0, Math.min(1, 1 - y / (vh * 0.55))));
     };
     const onScroll = () => {
@@ -572,12 +620,11 @@ export default function RobotWorld({ onOpenResume }) {
         </a>
       </section>
 
-      {/* speech bubble — top-right in hero, above the docked robot on scroll */}
+      {/* speech bubble — hero only (right side); when docked the narration
+          folds into the bottom pill so nothing floats over body text */}
       <div
         className={`fixed z-30 transition-all duration-500 ${
-          docked
-            ? "bottom-48 left-6 w-[min(300px,26vw)]"
-            : "right-5 top-28 hidden max-w-xs lg:block xl:right-16"
+          docked ? "hidden" : "right-5 top-28 hidden max-w-xs lg:block xl:right-16"
         }`}
       >
         <div className="rounded-2xl border border-data-indigo/30 bg-[#0a0d1c]/85 p-4 backdrop-blur-md">
@@ -616,14 +663,36 @@ export default function RobotWorld({ onOpenResume }) {
         </div>
       </div>
 
-      {/* ask — full bar in hero, compact pill once docked (always reachable) */}
+      {/* ask — full bar in hero; bottom-centred pill once docked (always
+          reachable, never beside body text) */}
       <div
         className={`fixed z-30 transition-all duration-500 ${
           docked
-            ? "bottom-6 right-6 w-[min(380px,34vw)]"
+            ? "bottom-6 left-1/2 -translate-x-1/2 w-[min(440px,92vw)]"
             : "inset-x-0 bottom-7 mx-auto w-full max-w-2xl px-5"
         }`}
       >
+        {docked && (
+          <div className="mb-2 rounded-2xl border border-data-indigo/30 bg-[#0a0d1c]/85 px-4 py-2.5 backdrop-blur-md">
+            <div className="flex items-center justify-between">
+              <span className="mono-label text-[0.5rem] text-data-indigo/80">
+                <span className="text-emerald-400">● </span>ai guide
+              </span>
+              {voice.supportsTTS && (
+                <button
+                  onClick={voice.toggleMute}
+                  aria-label={voice.muted ? "Unmute" : "Mute"}
+                  className="text-neutral-400 transition-colors hover:text-data-cyan"
+                >
+                  {voice.muted ? <FiVolumeX className="text-xs" /> : <FiVolume2 className="text-xs" />}
+                </button>
+              )}
+            </div>
+            <p className="mt-1 line-clamp-2 text-[0.8rem] leading-snug text-neutral-100">
+              {typed}
+            </p>
+          </div>
+        )}
         {!docked && (
           <div className="mb-3 flex flex-wrap justify-center gap-2">
             {SUGGESTIONS.map((s) => (
