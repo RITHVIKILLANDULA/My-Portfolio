@@ -1,9 +1,9 @@
-import { lazy, Suspense, useState } from "react";
+import { useState } from "react";
 import { NAV_LINKS } from "./constants";
 import useScrollSpy from "./hooks/useScrollSpy";
 
 import Preloader from "./components/Preloader";
-const DataBackground = lazy(() => import("./components/DataBackground"));
+import HoloBackground from "./components/HoloBackground";
 import CustomCursor from "./components/CustomCursor";
 import ScrollProgress from "./components/ScrollProgress";
 import SoundToggle from "./components/SoundToggle";
@@ -30,9 +30,7 @@ export default function App() {
   return (
     <div className="relative min-h-screen text-neutral-300 antialiased">
       <Preloader onDone={() => setBooted(true)} />
-      <Suspense fallback={<div className="fixed inset-0 -z-10 bg-void-950" />}>
-        <DataBackground />
-      </Suspense>
+      <HoloBackground />
       <CustomCursor />
       <ScrollProgress active={active} />
       <SoundToggle />

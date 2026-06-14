@@ -9,6 +9,7 @@ import {
 } from "../constants";
 import SectionHeading from "./ui/SectionHeading";
 import Reveal from "./ui/Reveal";
+import HoloPortrait from "./ui/HoloPortrait";
 
 export default function About() {
   return (
@@ -21,38 +22,9 @@ export default function About() {
       />
 
       <div className="grid items-center gap-12 lg:grid-cols-[0.85fr_1.15fr]">
-        {/* framed portrait — AI agent scanning the subject */}
+        {/* animated holographic portrait */}
         <Reveal from="left" className="relative mx-auto max-w-sm">
-          <div className="group relative overflow-hidden rounded-2xl border border-data-indigo/25 bg-void-850 p-2 shadow-glow-lg">
-            <img
-              src={heroImg}
-              alt="Rithvik Illandula"
-              className="aspect-[4/5] w-full rounded-xl object-cover transition-all duration-700 group-hover:scale-[1.03]"
-            />
-            {/* tint + analyzing grid */}
-            <div className="pointer-events-none absolute inset-2 z-10 rounded-xl bg-[radial-gradient(circle_at_30%_0%,rgba(34,211,238,0.16),transparent_55%)] mix-blend-screen" />
-            <div className="data-floor pointer-events-none absolute inset-2 z-10 rounded-xl opacity-25" />
-            {/* scan line */}
-            <div className="pointer-events-none absolute inset-2 z-10 overflow-hidden rounded-xl">
-              <div className="absolute inset-x-0 h-16 animate-scan bg-gradient-to-b from-transparent via-data-cyan/25 to-transparent" />
-            </div>
-            {/* HUD: status chips */}
-            <div className="mono-label absolute left-3 top-3 z-20 flex items-center gap-1.5 rounded bg-void-950/70 px-2 py-1 text-[0.5rem] text-data-cyan">
-              <span className="h-1.5 w-1.5 animate-pulseGlow rounded-full bg-emerald-400" />
-              agent · scanning
-            </div>
-            <div className="mono-label absolute right-3 top-3 z-20 rounded bg-void-950/70 px-2 py-1 text-[0.5rem] text-data-violet">
-              conf 0.98
-            </div>
-            {/* targeting reticle */}
-            <span className="absolute left-3 bottom-12 z-20 h-5 w-5 animate-pulseGlow border-l-2 border-t-2 border-data-cyan/80" />
-            <span className="absolute right-3 bottom-12 z-20 h-5 w-5 animate-pulseGlow border-r-2 border-t-2 border-data-cyan/80" />
-            {/* readout strip */}
-            <div className="mono-label absolute inset-x-2 bottom-2 z-20 flex items-center justify-between rounded bg-void-950/75 px-2.5 py-1.5 text-[0.5rem] text-neutral-300 backdrop-blur-sm">
-              <span className="text-data-cyan">subject: rithvik.illandula</span>
-              <span className="text-emerald-400">status: building ▸</span>
-            </div>
-          </div>
+          <HoloPortrait src={heroImg} alt="Rithvik Illandula" />
         </Reveal>
 
         {/* text + console */}

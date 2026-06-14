@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["Space Grotesk", "Inter", "sans-serif"],
         mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       colors: {
@@ -22,6 +23,15 @@ export default {
           indigo: "#6366f1",
           violet: "#a78bfa",
           magenta: "#e879f9",
+        },
+        holo: {
+          violet: "#7c3aed",
+          blue: "#2563eb",
+          teal: "#06b6d4",
+          pink: "#db2777",
+          ice: "#a5f3fc",
+          lav: "#c4b5fd",
+          rose: "#f0abfc",
         },
       },
       boxShadow: {

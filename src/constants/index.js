@@ -15,17 +15,17 @@ export const HERO_NAME = "Rithvik Illandula";
 export const HERO_ROLES = [
   "AI Data Analyst",
   "Data Analytics Engineer",
-  "BI & Dashboard Developer",
-  "Data Quality Specialist",
+  "Data Problem-Solver",
+  "Insight Architect",
 ];
 
-export const HERO_CONTENT = `I turn data into decisions — and increasingly, into agents. 4+ years building analytics and applied-AI systems across Deloitte, WAFU, and UB: 1M+ records modeled, 15+ dashboards shipped, manual review cut 80%. SQL and BigQuery to LLMs, RAG, and autonomous pipelines.`;
+export const HERO_CONTENT = `Give me messy, multi-source data and I'll hand you decisions. 4+ years across Deloitte, WAFU & UB turning chaos into clarity — 1M+ records modeled, manual work cut 80%, pipelines that run themselves. SQL, BigQuery, and LLMs are where I play.`;
 
-export const ABOUT_TEXT = `I'm a data analyst who builds — equal parts SQL, statistics, and increasingly, AI agents. Over 4+ years at Deloitte, WAFU, and the University at Buffalo, I've turned six source systems of messy TV/media and adtech data into reporting layers, data-quality controls, and decisions leaders actually trust.
+export const ABOUT_TEXT = `I'm the analyst companies call when the data won't behave. Across Deloitte, WAFU, and the University at Buffalo, I've taken six tangled source systems of TV/media and adtech data and turned them into reporting people actually trust — and act on.
 
-My range is the point. I profile and validate data with Python, R, and SQL; orchestrate pipelines with Airflow, Spark, and BigQuery; ship 15+ Tableau and Power BI dashboards; and wire LLMs into the loop with LangChain, RAG, and Vertex AI. I care about the unglamorous parts — reconciliation, anomaly detection, lineage — because that's what makes the impressive parts true.
+I move fast and I move precisely. I profile and validate with Python, R, and SQL; orchestrate pipelines with Airflow, Spark, and BigQuery; ship 15+ Tableau and Power BI dashboards; and put LLMs to work with LangChain, RAG, and Vertex AI. I obsess over the unglamorous parts — reconciliation, anomaly detection, lineage — so the insights come out bulletproof.
 
-The results compound: 1M+ records modeled, nightly runtimes cut from 2 hours to 35 minutes, manual review down 80%, 40+ source-to-target mappings documented. I'm finishing an M.S. in Computer Science and building toward systems that don't just report the past — they reason about it.`;
+The scoreboard: 1M+ records modeled, nightly runtimes cut from 2 hours to 35 minutes, manual review down 80%, 40+ mappings documented. Finishing an M.S. in Computer Science, I build data systems that don't just report the past — they reason about it. Hand me the hardest data problem in the room; I'll make it look easy.`;
 
 // Animated headline counters
 export const STATS = [
@@ -46,74 +46,74 @@ export const IMPACT = [
 // Skill categories with proficiency for the animated visualization
 export const SKILL_CATEGORIES = [
   {
-    name: "Programming & Analysis",
-    accent: "#22d3ee",
+    name: "AI & LLMs",
+    accent: "#7c3aed",
     skills: [
-      { name: "Python", level: 95 },
-      { name: "SQL", level: 95 },
+      { name: "OpenAI / GPT", level: 90 },
+      { name: "LangChain", level: 88 },
+      { name: "RAG Pipelines", level: 86 },
+      { name: "Vector DBs / FAISS", level: 84 },
+      { name: "Prompt Engineering", level: 88 },
+      { name: "Vertex AI", level: 78 },
+    ],
+  },
+  {
+    name: "Machine Learning",
+    accent: "#2563eb",
+    skills: [
+      { name: "scikit-learn", level: 90 },
+      { name: "XGBoost", level: 86 },
+      { name: "LightGBM", level: 84 },
+      { name: "Forecasting", level: 86 },
+      { name: "Anomaly Detection", level: 87 },
+      { name: "MLflow", level: 80 },
+    ],
+  },
+  {
+    name: "Languages & Query",
+    accent: "#06b6d4",
+    skills: [
+      { name: "Python", level: 96 },
+      { name: "SQL", level: 96 },
+      { name: "T-SQL", level: 88 },
       { name: "R", level: 80 },
-      { name: "Pandas", level: 92 },
-      { name: "NumPy", level: 90 },
-      { name: "scikit-learn", level: 84 },
+      { name: "Pandas / NumPy", level: 93 },
+      { name: "Spark / PySpark", level: 84 },
     ],
   },
   {
-    name: "Analytics Methods",
-    accent: "#38bdf8",
+    name: "Cloud & Data Eng",
+    accent: "#db2777",
     skills: [
-      { name: "Data Profiling", level: 92 },
-      { name: "Data Validation", level: 90 },
-      { name: "Anomaly Detection", level: 85 },
-      { name: "Trend & Correlation", level: 90 },
-      { name: "Segmentation", level: 84 },
-      { name: "Reconciliation", level: 88 },
+      { name: "BigQuery", level: 92 },
+      { name: "BigQuery ML", level: 85 },
+      { name: "GCP", level: 86 },
+      { name: "Databricks", level: 85 },
+      { name: "Airflow", level: 88 },
+      { name: "Snowflake", level: 82 },
     ],
   },
   {
-    name: "Cloud & Data",
-    accent: "#6366f1",
-    skills: [
-      { name: "BigQuery", level: 90 },
-      { name: "GCP", level: 85 },
-      { name: "BigQuery ML", level: 82 },
-      { name: "Vertex AI", level: 74 },
-      { name: "Databricks", level: 84 },
-      { name: "PostgreSQL", level: 86 },
-    ],
-  },
-  {
-    name: "Viz & Reporting",
+    name: "Viz & BI",
     accent: "#a78bfa",
     skills: [
       { name: "Tableau", level: 92 },
       { name: "Power BI", level: 92 },
-      { name: "DAX", level: 86 },
+      { name: "DAX", level: 87 },
+      { name: "Dashboards", level: 94 },
       { name: "KPI Reporting", level: 90 },
-      { name: "Dashboards", level: 93 },
-      { name: "Data Models", level: 85 },
-    ],
-  },
-  {
-    name: "Workflows & Tools",
-    accent: "#e879f9",
-    skills: [
-      { name: "Airflow", level: 88 },
-      { name: "Spark / PySpark", level: 84 },
-      { name: "ETL / ELT", level: 88 },
-      { name: "Git", level: 85 },
-      { name: "Docker", level: 75 },
-      { name: "Jira", level: 82 },
+      { name: "Data Modeling", level: 86 },
     ],
   },
 ];
 
 // Flat tag list for the 3D rotating skill-sphere
 export const SKILL_TAGS = [
-  "Python", "SQL", "R", "Pandas", "NumPy", "scikit-learn", "BigQuery", "GCP",
-  "BigQuery ML", "Vertex AI", "Databricks", "PostgreSQL", "MySQL", "Tableau",
-  "Power BI", "DAX", "Airflow", "Spark", "PySpark", "ETL", "Docker", "Git",
-  "Jira", "Data Profiling", "Anomaly Detection", "Reconciliation",
-  "KPI Reporting", "EDA",
+  "Python", "SQL", "LangChain", "RAG", "OpenAI", "Vertex AI", "Vector DB",
+  "Embeddings", "Prompt Eng", "Agents", "scikit-learn", "XGBoost", "LightGBM",
+  "Forecasting", "Anomaly Detection", "BigQuery", "BigQuery ML", "GCP",
+  "Databricks", "Airflow", "Spark", "PySpark", "Snowflake", "Tableau",
+  "Power BI", "DAX", "MLflow", "Pandas",
 ];
 
 export const EXPERIENCES = [
@@ -143,7 +143,7 @@ export const EXPERIENCES = [
   },
 ];
 
-export const RESUME_SUMMARY = `Data analyst & applied-AI builder. 4+ years turning TV/media, adtech, and operational data into dashboards, data-quality systems, and LLM-powered tools — measured in records modeled, hours saved, and decisions changed.`;
+export const RESUME_SUMMARY = `The person you want on your data. 4+ years turning TV/media, adtech, and operational chaos into dashboards, self-running pipelines, and AI tools — fast, precise, and built to scale.`;
 
 export const EDUCATION = [
   {

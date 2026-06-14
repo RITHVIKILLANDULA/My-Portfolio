@@ -43,7 +43,7 @@ export default function Hero({ booted, onOpenResume }) {
         </div>
 
         {/* name */}
-        <h1 className="max-w-4xl text-5xl font-extralight leading-[0.95] tracking-tight text-white sm:text-7xl lg:text-8xl">
+        <h1 className="max-w-4xl font-display text-5xl font-semibold leading-[0.95] tracking-tight text-white sm:text-7xl lg:text-8xl">
           <DecodeText text={HERO_NAME} start={booted} speed={1.1} className="block" />
         </h1>
 

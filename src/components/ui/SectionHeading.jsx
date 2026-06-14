@@ -23,7 +23,7 @@ export default function SectionHeading({ index, kicker, title, subtitle }) {
       </div>
       <h2
         style={base(0.05)}
-        className="text-4xl font-light tracking-tight text-neutral-100 sm:text-5xl"
+        className="font-display text-4xl font-medium tracking-tight text-neutral-100 sm:text-5xl"
       >
         {title}
       </h2>

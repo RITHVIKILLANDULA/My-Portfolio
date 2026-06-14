@@ -25,6 +25,8 @@ import {
 } from "../constants";
 import DecodeText from "./ui/DecodeText";
 import AgentNode from "./ui/AgentNode";
+import HoloPortrait from "./ui/HoloPortrait";
+import heroImg from "../assets/Hero-portrait.jpg";
 
 /* ---------- small CSS-driven helpers (framer-independent) ---------- */
 
@@ -108,37 +110,10 @@ const BOOT = [
 ];
 
 const Intro = () => (
-  <Shell accent="#22d3ee">
-    {/* agent orb */}
-    <In>
-      <div className="relative mb-8 h-36 w-36">
-        <div className="absolute inset-0 animate-spin-slow rounded-full border border-data-cyan/40 border-t-data-cyan" />
-        <div className="absolute inset-4 animate-spin-slower rounded-full border border-data-indigo/30 border-b-data-indigo" />
-        {/* orbiting satellites */}
-        <div className="absolute inset-0 animate-spin-slow">
-          <span className="absolute left-1/2 top-0 h-2.5 w-2.5 -translate-x-1/2 rounded-full bg-data-cyan shadow-glow" />
-        </div>
-        <div
-          className="absolute inset-0 animate-spin-slower"
-          style={{ animationDirection: "reverse" }}
-        >
-          <span className="absolute bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-data-violet shadow-glow-violet" />
-        </div>
-        {/* bot face */}
-        <div className="absolute inset-0 grid place-items-center">
-          <svg viewBox="0 0 48 48" className="h-16 w-16 text-data-cyan" style={{ filter: "drop-shadow(0 0 8px rgba(34,211,238,0.8))" }} aria-hidden="true">
-            <line x1="24" y1="6" x2="24" y2="13" stroke="currentColor" strokeWidth="2" />
-            <circle cx="24" cy="5" r="2" fill="currentColor">
-              <animate attributeName="r" values="1.4;2.6;1.4" dur="1.5s" repeatCount="indefinite" />
-            </circle>
-            <rect x="11" y="13" width="26" height="20" rx="7" fill="rgba(34,211,238,0.1)" stroke="currentColor" strokeWidth="2" />
-            <circle className="agent-eye" cx="19" cy="23" r="2.8" fill="currentColor" />
-            <circle className="agent-eye" cx="29" cy="23" r="2.8" fill="currentColor" style={{ animationDelay: "0.2s" }} />
-            <rect x="18" y="29" width="12" height="2.4" rx="1.2" fill="currentColor" opacity="0.6" />
-          </svg>
-        </div>
-        <div className="absolute inset-[42%] animate-pulseGlow rounded-full bg-data-cyan blur-[8px]" />
-      </div>
+  <Shell accent="#7c3aed">
+    {/* animated holographic portrait */}
+    <In className="mb-6 w-[150px] sm:w-[170px]">
+      <HoloPortrait src={heroImg} alt="Rithvik Illandula" />
     </In>
 
     {/* boot terminal */}
