@@ -44,7 +44,7 @@ export default function Contact() {
   return (
     <section id="contact" className="scroll-mt-24 py-24">
       <SectionHeading
-        index="05"
+        index="06"
         kicker="open_a_channel"
         title="Get in Touch"
         subtitle="Have a dataset, a dashboard, or a role in mind? Let's talk."

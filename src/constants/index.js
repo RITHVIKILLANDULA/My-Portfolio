@@ -1,17 +1,3 @@
-import project1 from "../assets/projects/project-1.jpg";
-import project2 from "../assets/projects/project-2.jpg";
-import project3 from "../assets/projects/project-3.jpg";
-import project4 from "../assets/projects/project-4.jpg";
-import project5 from "../assets/projects/project-5.jpeg";
-import project6 from "../assets/projects/project-6.jpeg";
-import project7 from "../assets/projects/project-7.jpeg";
-import project8 from "../assets/projects/project-8.jpeg";
-import project9 from "../assets/projects/project-9.jpeg";
-import project10 from "../assets/projects/project-10.jpeg";
-import project12 from "../assets/projects/project-12.jpeg";
-
-// Company logos
-import wafuLogo from "../assets/wafu-logo.jpeg";
 
 export const RESUME_URL = import.meta.env.BASE_URL + "Rithvik_Illandula_Resume.pdf";
 
@@ -19,6 +5,7 @@ export const NAV_LINKS = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
   { id: "skills", label: "Skills" },
+  { id: "agents", label: "Agents" },
   { id: "experience", label: "Experience" },
   { id: "projects", label: "Projects" },
   { id: "contact", label: "Contact" },
@@ -32,13 +19,13 @@ export const HERO_ROLES = [
   "Data Quality Specialist",
 ];
 
-export const HERO_CONTENT = `I turn TV/media, adtech, and operational data into dashboards, data-quality controls, and decisions. 4+ years across Deloitte, WAFU, and the University at Buffalo — using Python, SQL, BigQuery, and Tableau/Power BI to make messy, multi-source data legible and client-ready.`;
+export const HERO_CONTENT = `I turn data into decisions — and increasingly, into agents. 4+ years building analytics and applied-AI systems across Deloitte, WAFU, and UB: 1M+ records modeled, 15+ dashboards shipped, manual review cut 80%. SQL and BigQuery to LLMs, RAG, and autonomous pipelines.`;
 
-export const ABOUT_TEXT = `I'm a Data Analyst with 4+ years of experience turning complex, multi-source data into dashboards, data-quality controls, and business insight. At Deloitte I analyzed TV/media datasets — audience, campaign, customer, and transaction data — for entertainment and news clients. Today I build data workflows and quality controls as a Data Analyst at the University at Buffalo while finishing my M.S. in Computer Science.
+export const ABOUT_TEXT = `I'm a data analyst who builds — equal parts SQL, statistics, and increasingly, AI agents. Over 4+ years at Deloitte, WAFU, and the University at Buffalo, I've turned six source systems of messy TV/media and adtech data into reporting layers, data-quality controls, and decisions leaders actually trust.
 
-My work spans the full analytics stack: profiling and validating data with Python, R, and SQL; building pipelines with Airflow, Spark, and BigQuery; and shipping 15+ Tableau and Power BI dashboards that track audience trends, campaign KPIs, and data completeness for stakeholders.
+My range is the point. I profile and validate data with Python, R, and SQL; orchestrate pipelines with Airflow, Spark, and BigQuery; ship 15+ Tableau and Power BI dashboards; and wire LLMs into the loop with LangChain, RAG, and Vertex AI. I care about the unglamorous parts — reconciliation, anomaly detection, lineage — because that's what makes the impressive parts true.
 
-I care about getting the numbers right and making them legible — defining reconciliation and anomaly-detection rules that cut manual review by 80%, documenting 40+ source-to-target mappings, and translating metric shifts into client-ready insight summaries for SMEs, product teams, and agencies.`;
+The results compound: 1M+ records modeled, nightly runtimes cut from 2 hours to 35 minutes, manual review down 80%, 40+ source-to-target mappings documented. I'm finishing an M.S. in Computer Science and building toward systems that don't just report the past — they reason about it.`;
 
 // Animated headline counters
 export const STATS = [
@@ -134,7 +121,6 @@ export const EXPERIENCES = [
     year: "2025 FEB — 2026 MAY",
     role: "AI Data Analyst",
     company: "University at Buffalo",
-    mono: "UB",
     description: `Built Python, SQL, Airflow, and BigQuery workflows that collect, cleanse, validate, and prepare 25+ operational and research datasets for reporting and exploratory analysis. Defined data-collection standards and quality procedures with faculty and SMEs across 5 recurring controls — completeness, duplicates, schema drift, late files, and exception trends. Profiled datasets with Python, R, SQL, Pandas, and NumPy to surface outliers, compare baselines, and evaluate correlations for stakeholder review. Optimized recurring SQL jobs and partitioned BigQuery tables, cutting nightly processing from 2 hours to 35 minutes while preserving audit logs and recovery steps.`,
     technologies: ["Python", "SQL", "Airflow", "BigQuery", "R", "Pandas", "Data Quality"],
     metrics: ["25+ datasets prepared", "2h → 35m nightly runtime", "5 recurring quality controls"],
@@ -143,7 +129,6 @@ export const EXPERIENCES = [
     year: "2022 JAN — 2024 DEC",
     role: "Data Analytics Engineer",
     company: "Deloitte",
-    mono: "De",
     description: `Analyzed TV/media datasets for entertainment and news clients — audience, campaign, customer, transaction, and reference data from 6 source systems — using Python, SQL, Spark, Databricks, and Airflow for client reporting and KPI analysis. Built 15+ Tableau and Power BI dashboards tracking audience-segment trends, campaign KPI movement, delayed events, and data completeness. Partnered with SMEs, engineers, client teams, and agency reporting teams to clarify requirements and document 40+ source-to-target mappings. Implemented reconciliation, cleansing, and data-quality rules for volume shifts, missing/duplicate events, and threshold breaches — cutting manual review effort by 80% — and translated audience, campaign, and transaction trends into client-ready insight summaries.`,
     technologies: ["Python", "SQL", "Spark", "Databricks", "Airflow", "Tableau", "Power BI", "Reconciliation"],
     metrics: ["15+ dashboards shipped", "6 source systems unified", "80% less manual review", "40+ source-to-target mappings"],
@@ -152,15 +137,13 @@ export const EXPERIENCES = [
     year: "2020 DEC — 2021 AUG",
     role: "Data Analyst",
     company: "WAFU Technologies",
-    mono: "W",
-    logo: wafuLogo,
     description: `Analyzed adtech event, campaign, customer-transaction, order, inventory, and payment-workflow data across 4 client applications using SQL, Python, and NoSQL to surface reporting gaps, failed events, and operational exceptions. Built monitoring queries covering 5 categories of operational and ad-event exceptions — event mismatches, order issues, rejected records, inventory gaps, and recurring process failures. Modeled 6+ reporting tables and optimized MySQL queries for agency reporting, campaign visibility, customer-transaction analysis, and operational performance monitoring.`,
     technologies: ["SQL", "Python", "NoSQL", "MySQL", "Adtech", "Monitoring"],
     metrics: ["4 client applications", "5 exception categories", "6+ reporting tables modeled"],
   },
 ];
 
-export const RESUME_SUMMARY = `Data Analyst with 4+ years turning TV/media, adtech, customer, campaign, and operational data into dashboards, data-quality controls, and business insight — across Deloitte, WAFU, and the University at Buffalo.`;
+export const RESUME_SUMMARY = `Data analyst & applied-AI builder. 4+ years turning TV/media, adtech, and operational data into dashboards, data-quality systems, and LLM-powered tools — measured in records modeled, hours saved, and decisions changed.`;
 
 export const EDUCATION = [
   {
@@ -193,7 +176,6 @@ export const CERTIFICATIONS = [
 export const PROJECTS = [
   {
     title: "Audience & Client Insights Dashboard",
-    image: project1,
     category: "Analytics & BI",
     featured: true,
     description:
@@ -202,7 +184,6 @@ export const PROJECTS = [
   },
   {
     title: "Data Quality & Anomaly Detection Pipeline",
-    image: project3,
     category: "Data Engineering",
     featured: true,
     description:
@@ -211,7 +192,6 @@ export const PROJECTS = [
   },
   {
     title: "BigQuery ML Customer Analytics Pipeline",
-    image: project9,
     category: "Data Engineering",
     featured: true,
     description:
@@ -220,7 +200,6 @@ export const PROJECTS = [
   },
   {
     title: "Telco Customer Churn Prediction",
-    image: project2,
     category: "Machine Learning",
     description:
       "Built churn prediction models using Logistic Regression, XGBoost, and Random Forest, analyzing 500,000+ customer records to surface the behavioral drivers of churn. Shipped a web app to expose churn-risk insights through an intuitive UI, supporting targeted retention.",
@@ -228,7 +207,6 @@ export const PROJECTS = [
   },
   {
     title: "Citi Bike Trip Demand Prediction",
-    image: project10,
     category: "Machine Learning",
     description:
       "Designed an end-to-end ML pipeline forecasting hourly Citi Bike demand with Python, Pandas, and LightGBM over 1M+ historical trips. Ran 20+ experiments in MLflow, achieved a 12–15% MAE improvement, and deployed Streamlit dashboards to visualize hourly predictions.",
@@ -236,7 +214,6 @@ export const PROJECTS = [
   },
   {
     title: "PDF-Insight · RAG Q&A Assistant",
-    image: project9,
     category: "GenAI / LLM",
     description:
       "A Streamlit app that lets users upload multiple PDFs and ask detailed questions about their content. Text is vectorized with OpenAI Embeddings and stored in FAISS; Gemini-Pro generates context-aware answers, orchestrated end-to-end by LangChain.",
@@ -244,7 +221,6 @@ export const PROJECTS = [
   },
   {
     title: "EDA with LangChain + LLMs",
-    image: project4,
     category: "GenAI / LLM",
     description:
       "Exploratory data analysis on 14,000+ data-science job listings, surfacing trends in salary, seniority, and remote adoption. Used LangChain and OpenAI APIs to generate natural-language insight, cutting manual EDA time by ~40%.",
@@ -252,7 +228,6 @@ export const PROJECTS = [
   },
   {
     title: "NLP Toolkit",
-    image: project8,
     category: "GenAI / LLM",
     description:
       "A customizable NLP tool powered by Hugging Face Transformers for code summarization, text summarization, sentiment analysis, rephrasing, and humanizing text — wrapped in an interactive Streamlit interface.",
@@ -260,7 +235,6 @@ export const PROJECTS = [
   },
   {
     title: "WeatherWise",
-    image: project7,
     category: "GenAI / LLM",
     description:
       "An interactive weather app delivering real-time updates and a 5-day forecast for any city, with AI-generated, human-like descriptions of the weather — combining the OpenWeatherMap API with the OpenAI API for engaging, personalized summaries.",
@@ -268,7 +242,6 @@ export const PROJECTS = [
   },
   {
     title: "Fake News Prediction",
-    image: project4,
     category: "Machine Learning",
     description:
       "An ML + NLP system that classifies news articles as real or fake. Processed text with NLTK (stopword removal, stemming, TF-IDF), trained a Logistic Regression classifier on a labeled Kaggle dataset, and shipped a Streamlit app for real-time predictions.",
@@ -276,7 +249,6 @@ export const PROJECTS = [
   },
   {
     title: "Diabetes Risk Prediction",
-    image: project12,
     category: "Machine Learning",
     description:
       "Built for Data Intensive Computing at the University at Buffalo. Performed EDA and preprocessing, then benchmarked Logistic Regression, Random Forest, SVM, Neural Networks, and K-NN — a tuned Random Forest delivered the best risk-prediction performance.",
@@ -284,7 +256,6 @@ export const PROJECTS = [
   },
   {
     title: "Reinforcement Learning · Grid World",
-    image: project10,
     category: "Machine Learning",
     description:
       "Explored SARSA and Double Q-Learning in a custom 5×5 grid-world with traps, rewards, and termination states. Implemented epsilon-greedy action selection, analyzed hyperparameter effects, and visualized the learned policy.",
@@ -292,7 +263,6 @@ export const PROJECTS = [
   },
   {
     title: "Imagify · Text-to-Image SaaS",
-    image: project6,
     category: "Web App",
     link: "https://frontend-verse2vision.onrender.com/",
     description:
@@ -301,7 +271,6 @@ export const PROJECTS = [
   },
   {
     title: "Personal Portfolio · Data World",
-    image: project5,
     category: "Web App",
     description:
       "This site — an immersive, interactive 3D 'data world.' A live WebGL particle constellation, a rotating data-core, decode-text animations, an interactive skill-sphere, and animated data visualizations bring the work to life.",

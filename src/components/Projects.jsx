@@ -4,6 +4,7 @@ import { FiArrowUpRight, FiExternalLink } from "react-icons/fi";
 import { PROJECTS, PROJECT_FILTERS } from "../constants";
 import SectionHeading from "./ui/SectionHeading";
 import TiltCard from "./ui/TiltCard";
+import ProjectVisual from "./ui/ProjectVisual";
 
 export default function Projects() {
   const [filter, setFilter] = useState("All");
@@ -19,7 +20,7 @@ export default function Projects() {
   return (
     <section id="projects" className="scroll-mt-24 py-24">
       <SectionHeading
-        index="04"
+        index="05"
         kicker="datasets_shipped"
         title="Projects"
         subtitle="Models, pipelines, and apps — built end to end."
@@ -73,15 +74,12 @@ export default function Projects() {
                         "radial-gradient(420px circle at var(--gx,50%) var(--gy,50%), rgba(34,211,238,0.12), transparent 45%)",
                     }}
                   />
-                  {/* image */}
+                  {/* generated animated visual */}
                   <div className="relative h-40 overflow-hidden">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      loading="lazy"
-                      className="h-full w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-110 group-hover:opacity-100"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-void-900 via-void-900/40 to-transparent" />
+                    <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
+                      <ProjectVisual category={project.category} />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-void-900 via-void-900/30 to-transparent" />
                     {project.featured && (
                       <span className="mono-label absolute left-3 top-3 rounded-full border border-data-cyan/40 bg-void-950/70 px-2 py-0.5 text-[0.5rem] text-data-cyan">
                         ★ featured

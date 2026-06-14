@@ -24,6 +24,7 @@ import {
   RESUME_URL,
 } from "../constants";
 import DecodeText from "./ui/DecodeText";
+import AgentNode from "./ui/AgentNode";
 
 /* ---------- small CSS-driven helpers (framer-independent) ---------- */
 
@@ -100,25 +101,62 @@ function Shell({ accent, children }) {
 
 /* ---------- chapters ---------- */
 
+const BOOT = [
+  "> initializing agent · rithvik",
+  "> loading 4 years of context …",
+  "> capabilities: data · bi · llm ✓",
+];
+
 const Intro = () => (
   <Shell accent="#22d3ee">
-    <In className="mono-label mb-6 text-[0.7rem] text-data-cyan/80">
-      interactive résumé · press play
-    </In>
-    <In d={0.1}>
-      <div className="relative mb-8 h-28 w-28">
+    {/* agent orb */}
+    <In>
+      <div className="relative mb-8 h-36 w-36">
         <div className="absolute inset-0 animate-spin-slow rounded-full border border-data-cyan/40 border-t-data-cyan" />
-        <div className="absolute inset-3 animate-spin-slower rounded-full border border-data-indigo/30 border-b-data-indigo" />
-        <div className="absolute inset-0 grid place-items-center font-mono text-2xl font-bold text-data-cyan">
-          RI
+        <div className="absolute inset-4 animate-spin-slower rounded-full border border-data-indigo/30 border-b-data-indigo" />
+        {/* orbiting satellites */}
+        <div className="absolute inset-0 animate-spin-slow">
+          <span className="absolute left-1/2 top-0 h-2.5 w-2.5 -translate-x-1/2 rounded-full bg-data-cyan shadow-glow" />
         </div>
-        <div className="absolute inset-[44%] animate-pulseGlow rounded-full bg-data-cyan blur-[6px]" />
+        <div
+          className="absolute inset-0 animate-spin-slower"
+          style={{ animationDirection: "reverse" }}
+        >
+          <span className="absolute bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-data-violet shadow-glow-violet" />
+        </div>
+        {/* bot face */}
+        <div className="absolute inset-0 grid place-items-center">
+          <svg viewBox="0 0 48 48" className="h-16 w-16 text-data-cyan" style={{ filter: "drop-shadow(0 0 8px rgba(34,211,238,0.8))" }} aria-hidden="true">
+            <line x1="24" y1="6" x2="24" y2="13" stroke="currentColor" strokeWidth="2" />
+            <circle cx="24" cy="5" r="2" fill="currentColor">
+              <animate attributeName="r" values="1.4;2.6;1.4" dur="1.5s" repeatCount="indefinite" />
+            </circle>
+            <rect x="11" y="13" width="26" height="20" rx="7" fill="rgba(34,211,238,0.1)" stroke="currentColor" strokeWidth="2" />
+            <circle className="agent-eye" cx="19" cy="23" r="2.8" fill="currentColor" />
+            <circle className="agent-eye" cx="29" cy="23" r="2.8" fill="currentColor" style={{ animationDelay: "0.2s" }} />
+            <rect x="18" y="29" width="12" height="2.4" rx="1.2" fill="currentColor" opacity="0.6" />
+          </svg>
+        </div>
+        <div className="absolute inset-[42%] animate-pulseGlow rounded-full bg-data-cyan blur-[8px]" />
       </div>
     </In>
-    <h2 className="rx-anim text-5xl font-extralight tracking-tight text-white sm:text-7xl" style={{ animationDelay: "0.2s" }}>
+
+    {/* boot terminal */}
+    <div className="mx-auto mb-7 w-full max-w-xs text-left font-mono text-[0.7rem] leading-relaxed text-data-cyan/80">
+      {BOOT.map((line, i) => (
+        <div key={i} className="rx-anim" style={{ animationDelay: `${0.25 + i * 0.35}s` }}>
+          {line}
+        </div>
+      ))}
+      <div className="rx-anim text-emerald-400" style={{ animationDelay: "1.3s" }}>
+        &gt; agent ready ▸
+      </div>
+    </div>
+
+    <h2 className="rx-anim text-5xl font-extralight tracking-tight text-white sm:text-7xl" style={{ animationDelay: "1.5s" }}>
       <DecodeText text={HERO_NAME} speed={1.1} />
     </h2>
-    <In d={0.4} className="gradient-text mt-4 font-mono text-2xl font-medium sm:text-4xl">
+    <In d={1.8} className="gradient-text mt-4 font-mono text-2xl font-medium sm:text-4xl">
       AI Data Analyst
     </In>
   </Shell>
@@ -165,9 +203,7 @@ const Experience = () => (
           className="glass flex flex-col rounded-2xl p-5 text-left"
         >
           <div className="mb-3 flex items-center gap-3">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-data-cyan/40 bg-void-850 font-mono text-xs font-bold text-data-cyan">
-              {e.mono || "•"}
-            </span>
+            <AgentNode className="h-10 w-10" />
             <div>
               <p className="text-sm font-semibold text-white">{e.role}</p>
               <p className="text-xs text-data-violet">{e.company}</p>
@@ -328,7 +364,7 @@ const Outro = ({ onReplay, onClose }) => (
 /* ---------- the reel ---------- */
 
 const CHAPTERS = [
-  { key: "intro", accent: "#22d3ee", dur: 4500, auto: true },
+  { key: "intro", accent: "#22d3ee", dur: 6500, auto: true },
   { key: "summary", accent: "#38bdf8", dur: 7000, auto: true },
   { key: "experience", accent: "#6366f1", dur: 8000, auto: true },
   { key: "skills", accent: "#a78bfa", dur: 7000, auto: true },

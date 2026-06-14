@@ -170,6 +170,56 @@ body {
   animation: rxIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* ---------- AI agent / bot motifs ---------- */
+@keyframes agentBlink {
+  0%, 91%, 100% { opacity: 1; }
+  94%, 97% { opacity: 0.12; }
+}
+.agent-eye {
+  animation: agentBlink 4.5s ease-in-out infinite;
+}
+@keyframes agentFloat {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-9px) rotate(1deg); }
+}
+@keyframes antennaPulse {
+  0%, 100% { opacity: 0.5; r: 1.2; }
+  50% { opacity: 1; r: 1.8; }
+}
+/* a data packet sliding along a path/track */
+@keyframes packetMove {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}
+
+/* ---------- Generated project visuals ---------- */
+@keyframes pvFlow {
+  to { stroke-dashoffset: -28; }
+}
+@keyframes pvBar {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+}
+@keyframes pvToken {
+  0%, 100% { opacity: 0.18; }
+  50% { opacity: 1; }
+}
+@keyframes pvPacket {
+  0% { transform: translateX(0); opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { transform: translateX(86px); opacity: 0; }
+}
+@keyframes pvScan {
+  0% { transform: translateY(-4px); opacity: 0; }
+  20%, 80% { opacity: 1; }
+  100% { transform: translateY(60px); opacity: 0; }
+}
+@keyframes pvNode {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
 /* ---------- Accessibility: reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   *,

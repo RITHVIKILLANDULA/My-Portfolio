@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { FiArrowDownRight, FiArrowUpRight } from "react-icons/fi";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { HERO_NAME, HERO_ROLES, HERO_CONTENT, STATS } from "../constants";
@@ -19,17 +18,19 @@ export default function Hero({ booted, onOpenResume }) {
     return () => clearInterval(id);
   }, [booted]);
 
+  // CSS reveal gated on boot (framer-independent, reliable everywhere)
+  const reveal = (delay, y = 20) => ({
+    opacity: booted ? 1 : 0,
+    transform: booted ? "none" : `translateY(${y}px)`,
+    transition: `opacity .7s cubic-bezier(.22,1,.36,1) ${delay}s, transform .7s cubic-bezier(.22,1,.36,1) ${delay}s`,
+  });
+
   return (
-    <section
-      id="home"
-      className="relative flex min-h-[100svh] items-center pt-28"
-    >
+    <section id="home" className="relative flex min-h-[100svh] items-center pt-28">
       <div className="w-full">
         {/* status chip */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={booted ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.1 }}
+        <div
+          style={reveal(0.1, 16)}
           className="mb-7 inline-flex items-center gap-2 rounded-full border border-data-cyan/30 bg-data-cyan/5 px-4 py-1.5"
         >
           <span className="relative flex h-2 w-2">
@@ -39,16 +40,11 @@ export default function Hero({ booted, onOpenResume }) {
           <span className="mono-label text-[0.6rem] text-neutral-300">
             Open to Data Analyst roles · Buffalo, NY
           </span>
-        </motion.div>
+        </div>
 
         {/* name */}
         <h1 className="max-w-4xl text-5xl font-extralight leading-[0.95] tracking-tight text-white sm:text-7xl lg:text-8xl">
-          <DecodeText
-            text={HERO_NAME}
-            start={booted}
-            speed={1.1}
-            className="block"
-          />
+          <DecodeText text={HERO_NAME} start={booted} speed={1.1} className="block" />
         </h1>
 
         {/* rotating role */}
@@ -64,22 +60,15 @@ export default function Hero({ booted, onOpenResume }) {
         </div>
 
         {/* intro */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={booted ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.5 }}
+        <p
+          style={reveal(0.5)}
           className="mt-7 max-w-xl text-base font-light leading-relaxed text-neutral-300"
         >
           {HERO_CONTENT}
-        </motion.p>
+        </p>
 
         {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={booted ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.65 }}
-          className="mt-9 flex flex-wrap items-center gap-4"
-        >
+        <div style={reveal(0.65)} className="mt-9 flex flex-wrap items-center gap-4">
           <Magnetic strength={0.25}>
             <a
               href="#projects"
@@ -101,13 +90,11 @@ export default function Hero({ booted, onOpenResume }) {
               <FiArrowUpRight className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </button>
           </Magnetic>
-        </motion.div>
+        </div>
 
         {/* stat counters */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={booted ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.85 }}
+        <div
+          style={reveal(0.85, 24)}
           className="mt-16 grid max-w-2xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-void-700 bg-void-700/40 sm:grid-cols-4"
         >
           {STATS.map((s) => (
@@ -124,28 +111,25 @@ export default function Hero({ booted, onOpenResume }) {
               </div>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
 
       {/* scroll cue */}
-      <motion.a
+      <a
         href="#about"
         data-cursor
-        initial={{ opacity: 0 }}
-        animate={booted ? { opacity: 1 } : {}}
-        transition={{ delay: 1.2 }}
+        style={{
+          opacity: booted ? 1 : 0,
+          transition: "opacity .7s ease 1.2s",
+        }}
         className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-neutral-500 lg:flex"
         aria-label="Scroll down"
       >
         <span className="mono-label text-[0.55rem]">scroll</span>
         <span className="flex h-9 w-5 justify-center rounded-full border border-neutral-700 p-1">
-          <motion.span
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity }}
-            className="h-1.5 w-1 rounded-full bg-data-cyan"
-          />
+          <span className="h-1.5 w-1 animate-bounce rounded-full bg-data-cyan" />
         </span>
-      </motion.a>
+      </a>
     </section>
   );
 }

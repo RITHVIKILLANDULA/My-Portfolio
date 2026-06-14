@@ -147,8 +147,45 @@ export default function DataBackground() {
     });
     const lines = new THREE.LineSegments(lGeo, lMat);
 
+    // ---- data packets traveling along edges (agents exchanging data) ----
+    const edgeCount = edges.length / 2;
+    const PACKETS = Math.min(edgeCount, isSmall ? 14 : 32);
+    const packetPos = new Float32Array(PACKETS * 3);
+    const packetEdge = new Int32Array(PACKETS);
+    const packetPhase = new Float32Array(PACKETS);
+    const packetSpeed = new Float32Array(PACKETS);
+    for (let i = 0; i < PACKETS; i++) {
+      packetEdge[i] = (Math.random() * edgeCount) | 0;
+      packetPhase[i] = Math.random();
+      packetSpeed[i] = 0.12 + Math.random() * 0.32;
+    }
+    const setPacket = (i, src) => {
+      const e = packetEdge[i];
+      const a = edges[e * 2] * 3;
+      const b = edges[e * 2 + 1] * 3;
+      const f = src.f;
+      const o = i * 3;
+      packetPos[o] = src.arr[a] + (src.arr[b] - src.arr[a]) * f;
+      packetPos[o + 1] = src.arr[a + 1] + (src.arr[b + 1] - src.arr[a + 1]) * f;
+      packetPos[o + 2] = src.arr[a + 2] + (src.arr[b + 2] - src.arr[a + 2]) * f;
+    };
+    for (let i = 0; i < PACKETS; i++)
+      setPacket(i, { arr: positions, f: packetPhase[i] });
+    const packetGeo = new THREE.BufferGeometry();
+    packetGeo.setAttribute("position", new THREE.BufferAttribute(packetPos, 3));
+    const packetMat = new THREE.PointsMaterial({
+      size: isSmall ? 0.55 : 0.72,
+      map: sprite,
+      color: 0xbdf5ff,
+      transparent: true,
+      opacity: 1,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    const packets = new THREE.Points(packetGeo, packetMat);
+
     const field = new THREE.Group();
-    field.add(points, lines);
+    field.add(points, lines, packets);
     scene.add(field);
 
     // ---- data core (rotating wireframe icosahedra) ----
@@ -242,6 +279,12 @@ export default function DataBackground() {
       pGeo.attributes.position.needsUpdate = true;
       updateEdges();
 
+      // move data packets along their edges
+      for (let i = 0; i < PACKETS; i++) {
+        setPacket(i, { arr: pos, f: (t * packetSpeed[i] + packetPhase[i]) % 1 });
+      }
+      packetGeo.attributes.position.needsUpdate = true;
+
       // parallax
       mouse.x += (mouse.tx - mouse.x) * 0.05;
       mouse.y += (mouse.ty - mouse.y) * 0.05;
@@ -300,6 +343,8 @@ export default function DataBackground() {
       pMat.dispose();
       lGeo.dispose();
       lMat.dispose();
+      packetGeo.dispose();
+      packetMat.dispose();
       coreNodeGeo.dispose();
       shellA.geometry.dispose();
       shellA.material.dispose();
