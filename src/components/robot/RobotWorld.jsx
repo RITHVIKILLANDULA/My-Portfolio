@@ -36,12 +36,12 @@ useGLTF.preload(ROBOT_URL);
 const CYAN = "#22d3ee";
 const INDIGO = "#6366f1";
 const CLIP = {
-  idle: "RobotArmature|Robot_Idle",
-  wave: "RobotArmature|Robot_Wave",
-  yes: "RobotArmature|Robot_Yes",
-  thumbsUp: "RobotArmature|Robot_ThumbsUp",
-  no: "RobotArmature|Robot_No",
-  walk: "RobotArmature|Robot_Walking",
+  idle: "Idle",
+  wave: "Wave",
+  yes: "Yes",
+  thumbsUp: "ThumbsUp",
+  no: "No",
+  walk: "Walking",
 };
 
 /* -------- the robot: auto-fit + metal reskin + walk/wander + gesture -------- */
@@ -62,26 +62,29 @@ function RobotModel({ gesture, gKey, speaking }) {
     const box = new THREE.Box3().setFromObject(scene);
     const size = new THREE.Vector3();
     box.getSize(size);
-    if (size.y > 0.001) scene.scale.multiplyScalar(2.4 / size.y);
+    if (size.y > 0.001) scene.scale.multiplyScalar(2.45 / size.y);
     scene.updateWorldMatrix(true, true);
     const b2 = new THREE.Box3().setFromObject(scene);
     const c = new THREE.Vector3();
     b2.getCenter(c);
-    scene.position.set(-c.x, -b2.min.y, -c.z);
+    // centre the robot on the origin so the camera (which looks at 0,0,0)
+    // frames the whole body, head included
+    scene.position.set(-c.x, -c.y, -c.z);
     scene.traverse((o) => {
       if (!o.isMesh || !o.material) return;
+      o.castShadow = true;
       const m = o.material;
-      m.metalness = 0.92;
-      m.roughness = 0.26;
-      m.envMapIntensity = 1.6;
+      // keep its friendly colours, add a premium metallic sheen + reflections
+      m.metalness = 0.55;
+      m.roughness = 0.42;
+      m.envMapIntensity = 1.35;
+      m.emissive = new THREE.Color(INDIGO);
+      m.emissiveIntensity = 0.07;
       if (/Head/i.test(o.name)) {
+        // the face glows softly and lights up when the robot talks
         m.emissive = new THREE.Color(CYAN);
-        m.emissiveIntensity = 0.95;
+        m.emissiveIntensity = 0.25;
         headMats.current.push(m);
-      } else {
-        m.color = new THREE.Color("#aeb6d6").lerp(m.color, 0.35);
-        m.emissive = new THREE.Color(INDIGO);
-        m.emissiveIntensity = 0.12;
       }
     });
   }, [scene]);
@@ -109,8 +112,8 @@ function RobotModel({ gesture, gKey, speaking }) {
     tt.current += dt;
     // eyes flicker while the robot is speaking
     const glow = speaking
-      ? 0.95 + Math.abs(Math.sin(state.clock.elapsedTime * 17)) * 1.1
-      : 0.95;
+      ? 0.35 + Math.abs(Math.sin(state.clock.elapsedTime * 17)) * 1.0
+      : 0.25;
     for (const m of headMats.current) m.emissiveIntensity = glow;
 
     const o = outer.current;
