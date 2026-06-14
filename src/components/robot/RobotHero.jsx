@@ -8,7 +8,6 @@ import {
   Environment,
   Lightformer,
   ContactShadows,
-  Html,
 } from "@react-three/drei";
 import {
   EffectComposer,
@@ -117,13 +116,13 @@ function Platform() {
 function Aura() {
   const ref = useRef();
   const geom = useMemo(() => {
-    const N = 360;
+    const N = 620;
     const pos = new Float32Array(N * 3);
     for (let i = 0; i < N; i++) {
       const a = Math.random() * Math.PI * 2;
-      const r = 1.4 + Math.random() * 1.6;
+      const r = 1.2 + Math.random() * 3.2;
       pos[i * 3] = Math.cos(a) * r;
-      pos[i * 3 + 1] = (Math.random() - 0.3) * 3.4;
+      pos[i * 3 + 1] = (Math.random() - 0.25) * 4.2;
       pos[i * 3 + 2] = Math.sin(a) * r;
     }
     const g = new THREE.BufferGeometry();
@@ -140,14 +139,51 @@ function Aura() {
   );
 }
 
-/* ---- floating holographic status chips ---- */
-function HoloChip({ position, label, value }) {
+/* ---- orbiting energy rings around the robot ---- */
+function OrbitRings() {
+  const g = useRef();
+  useFrame((_, dt) => {
+    if (!g.current) return;
+    g.current.rotation.y += dt * 0.35;
+    g.current.rotation.x += dt * 0.12;
+  });
+  const rings = [
+    [2.7, [Math.PI / 2.3, 0, 0]],
+    [3.0, [Math.PI / 1.7, 0, 0.6]],
+    [3.3, [Math.PI / 2, 0.5, 0]],
+  ];
   return (
-    <Html position={position} center distanceFactor={8} transform sprite>
-      <div className="select-none whitespace-nowrap rounded-md border border-cyan-300/30 bg-[#06101f]/70 px-2 py-1 font-mono text-[7px] text-cyan-200 backdrop-blur-sm">
-        <span className="text-cyan-400">{label}</span> {value}
-      </div>
-    </Html>
+    <group ref={g} position={[0, 0.1, 0]}>
+      {rings.map(([r, rot], i) => (
+        <mesh key={i} rotation={rot}>
+          <torusGeometry args={[r, 0.009, 8, 110]} />
+          <meshStandardMaterial
+            color={i % 2 ? INDIGO : CYAN}
+            emissive={i % 2 ? INDIGO : CYAN}
+            emissiveIntensity={1.8}
+            toneMapped={false}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+/* ---- sci-fi grid floor (depth), faded by fog ---- */
+function Floor() {
+  const ref = useRef();
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.material.transparent = true;
+      ref.current.material.opacity = 0.35;
+    }
+  }, []);
+  return (
+    <gridHelper
+      ref={ref}
+      args={[60, 60, CYAN, "#1b2550"]}
+      position={[0, -1.21, 0]}
+    />
   );
 }
 
@@ -175,11 +211,10 @@ function Scene() {
         <Suspense fallback={null}>
           <Float speed={1.3} rotationIntensity={0.15} floatIntensity={0.5}>
             <RobotModel />
-            <HoloChip position={[-1.95, 1.15, 0.3]} label="AI" value="online" />
-            <HoloChip position={[1.7, 0.35, 0.3]} label="sys" value="100%" />
-            <HoloChip position={[-1.7, -0.55, 0.4]} label="data" value="1M+" />
           </Float>
+          <OrbitRings />
           <Platform />
+          <Floor />
           <Aura />
           <Environment resolution={256}>
             <Lightformer intensity={3} position={[0, 3, 4]} scale={[6, 6, 1]} color="#aebfff" />
