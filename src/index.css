@@ -155,6 +155,14 @@ body {
 @keyframes holoSpin {
   to { transform: rotate(360deg); }
 }
+@keyframes gridDrift {
+  to { background-position: 52px 52px; }
+}
+@keyframes scanBeam {
+  0% { transform: translateY(-40vh); opacity: 0; }
+  20%, 80% { opacity: 0.07; }
+  100% { transform: translateY(320vh); opacity: 0; }
+}
 
 /* diagonal light sweep for the animated portrait */
 @keyframes holoSweep {
@@ -281,6 +289,305 @@ body {
 @keyframes pvNode {
   0%, 100% { opacity: 0.45; }
   50% { opacity: 1; }
+}
+
+/* ---------- AI tour-guide robot ---------- */
+.robot-pill {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: none;
+  --stage-w: 224px;
+  --stage-h: 262px;
+}
+.robot-pill.is-expanded {
+  --stage-w: 296px;
+  --stage-h: 350px;
+}
+.robot-pill--min {
+  --stage-w: 0px;
+  --stage-h: 0px;
+}
+@media (max-width: 640px) {
+  .robot-pill {
+    right: 12px;
+    bottom: 12px;
+    --stage-w: 132px;
+    --stage-h: 156px;
+  }
+  .robot-pill.is-expanded {
+    --stage-w: 164px;
+    --stage-h: 196px;
+  }
+}
+
+.robot-stage {
+  position: relative;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  pointer-events: auto;
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  filter: drop-shadow(0 30px 46px rgba(67, 56, 202, 0.4));
+}
+.robot-pill--min .robot-stage {
+  width: auto;
+  height: auto;
+  filter: none;
+}
+.robot-stage canvas {
+  cursor: grab;
+}
+
+.robot-bubble {
+  pointer-events: auto;
+  max-width: 270px;
+  position: relative;
+  padding: 13px 16px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(129, 140, 248, 0.3);
+  background: linear-gradient(160deg, rgba(21, 23, 44, 0.94), rgba(9, 10, 22, 0.96));
+  box-shadow: 0 22px 60px -24px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: rbBubbleIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.robot-bubble::after {
+  content: "";
+  position: absolute;
+  right: 40px;
+  bottom: -7px;
+  width: 13px;
+  height: 13px;
+  background: linear-gradient(160deg, rgba(21, 23, 44, 0.94), rgba(9, 10, 22, 0.96));
+  border-right: 1px solid rgba(129, 140, 248, 0.3);
+  border-bottom: 1px solid rgba(129, 140, 248, 0.3);
+  transform: rotate(45deg);
+}
+.robot-bubble__tag {
+  display: inline-block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #818cf8;
+}
+.robot-bubble__tag::before {
+  content: "● ";
+  color: #34d399;
+  font-size: 0.7em;
+}
+.robot-bubble p {
+  margin: 0.3rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.42;
+  color: #e7eaf6;
+  min-height: 2.4em;
+}
+.robot-bubble__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 11px;
+}
+.robot-bubble__actions--mini {
+  gap: 6px;
+}
+.robot-bubble__progress {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.6rem;
+  color: #7c83a3;
+  margin: 0 2px;
+}
+.rb-btn {
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #c7cbe0;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.2s ease;
+}
+.rb-btn:hover {
+  border-color: rgba(129, 140, 248, 0.6);
+  color: #e7eaf6;
+}
+.rb-btn--primary {
+  border-color: transparent;
+  color: #0a0d1a;
+  font-weight: 600;
+  background: linear-gradient(120deg, #818cf8, #22d3ee);
+  box-shadow: 0 8px 24px -10px rgba(99, 102, 241, 0.9);
+}
+.rb-btn--primary:hover {
+  filter: brightness(1.08);
+  color: #0a0d1a;
+}
+.rb-icon {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  color: #aab0cc;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+.rb-icon:hover {
+  color: #fff;
+  border-color: rgba(129, 140, 248, 0.6);
+  background: rgba(129, 140, 248, 0.12);
+}
+.robot-mini {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: #8b91b0;
+  font-size: 1rem;
+  line-height: 1;
+  background: rgba(10, 12, 26, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 0.25s ease, color 0.2s ease;
+}
+.robot-stage:hover .robot-mini {
+  opacity: 1;
+}
+.robot-mini:hover {
+  color: #fff;
+}
+.robot-restore {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #c7cbe0;
+  background: linear-gradient(160deg, rgba(21, 23, 44, 0.95), rgba(9, 10, 22, 0.97));
+  border: 1px solid rgba(129, 140, 248, 0.4);
+  box-shadow: 0 16px 40px -16px rgba(0, 0, 0, 0.8);
+  transition: all 0.2s ease;
+}
+.robot-restore:hover {
+  border-color: rgba(129, 140, 248, 0.8);
+  color: #fff;
+}
+.robot-restore__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 10px #34d399;
+  animation: pulseGlow 2.4s ease-in-out infinite;
+}
+.robot-fallback {
+  width: 84px;
+  height: 98px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: linear-gradient(160deg, #312e81, #1b1840);
+  border: 1px solid rgba(129, 140, 248, 0.5);
+  box-shadow: 0 0 44px -8px rgba(99, 102, 241, 0.6);
+  animation: holoFloat 4s ease-in-out infinite;
+}
+.robot-fallback__eye {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #22d3ee;
+  box-shadow: 0 0 12px #22d3ee;
+  animation: agentBlink 4s ease-in-out infinite;
+}
+@keyframes rbBubbleIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* section spotlight while the guide is narrating it */
+.tour-highlight {
+  position: relative;
+  z-index: 1;
+}
+.tour-highlight::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 24px;
+  border: 1.5px solid rgba(99, 102, 241, 0.55);
+  box-shadow: 0 0 50px -4px rgba(99, 102, 241, 0.4),
+    inset 0 0 60px -20px rgba(99, 102, 241, 0.35);
+  pointer-events: none;
+  z-index: -1;
+  animation: tourRing 1.8s ease-in-out infinite;
+}
+@keyframes tourRing {
+  0%, 100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ---------- Living agent pipeline ---------- */
+.pl-svg {
+  overflow: visible;
+  max-width: 780px;
+  margin: 0 auto;
+  display: block;
+}
+.pl-wire {
+  stroke-dasharray: 760;
+  stroke-dashoffset: 760;
+  animation: plDraw 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes plDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.pl-core {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: plPulse 2.4s ease-in-out infinite;
+}
+@keyframes plPulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.5);
+  }
 }
 
 /* ---------- Accessibility: reduced motion ---------- */

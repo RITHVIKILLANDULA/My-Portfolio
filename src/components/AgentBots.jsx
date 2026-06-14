@@ -1,5 +1,6 @@
 import SectionHeading from "./ui/SectionHeading";
 import Reveal from "./ui/Reveal";
+import AgentPipeline from "./AgentPipeline";
 
 const AGENTS = [
   {
@@ -85,6 +86,16 @@ export default function AgentBots() {
         title="AI Agents"
         subtitle="How I approach data + AI — composable agents for profiling, detection, retrieval, and forecasting."
       />
+
+      {/* living pipeline illustration */}
+      <Reveal from="up">
+        <div className="glass mb-10 overflow-hidden rounded-2xl px-4 py-8 sm:px-8 sm:py-10">
+          <p className="mono-label mb-6 text-center text-[0.55rem] text-data-indigo/80">
+            autonomous_pipeline — runs end to end
+          </p>
+          <AgentPipeline />
+        </div>
+      </Reveal>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {AGENTS.map((a, i) => (

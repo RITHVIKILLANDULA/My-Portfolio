@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Holographic-chrome backdrop: drifting iridescent gradient blobs, a slowly
- * rotating chrome-shimmer layer, a cursor-following glow, fine grain + grid.
- * Pure CSS/transform — GPU-friendly, reliable, no WebGL.
+ * Premium, restrained backdrop — deep near-black with two indigo/blue light
+ * pools, a single cool data accent, a fine drifting data-grid, a slow scan
+ * beam, and a soft cursor-tracking glow. One accent family (indigo → cyan),
+ * no rainbow. Pure CSS/transform — GPU-friendly, no WebGL.
  */
 export default function HoloBackground() {
   const followRef = useRef(null);
@@ -25,8 +26,8 @@ export default function HoloBackground() {
       ty = e.clientY;
     };
     const loop = () => {
-      x += (tx - x) * 0.06;
-      y += (ty - y) * 0.06;
+      x += (tx - x) * 0.05;
+      y += (ty - y) * 0.05;
       el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
       raf = requestAnimationFrame(loop);
     };
@@ -39,68 +40,80 @@ export default function HoloBackground() {
   }, []);
 
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden bg-[#060611]">
-      {/* drifting iridescent blobs */}
+    <div className="fixed inset-0 -z-10 overflow-hidden bg-[#05060d]">
+      {/* base wash */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_60%_at_50%_-10%,rgba(67,56,202,0.28),transparent_60%)]" />
+
+      {/* indigo light pool (top-left) */}
       <div
-        className="absolute -left-[10%] -top-[15%] h-[60vw] w-[60vw] rounded-full opacity-50 blur-[110px]"
+        className="absolute -left-[12%] -top-[18%] h-[58vw] w-[58vw] rounded-full opacity-50 blur-[120px]"
         style={{
-          background: "radial-gradient(circle, #7c3aed, transparent 65%)",
-          animation: "blobA 18s ease-in-out infinite",
+          background: "radial-gradient(circle, #4338ca, transparent 66%)",
+          animation: "blobA 24s ease-in-out infinite",
         }}
       />
+      {/* deeper blue pool (right) */}
       <div
-        className="absolute -right-[12%] top-[5%] h-[55vw] w-[55vw] rounded-full opacity-45 blur-[120px]"
+        className="absolute -right-[14%] top-[8%] h-[52vw] w-[52vw] rounded-full opacity-40 blur-[130px]"
         style={{
-          background: "radial-gradient(circle, #2563eb, transparent 65%)",
-          animation: "blobB 22s ease-in-out infinite",
+          background: "radial-gradient(circle, #1d4ed8, transparent 66%)",
+          animation: "blobB 30s ease-in-out infinite",
         }}
       />
+      {/* single cool data accent (low, subtle) */}
       <div
-        className="absolute bottom-[-20%] left-[20%] h-[55vw] w-[55vw] rounded-full opacity-40 blur-[120px]"
+        className="absolute bottom-[-22%] left-[26%] h-[46vw] w-[46vw] rounded-full opacity-25 blur-[130px]"
         style={{
-          background: "radial-gradient(circle, #06b6d4, transparent 65%)",
-          animation: "blobC 26s ease-in-out infinite",
-        }}
-      />
-      <div
-        className="absolute bottom-[5%] right-[8%] h-[42vw] w-[42vw] rounded-full opacity-40 blur-[110px]"
-        style={{
-          background: "radial-gradient(circle, #db2777, transparent 65%)",
-          animation: "blobA 24s ease-in-out infinite reverse",
+          background: "radial-gradient(circle, #0891b2, transparent 68%)",
+          animation: "blobC 34s ease-in-out infinite",
         }}
       />
 
-      {/* rotating chrome shimmer */}
-      <div
-        className="absolute left-1/2 top-1/2 h-[160vmax] w-[160vmax] -translate-x-1/2 -translate-y-1/2 opacity-[0.12] blur-[90px] mix-blend-screen"
-        style={{
-          background:
-            "conic-gradient(from 0deg, #7c3aed, #2563eb, #06b6d4, #db2777, #7c3aed)",
-          animation: "holoSpin 40s linear infinite",
-        }}
-      />
-
-      {/* cursor-following glow */}
+      {/* cursor-tracking glow */}
       <div
         ref={followRef}
-        className="pointer-events-none absolute left-0 top-0 h-[40vw] w-[40vw] rounded-full opacity-30 blur-[100px]"
+        className="pointer-events-none absolute left-0 top-0 h-[36vw] w-[36vw] rounded-full opacity-20 blur-[110px]"
         style={{
-          background: "radial-gradient(circle, #c4b5fd, transparent 60%)",
+          background: "radial-gradient(circle, #818cf8, transparent 62%)",
+        }}
+      />
+
+      {/* fine drifting data grid */}
+      <div
+        className="absolute inset-0 opacity-[0.5]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(129,140,248,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(129,140,248,0.06) 1px, transparent 1px)",
+          backgroundSize: "52px 52px",
+          maskImage:
+            "radial-gradient(ellipse 75% 70% at 50% 40%, #000 25%, transparent 80%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 75% 70% at 50% 40%, #000 25%, transparent 80%)",
+          animation: "gridDrift 26s linear infinite",
+        }}
+      />
+
+      {/* slow vertical scan beam */}
+      <div
+        className="absolute inset-x-0 top-0 h-[34vh] opacity-[0.07] mix-blend-screen"
+        style={{
+          background:
+            "linear-gradient(180deg, transparent, rgba(129,140,248,0.9), transparent)",
+          animation: "scanBeam 11s ease-in-out infinite",
         }}
       />
 
       {/* fine grain */}
       <div
-        className="absolute inset-0 opacity-[0.04] mix-blend-overlay"
+        className="absolute inset-0 opacity-[0.035] mix-blend-overlay"
         style={{
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
         }}
       />
 
-      {/* grid + vignette */}
-      <div className="data-floor absolute bottom-0 left-0 right-0 h-[55vh] opacity-40" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_120%_120%_at_50%_50%,transparent_45%,rgba(6,6,17,0.85))]" />
+      {/* vignette */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_120%_120%_at_50%_50%,transparent_42%,rgba(5,6,13,0.92))]" />
     </div>
   );
 }

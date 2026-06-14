@@ -4,11 +4,10 @@ import useScrollSpy from "./hooks/useScrollSpy";
 
 import Preloader from "./components/Preloader";
 import HoloBackground from "./components/HoloBackground";
-import AgentCompanion from "./components/AgentCompanion";
 import CustomCursor from "./components/CustomCursor";
 import ScrollProgress from "./components/ScrollProgress";
-import SoundToggle from "./components/SoundToggle";
 import ResumeExperience from "./components/ResumeExperience";
+import RobotGuide from "./components/RobotGuide";
 
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -32,10 +31,8 @@ export default function App() {
     <div className="relative min-h-screen text-neutral-300 antialiased">
       <Preloader onDone={() => setBooted(true)} />
       <HoloBackground />
-      <AgentCompanion active={active} />
       <CustomCursor />
       <ScrollProgress active={active} />
-      <SoundToggle />
       <ResumeExperience open={resumeOpen} onClose={() => setResumeOpen(false)} />
 
       <Navbar active={active} onOpenResume={openResume} />
@@ -50,6 +47,9 @@ export default function App() {
         <Contact />
         <Footer />
       </main>
+
+      {/* AI guide that greets, then walks you through the whole site */}
+      {booted && <RobotGuide />}
     </div>
   );
 }
