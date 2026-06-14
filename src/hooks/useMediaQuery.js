@@ -10,7 +10,11 @@ export default function useMediaQuery(query) {
     const onChange = () => setMatches(mql.matches);
     onChange();
     mql.addEventListener("change", onChange);
-    return () => mql.removeEventListener("change", onChange);
+    window.addEventListener("resize", onChange);
+    return () => {
+      mql.removeEventListener("change", onChange);
+      window.removeEventListener("resize", onChange);
+    };
   }, [query]);
 
   return matches;

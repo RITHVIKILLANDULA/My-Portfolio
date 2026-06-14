@@ -5,9 +5,13 @@ import { HERO_NAME, HERO_ROLES, HERO_CONTENT, STATS } from "../constants";
 import DecodeText from "./ui/DecodeText";
 import Counter from "./ui/Counter";
 import Magnetic from "./ui/Magnetic";
+import useMediaQuery from "../hooks/useMediaQuery";
+import RobotHero from "./robot/RobotHero";
 
 export default function Hero({ booted, onOpenResume }) {
   const [roleIdx, setRoleIdx] = useState(0);
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const reduced = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   useEffect(() => {
     if (!booted) return;
@@ -26,8 +30,17 @@ export default function Hero({ booted, onOpenResume }) {
   });
 
   return (
-    <section id="home" className="relative flex min-h-[100svh] items-center pt-28">
-      <div className="w-full">
+    <section id="home" className="relative flex min-h-[100svh] items-center overflow-hidden pt-28">
+      {/* fancy 3D robot showcase (desktop only) */}
+      {isDesktop && (
+        <div className="absolute inset-y-0 right-[-4%] z-0 w-[62%]" aria-hidden>
+          <RobotHero reduced={reduced} />
+        </div>
+      )}
+      {/* readability gradient over the robot */}
+      <div className="pointer-events-none absolute inset-0 z-0 hidden bg-gradient-to-r from-[#04050c] via-[#04050c]/85 to-transparent lg:block" />
+
+      <div className="relative z-10 w-full lg:max-w-[48%]">
         {/* status chip */}
         <div
           style={reveal(0.1, 16)}
@@ -43,7 +56,7 @@ export default function Hero({ booted, onOpenResume }) {
         </div>
 
         {/* name */}
-        <h1 className="max-w-4xl font-display text-5xl font-semibold leading-[0.95] tracking-tight text-white sm:text-7xl lg:text-8xl">
+        <h1 className="font-display text-5xl font-semibold leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">
           <DecodeText text={HERO_NAME} start={booted} speed={1.1} className="block" />
         </h1>
 
