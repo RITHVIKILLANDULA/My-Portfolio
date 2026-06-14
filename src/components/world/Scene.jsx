@@ -6,51 +6,43 @@ import { EffectComposer, Bloom, Vignette, Noise } from "@react-three/postprocess
 import { BlendFunction } from "postprocessing";
 import { PALETTE } from "../../constants/world";
 import CameraRig from "./CameraRig";
-import Shaft from "./Shaft";
+import NeuralNet from "./NeuralNet";
+import DataViz from "./DataViz";
 import DataCore from "./DataCore";
-import Organs from "./Organs";
-import Motes from "./Motes";
-import Companion from "./Companion";
 
 export default function Scene() {
   return (
     <Canvas
-      className="!fixed inset-0"
       style={{ position: "fixed", inset: 0 }}
       frameloop="always"
       dpr={[1, 2]}
       gl={{ antialias: true, powerPreference: "high-performance" }}
-      camera={{ position: [0, 3, 9], fov: 58, near: 0.1, far: 220 }}
+      camera={{ position: [0, 1.5, 16], fov: 58, near: 0.1, far: 240 }}
       onCreated={(state) => {
-        state.scene.fog = new THREE.FogExp2(PALETTE.bg, 0.03);
+        state.scene.fog = new THREE.FogExp2(PALETTE.bg, 0.016);
         state.gl.setClearColor(PALETTE.bg, 1);
       }}
     >
       <CameraRig />
-      <hemisphereLight args={["#2a2f55", "#05060b", 0.55]} />
-      <directionalLight
-        position={[4, 6, 4]}
-        intensity={0.8}
-        color={PALETTE.amber}
-      />
+      <ambientLight intensity={0.4} />
+      <hemisphereLight args={["#2b3470", "#04050b", 0.6]} />
+      <pointLight position={[0, 0, 10]} intensity={1.2} color={PALETTE.cyan} distance={40} />
       <Suspense fallback={null}>
-        <Shaft />
-        <Organs />
-        <Motes />
+        <NeuralNet />
+        <DataViz />
         <DataCore />
-        <Companion />
       </Suspense>
 
       <EffectComposer multisampling={0} disableNormalPass>
         <Bloom
-          luminanceThreshold={1.0}
+          luminanceThreshold={0.9}
           luminanceSmoothing={0.3}
-          intensity={0.55}
+          intensity={0.7}
           mipmapBlur
-          radius={0.5}
+          radius={0.55}
         />
-        <Vignette eskil={false} offset={0.25} darkness={0.85} />
-        <Noise blendFunction={BlendFunction.OVERLAY} opacity={0.035} />
+        <Vignette eskil={false} offset={0.25} darkness={0.82} />
+        <Noise blendFunction={BlendFunction.OVERLAY} opacity={0.03} />
       </EffectComposer>
       <AdaptiveDpr pixelated />
     </Canvas>

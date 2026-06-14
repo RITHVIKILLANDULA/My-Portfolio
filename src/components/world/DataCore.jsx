@@ -70,7 +70,7 @@ export default function DataCore() {
           uSize: { value: 6 },
           uTime: { value: 0 },
           uColorA: { value: new THREE.Color(PALETTE.indigo) },
-          uColorB: { value: new THREE.Color(PALETTE.amber) },
+          uColorB: { value: new THREE.Color(PALETTE.cyan) },
         },
         vertexShader: VERT,
         fragmentShader: FRAG,

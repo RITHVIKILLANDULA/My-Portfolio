@@ -1,46 +1,42 @@
 import * as THREE from "three";
 
 // ---------------------------------------------------------------------------
-// THE DEEP STACK — geometry of the descent
-// One vertical shaft from the surface (y≈2) down to the Decision Core (y≈-58).
-// The camera and the robot companion both ride splines built from these points.
+// THE NEURAL NET — an AI/data world you fly forward through.
+// Seven glowing node-layers stacked along -Z (input → hidden → output), wired
+// by connections that fire data pulses. The camera flies through the layers as
+// you scroll; each section activates a layer. A data-core resolves at the end.
 // ---------------------------------------------------------------------------
 
 export const PALETTE = {
-  indigo: "#5b6cff", // structure / order
+  indigo: "#6366f1", // structure / weights
   indigoDeep: "#3a2fb0",
-  amber: "#ffb257", // raw data in motion
-  red: "#ff5c5c", // the single anomaly
-  bg: "#05060d",
-  graphite: "#11131f",
+  cyan: "#22d3ee", // data / signal
+  ice: "#a5f3fc",
+  red: "#ff5c6c", // a single detected anomaly
+  bg: "#04050c",
 };
 
-export const CORE_POS = new THREE.Vector3(0, -58, 0);
+// z of each layer; one per section.
+export const LAYER_Z = [0, -13, -26, -39, -52, -65, -78];
+export const CORE_POS = new THREE.Vector3(0, 0, LAYER_Z[6]);
 
-// Camera waypoints down the shaft (one gentle horizontal "catwalk" breather at Skills).
+// Camera flies forward through the stack with a gentle cinematic wander.
 const CAM_POINTS = [
-  [0, 3, 9], // 0.00 surface — hang at the mouth, look down
-  [0.6, -5, 7.5], // ingestion
-  [5.5, -15, 7], // skills — drift sideways along a catwalk
-  [-4, -25, 7], // agents
-  [0, -35, 11], // experience — pull back wide
-  [3.6, -44, 7.5], // projects — spiral in
-  [1.2, -50, 8.5], // arrival — core comes into frame
-  [0, -54, 7], // hold — core framed as a crystal
-  [0, -59.5, -3.5], // fly THROUGH the core, out the bottom
+  [0, 1.5, 16], // 0.00 — in front of the whole net
+  [3.5, 2, 4],
+  [-4, -1.5, -9],
+  [4, 1.5, -22],
+  [-3, 2, -35],
+  [3.5, -1.5, -48],
+  [-2, 1.2, -61],
+  [0, 0.4, -72],
+  [0, 0, -86], // fly through the output core, out the back
 ];
 
-const LOOK_POINTS = [
-  [0, -3, 2],
-  [0, -9, 0],
-  [0, -17, 0],
-  [0, -27, 0],
-  [0, -38, 0],
-  [0, -48, 0],
-  [0, -58, 0], // lock onto the core
-  [0, -58, 0],
-  [0, -61, -2],
-];
+// Always look forward, down the spine of the network.
+const LOOK_POINTS = LAYER_Z.map((z) => [0, 0, z - 6]);
+LOOK_POINTS.unshift([0, 0, 4]);
+LOOK_POINTS.push([0, 0, -96]);
 
 export const camCurve = new THREE.CatmullRomCurve3(
   CAM_POINTS.map((p) => new THREE.Vector3(...p)),
@@ -55,65 +51,85 @@ export const lookCurve = new THREE.CatmullRomCurve3(
   0.5
 );
 
-// Robot rides the same descent a fixed half-beat ahead-and-below the camera,
-// pulled toward the shaft centre so it's framed climbing down, looking back up.
-const ROBOT_POINTS = CAM_POINTS.slice(0, 8).map(([x, y, z]) => [
-  x * 0.55 - 1.1,
-  y - 3.0,
-  z - 3.4,
-]);
-export const robotCurve = new THREE.CatmullRomCurve3(
-  ROBOT_POINTS.map((p) => new THREE.Vector3(...p)),
-  false,
-  "catmullrom",
-  0.5
-);
-
-// Each section owns a [start,end] slice of the 0→1 descent.
+// Each section owns a slice of the 0→1 fly-through + the layer it activates.
 export const SECTIONS = [
-  { id: "surface", label: "Surface", start: 0.0, end: 0.12, y: 0 },
-  { id: "ingestion", label: "Ingestion", start: 0.12, end: 0.27, y: -10 },
-  { id: "loom", label: "Transformation", start: 0.27, end: 0.42, y: -19 },
-  { id: "pipeline", label: "Agents", start: 0.42, end: 0.56, y: -29 },
-  { id: "warehouse", label: "Warehouse", start: 0.56, end: 0.7, y: -39 },
-  { id: "lattice", label: "Models", start: 0.7, end: 0.84, y: -49 },
-  { id: "core", label: "Decision Core", start: 0.84, end: 1.0, y: -58 },
+  { id: "input", label: "input", start: 0.0, end: 0.12, layer: 0 },
+  { id: "about", label: "about", start: 0.12, end: 0.27, layer: 1 },
+  { id: "skills", label: "skills", start: 0.27, end: 0.42, layer: 2 },
+  { id: "agents", label: "agents", start: 0.42, end: 0.56, layer: 3 },
+  { id: "experience", label: "experience", start: 0.56, end: 0.7, layer: 4 },
+  { id: "projects", label: "projects", start: 0.7, end: 0.84, layer: 5 },
+  { id: "core", label: "decision core", start: 0.84, end: 1.0, layer: 6 },
 ];
 
-// Organ anchor positions down the shaft (where strata geometry + labels sit).
-export const ORGANS = {
-  ingestion: new THREE.Vector3(0, -10, 0),
-  loom: new THREE.Vector3(4.5, -19, 0),
-  pipeline: new THREE.Vector3(-3, -29, 0),
-  warehouse: new THREE.Vector3(0, -39, 0),
-  lattice: new THREE.Vector3(2.5, -49, 0),
-};
-
-// smooth 0→1 ramp inside a section window
 export function sectionT(progress, start, end) {
   return THREE.MathUtils.clamp((progress - start) / (end - start), 0, 1);
 }
 
+// deterministic pseudo-random (stable across reloads — no Math.random)
+const rand = (i, s) => {
+  const x = Math.sin(i * 12.9898 + s * 78.233) * 43758.5453;
+  return x - Math.floor(x);
+};
+
 // ---------------------------------------------------------------------------
-// Three pre-baked point layouts for the Decision Core's inner field.
-// cloud (gaussian scatter) → lattice (sorted grid) → classifier (two classes).
+// Build the network: nodes per layer (phyllotaxis disk) + wiring + pulse edges.
 // ---------------------------------------------------------------------------
-export function buildCoreLayouts(count = 1600) {
+export function buildNetwork() {
+  const counts = [7, 16, 22, 22, 16, 9, 1]; // narrows to a single output node
+  const radii = [3.2, 5.4, 6.6, 6.6, 5.4, 3.6, 0];
+  const GOLDEN = Math.PI * (3 - Math.sqrt(5));
+
+  const layers = LAYER_Z.map((z, li) => {
+    const n = counts[li];
+    const R = radii[li];
+    const nodes = [];
+    for (let i = 0; i < n; i++) {
+      if (n === 1) {
+        nodes.push([0, 0, z]);
+        continue;
+      }
+      const r = R * Math.sqrt((i + 0.5) / n);
+      const a = i * GOLDEN + li * 1.3;
+      nodes.push([Math.cos(a) * r, Math.sin(a) * r, z]);
+    }
+    return { z, nodes };
+  });
+
+  // edges: wire each node to ~3 nodes in the next layer
+  const edgePts = []; // flat [x,y,z, x,y,z, ...]
+  const pulseEdges = []; // [{ax,ay,az,bx,by,bz}] sampled for travelling pulses
+  for (let li = 0; li < layers.length - 1; li++) {
+    const a = layers[li].nodes;
+    const b = layers[li + 1].nodes;
+    for (let i = 0; i < a.length; i++) {
+      const links = b.length === 1 ? 1 : 3;
+      for (let k = 0; k < links; k++) {
+        const j = Math.floor(rand(li * 50 + i * 7 + k, k + 1) * b.length) % b.length;
+        edgePts.push(a[i][0], a[i][1], a[i][2], b[j][0], b[j][1], b[j][2]);
+        if (rand(li + i + k, 3) > 0.55)
+          pulseEdges.push({
+            ax: a[i][0], ay: a[i][1], az: a[i][2],
+            bx: b[j][0], by: b[j][1], bz: b[j][2],
+          });
+      }
+    }
+  }
+  return { layers, edges: new Float32Array(edgePts), pulseEdges };
+}
+
+// ---------------------------------------------------------------------------
+// Inner point layouts for the output Decision Core (scatter → grid → classes).
+// ---------------------------------------------------------------------------
+export function buildCoreLayouts(count = 950) {
   const cloud = new Float32Array(count * 3);
   const lattice = new Float32Array(count * 3);
   const classifier = new Float32Array(count * 3);
-  const cls = new Float32Array(count); // 0/1 class for colour
-
+  const cls = new Float32Array(count);
   const side = Math.ceil(Math.cbrt(count));
   const R = 1.6;
-  // deterministic pseudo-random (no Math.random — stable across reloads)
-  const rand = (i, s) => {
-    const x = Math.sin(i * 12.9898 + s * 78.233) * 43758.5453;
-    return x - Math.floor(x);
-  };
 
   for (let i = 0; i < count; i++) {
-    // uniform-volume scatter (even density, no hot centre)
     const r = Math.pow(rand(i, 1), 0.3333) * R;
     const theta = rand(i, 2) * Math.PI * 2;
     const phi = Math.acos(2 * rand(i, 3) - 1);
@@ -121,7 +137,6 @@ export function buildCoreLayouts(count = 1600) {
     cloud[i * 3 + 1] = r * Math.cos(phi);
     cloud[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
 
-    // sorted lattice grid
     const gx = i % side;
     const gy = Math.floor(i / side) % side;
     const gz = Math.floor(i / (side * side));
@@ -130,15 +145,11 @@ export function buildCoreLayouts(count = 1600) {
     lattice[i * 3 + 1] = -R + gy * step;
     lattice[i * 3 + 2] = -R + gz * step;
 
-    // classifier: two clusters separated across X by a margin plane
     const c = rand(i, 4) > 0.5 ? 1 : 0;
     cls[i] = c;
-    const cx = c ? 0.55 : -0.55;
-    const sr = 0.42;
-    classifier[i * 3] =
-      cx + (rand(i, 5) - 0.5) * sr + (c ? 0.18 : -0.18);
-    classifier[i * 3 + 1] = (rand(i, 6) - 0.5) * 1.4;
-    classifier[i * 3 + 2] = (rand(i, 7) - 0.5) * 1.4;
+    classifier[i * 3] = (c ? 0.6 : -0.6) + (rand(i, 5) - 0.5) * 0.5;
+    classifier[i * 3 + 1] = (rand(i, 6) - 0.5) * 1.5;
+    classifier[i * 3 + 2] = (rand(i, 7) - 0.5) * 1.5;
   }
   return { count, cloud, lattice, classifier, cls };
 }

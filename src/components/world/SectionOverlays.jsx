@@ -78,7 +78,7 @@ export default function SectionOverlays() {
     <>
       {/* SURFACE — hero */}
       <Panel p={p} start={0} end={0.12} side="left">
-        <span className={kicker}>// descent_0 · the surface</span>
+        <span className={kicker}>// layer_00 · input</span>
         <h1 className="mt-2 font-display text-5xl font-semibold leading-[0.95] tracking-tight text-white sm:text-7xl">
           {HERO_NAME}
         </h1>
@@ -90,13 +90,13 @@ export default function SectionOverlays() {
         </p>
         <div className="mt-6 inline-flex items-center gap-2 text-xs text-neutral-400">
           <FiArrowDown className="animate-bounce" />
-          scroll to descend the pipeline
+          scroll to enter the network
         </div>
       </Panel>
 
       {/* INGESTION — about */}
       <Panel p={p} start={0.12} end={0.27} side="right">
-        <span className={kicker}>// descent_1 · ingestion</span>
+        <span className={kicker}>// layer_01 · about</span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-white">
           The analyst they call when the data won't behave.
         </h2>
@@ -119,9 +119,9 @@ export default function SectionOverlays() {
 
       {/* LOOM — skills */}
       <Panel p={p} start={0.27} end={0.42} side="left">
-        <span className={kicker}>// descent_2 · transformation</span>
+        <span className={kicker}>// layer_02 · skills</span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-white">
-          Tangled inputs, parallel rails.
+          The stack, weighted and learned.
         </h2>
         <div className="mt-4 grid grid-cols-2 gap-3">
           {topSkills.map((c) => (
@@ -145,7 +145,7 @@ export default function SectionOverlays() {
 
       {/* PIPELINE — agents */}
       <Panel p={p} start={0.42} end={0.56} side="right">
-        <span className={kicker}>// descent_3 · the agents</span>
+        <span className={kicker}>// layer_03 · agents</span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-white">
           Autonomous, end to end.
         </h2>
@@ -167,7 +167,7 @@ export default function SectionOverlays() {
 
       {/* WAREHOUSE — experience */}
       <Panel p={p} start={0.56} end={0.7} side="left">
-        <span className={kicker}>// descent_4 · the warehouse</span>
+        <span className={kicker}>// layer_04 · experience</span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-white">
           The track record.
         </h2>
@@ -194,7 +194,7 @@ export default function SectionOverlays() {
 
       {/* LATTICE — projects */}
       <Panel p={p} start={0.7} end={0.84} side="right">
-        <span className={kicker}>// descent_5 · the models</span>
+        <span className={kicker}>// layer_05 · projects</span>
         <h2 className="mt-2 font-display text-3xl font-semibold text-white">
           What ships out the other end.
         </h2>
@@ -217,7 +217,7 @@ export default function SectionOverlays() {
 
       {/* CORE — contact */}
       <Panel p={p} start={0.86} end={1.0} side="center">
-        <span className={kicker}>// descent_6 · the decision core</span>
+        <span className={kicker}>// layer_06 · decision core</span>
         <h2 className="mt-2 font-display text-4xl font-semibold text-white">
           Let's build something that reasons.
         </h2>
