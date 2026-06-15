@@ -27,6 +27,7 @@ import { easing } from "maath";
 import { FiSend, FiArrowDownRight, FiMic, FiVolume2, FiVolumeX } from "react-icons/fi";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { HERO_NAME } from "../../constants";
+import RoleCycler from "../ui/RoleCycler";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import { answerFor, SUGGESTIONS, GREETING } from "./knowledge";
 import useVoice from "./useVoice";
@@ -508,9 +509,10 @@ export default function RobotWorld({ onOpenResume }) {
       scrollSig.vel = Math.min(6, Math.abs(y - lastY) / Math.max(1, now - lastT));
       lastY = y;
       lastT = now;
-      // dock only AFTER the hero has scrolled past, so the full-bleed arrival
-      // canvas never sits over the first section
-      const isDocked = y > vh * 0.85;
+      // dock as soon as you start leaving the hero, so the big centered robot
+      // + orbit rings shrink to the gutter BEFORE the next section scrolls into
+      // view (docking late kept them overlapping the rising content)
+      const isDocked = y > vh * 0.42;
       scrollSig.docked = isDocked;
       scrollSig.progress = clamp(y / Math.max(1, docH - vh), 0, 1);
       setDocked(isDocked);
@@ -592,7 +594,9 @@ export default function RobotWorld({ onOpenResume }) {
         <h1 className="font-display text-5xl font-semibold leading-[0.95] tracking-tight text-white sm:text-6xl">
           {HERO_NAME}
         </h1>
-        <p className="gradient-text mt-3 font-mono text-xl font-medium sm:text-2xl">AI Data Analyst</p>
+        <p className="gradient-text mt-3 min-h-[1.6em] font-mono text-xl font-medium sm:text-2xl">
+          <RoleCycler />
+        </p>
         <div className="mt-7 flex flex-wrap gap-3">
           <a href="#projects" data-cursor className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-data-cyan to-data-indigo px-5 py-2.5 text-sm font-semibold text-void-950 shadow-glow">
             <HiOutlineSparkles /> Explore the Work
