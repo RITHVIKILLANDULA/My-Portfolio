@@ -15,7 +15,7 @@ import About from "./components/About";
 import MissionControl from "./components/skills/MissionControl";
 import AgentBots from "./components/AgentBots";
 import Experience from "./components/Experience";
-import Projects from "./components/Projects";
+import ProjectGalaxy from "./components/projects/ProjectGalaxy";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
@@ -45,7 +45,7 @@ export default function ImmersiveSite({ smooth = true }) {
         <MissionControl />
         <AgentBots />
         <Experience />
-        <Projects />
+        <ProjectGalaxy />
         <Contact />
         <Footer />
       </main>

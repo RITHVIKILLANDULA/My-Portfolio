@@ -567,6 +567,22 @@ body {
   }
 }
 
+/* Project Galaxy — planets gently drift in orbit */
+@keyframes gx-float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, calc(-50% - 5px));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [style*="gx-float"] {
+    animation: none !important;
+  }
+}
+
 /* ---------- Guided experience section transition ---------- */
 @keyframes guidedEnter {
   from {
