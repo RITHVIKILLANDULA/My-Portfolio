@@ -5,7 +5,6 @@ export const NAV_LINKS = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
   { id: "skills", label: "Skills" },
-  { id: "agents", label: "Agents" },
   { id: "experience", label: "Experience" },
   { id: "projects", label: "Projects" },
   { id: "playground", label: "Playground" },

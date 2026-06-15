@@ -32,7 +32,7 @@ export default function RoleCycler() {
   return (
     <span>
       {text || " "}
-      <span className="ml-0.5 inline-block w-[2px] animate-pulse bg-data-cyan align-middle" style={{ height: "1em" }} />
+      <span className="ml-0.5 inline-block w-[2px] animate-pulse bg-brand align-middle" style={{ height: "1em" }} />
     </span>
   );
 }

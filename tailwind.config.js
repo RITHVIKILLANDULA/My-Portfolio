@@ -5,93 +5,40 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["Space Grotesk", "Inter", "sans-serif"],
+        display: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       colors: {
-        // "The Observatory" — calm instrument-grade lab at night
-        void: {
-          950: "#06080f", // page base
-          900: "#0a0e1a", // section
-          850: "#111626", // panel
-          800: "#1a2138", // hover
-          700: "#2a3354", // border / divider
-        },
-        accent: {
-          600: "#4f46e5",
-          500: "#6366f1", // the one hero accent
-          400: "#818cf8",
-        },
+        // clean, light, professional — one restrained accent
+        paper: "#ffffff", // page
+        mist: "#f6f7f9", // alternating section / subtle fill
+        line: "#e6e8ec", // borders / dividers
         ink: {
-          hi: "#f3f5fb",
-          mid: "#a6aec6",
-          lo: "#5e6783",
+          DEFAULT: "#0c0d10", // headings
+          700: "#383b42", // strong body
+          500: "#5c606a", // body
+          400: "#898d97", // muted / labels
         },
-        data: {
-          cyan: "#22d3ee", // only where AI is computing
-          sky: "#38bdf8",
-          indigo: "#6366f1",
-          violet: "#a78bfa",
-          magenta: "#e879f9",
-        },
-        holo: {
-          violet: "#7c3aed",
-          blue: "#2563eb",
-          teal: "#06b6d4",
-          pink: "#db2777",
-          ice: "#a5f3fc",
-          lav: "#c4b5fd",
-          rose: "#f0abfc",
+        brand: {
+          DEFAULT: "#4f46e5", // the one accent (indigo)
+          600: "#4338ca",
+          500: "#6366f1",
+          soft: "#eef1ff", // tinted backgrounds
         },
       },
       boxShadow: {
-        glow: "0 0 24px -2px rgba(34,211,238,0.45)",
-        "glow-lg": "0 0 60px -4px rgba(99,102,241,0.5)",
-        "glow-violet": "0 0 28px -2px rgba(167,139,250,0.5)",
-        node: "0 0 0 1px rgba(34,211,238,0.25), 0 8px 40px -8px rgba(34,211,238,0.35)",
-      },
-      backgroundImage: {
-        "data-grid":
-          "linear-gradient(rgba(34,211,238,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.06) 1px, transparent 1px)",
-        "radial-fade":
-          "radial-gradient(ellipse 80% 70% at 50% -10%, rgba(99,102,241,0.25), rgba(4,5,10,0) 70%)",
+        card: "0 1px 2px rgba(12,13,16,0.04), 0 1px 3px rgba(12,13,16,0.06)",
+        "card-hover": "0 8px 30px -8px rgba(12,13,16,0.12)",
+        brand: "0 8px 24px -8px rgba(79,70,229,0.35)",
       },
       keyframes: {
-        float: {
-          "0%,100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-12px)" },
+        "fade-up": {
+          from: { opacity: "0", transform: "translateY(12px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
         },
-        "float-slow": {
-          "0%,100%": { transform: "translateY(0) translateX(0)" },
-          "50%": { transform: "translateY(-18px) translateX(8px)" },
-        },
-        pulseGlow: {
-          "0%,100%": { opacity: "0.4", filter: "brightness(1)" },
-          "50%": { opacity: "1", filter: "brightness(1.4)" },
-        },
-        scan: {
-          "0%": { transform: "translateY(-100%)" },
-          "100%": { transform: "translateY(900%)" },
-        },
-        gridpan: {
-          "0%": { backgroundPosition: "0 0" },
-          "100%": { backgroundPosition: "40px 40px" },
-        },
-        shimmer: {
-          "0%": { backgroundPosition: "-200% 0" },
-          "100%": { backgroundPosition: "200% 0" },
-        },
-        spinSlow: { to: { transform: "rotate(360deg)" } },
       },
       animation: {
-        float: "float 6s ease-in-out infinite",
-        "float-slow": "float-slow 9s ease-in-out infinite",
-        pulseGlow: "pulseGlow 3s ease-in-out infinite",
-        scan: "scan 6s linear infinite",
-        gridpan: "gridpan 8s linear infinite",
-        shimmer: "shimmer 3s linear infinite",
-        "spin-slow": "spinSlow 22s linear infinite",
-        "spin-slower": "spinSlow 40s linear infinite",
+        "fade-up": "fade-up 0.6s cubic-bezier(0.22,1,0.36,1) both",
       },
     },
   },

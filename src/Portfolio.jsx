@@ -1,0 +1,41 @@
+import useScrollSpy from "./hooks/useScrollSpy";
+
+import Navbar from "./components/site/Navbar";
+import Hero from "./components/site/Hero";
+import About from "./components/site/About";
+import Skills from "./components/site/Skills";
+import Experience from "./components/site/Experience";
+import Projects from "./components/site/Projects";
+import Playground from "./components/playground/Playground";
+import Contact from "./components/site/Contact";
+import Footer from "./components/site/Footer";
+
+const SECTION_IDS = [
+  "home",
+  "about",
+  "skills",
+  "experience",
+  "projects",
+  "playground",
+  "contact",
+];
+
+export default function Portfolio() {
+  const active = useScrollSpy(SECTION_IDS);
+
+  return (
+    <div className="min-h-screen bg-paper text-ink">
+      <Navbar active={active} />
+      <main>
+        <Hero />
+        <About />
+        <Skills />
+        <Experience />
+        <Projects />
+        <Playground />
+        <Contact />
+      </main>
+      <Footer />
+    </div>
+  );
+}
