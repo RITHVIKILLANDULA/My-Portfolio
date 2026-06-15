@@ -1,3 +1,4 @@
+import { FiTrendingUp } from "react-icons/fi";
 import { EXPERIENCES } from "../constants";
 import SectionHeading from "./ui/SectionHeading";
 import Reveal from "./ui/Reveal";
@@ -62,7 +63,22 @@ export default function Experience() {
                 {exp.description}
               </p>
 
-              <div className="flex flex-wrap gap-2">
+              {/* the outcomes that shipped — real numbers from each role */}
+              {exp.metrics?.length > 0 && (
+                <div className="mb-5 flex flex-wrap gap-2">
+                  {exp.metrics.map((m) => (
+                    <span
+                      key={m}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-data-cyan/25 bg-data-cyan/[0.06] px-2.5 py-1 text-[0.68rem] font-medium text-data-cyan"
+                    >
+                      <FiTrendingUp className="shrink-0 text-[0.72rem]" />
+                      {m}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex flex-wrap gap-2 border-t border-white/5 pt-4">
                 {exp.technologies.map((t) => (
                   <span key={t} className="chip">
                     {t}
