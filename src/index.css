@@ -95,6 +95,29 @@
   border: 2px solid #ffffff;
 }
 
+/* immersive data-world motion */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+@keyframes spin-rev {
+  to { transform: rotate(-360deg); }
+}
+@keyframes dashflow {
+  to { stroke-dashoffset: -42; }
+}
+@keyframes corepulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.04); }
+}
+.floaty { animation: floaty 6s ease-in-out infinite; }
+.spin-slow { animation: spin-slow 36s linear infinite; transform-origin: center; }
+.spin-rev { animation: spin-rev 50s linear infinite; transform-origin: center; }
+.dashflow { stroke-dasharray: 4 8; animation: dashflow 1.4s linear infinite; }
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

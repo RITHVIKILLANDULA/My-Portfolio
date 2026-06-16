@@ -1,7 +1,7 @@
 import useScrollSpy from "./hooks/useScrollSpy";
 
 import Navbar from "./components/site/Navbar";
-import Hero from "./components/site/Hero";
+import HeroWorld from "./components/site/HeroWorld";
 import About from "./components/site/About";
 import Skills from "./components/site/Skills";
 import Experience from "./components/site/Experience";
@@ -27,7 +27,7 @@ export default function Portfolio() {
     <div className="min-h-screen bg-paper text-ink">
       <Navbar active={active} />
       <main>
-        <Hero />
+        <HeroWorld />
         <About />
         <Skills />
         <Experience />
