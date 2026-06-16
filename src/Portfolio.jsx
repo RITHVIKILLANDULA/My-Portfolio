@@ -26,9 +26,10 @@ export default function Portfolio() {
 
   return (
     <div className="min-h-screen text-ink">
+      <a href="#main" className="skip-link">Skip to content</a>
       <Atmosphere />
       <Navbar active={active} />
-      <main>
+      <main id="main">
         <HeroWorld />
         <About />
         <Skills />

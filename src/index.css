@@ -16,6 +16,28 @@
   ::selection {
     background: rgba(75, 71, 214, 0.14);
   }
+  :focus-visible {
+    outline: 2px solid #4b47d6;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+/* skip to content (keyboard) */
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  border-radius: var(--border-radius-md, 8px);
+  background: #4b47d6;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 1rem;
 }
 
 @layer components {

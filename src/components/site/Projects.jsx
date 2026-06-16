@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { FiArrowUpRight } from "react-icons/fi";
-import { PROJECTS, PROJECT_FILTERS } from "../../constants";
+import { FaGithub } from "react-icons/fa";
+import { PROJECTS, PROJECT_FILTERS, CONTACT } from "../../constants";
 import SectionHeading from "./SectionHeading";
 import Reveal from "../ui/Reveal";
 import Tilt from "../ui/Tilt";
@@ -88,6 +89,17 @@ export default function Projects() {
               </Tilt>
             </Reveal>
           ))}
+        </div>
+
+        <div className="mt-10 flex justify-center">
+          <a
+            href={CONTACT.github}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl border border-line bg-paper px-5 py-2.5 text-sm font-medium text-ink-700 transition-colors hover:border-ink-300 hover:text-brand"
+          >
+            <FaGithub /> See more on GitHub <FiArrowUpRight />
+          </a>
         </div>
       </div>
     </section>

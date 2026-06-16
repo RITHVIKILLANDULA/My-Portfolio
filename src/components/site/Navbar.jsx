@@ -33,6 +33,7 @@ export default function Navbar({ active }) {
             <a
               key={l.id}
               href={`#${l.id}`}
+              aria-current={active === l.id ? "page" : undefined}
               className={`rounded-lg px-3 py-1.5 text-sm transition-colors ${
                 active === l.id ? "font-medium text-brand" : "text-ink-500 hover:text-ink"
               }`}
