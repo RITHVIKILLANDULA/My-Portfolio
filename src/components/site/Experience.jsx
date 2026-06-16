@@ -8,18 +8,41 @@ export default function Experience() {
       <div className="mx-auto max-w-5xl px-5 sm:px-8">
         <SectionHeading index="03" kicker="Experience" title="Where the work has shipped" />
 
-        <Reveal className="border-t border-line">
+        <Reveal className="relative border-t border-line">
+          {/* the career pipeline spine (desktop) */}
+          <div className="absolute bottom-8 left-[6.5rem] top-10 hidden w-px bg-line sm:block">
+            <span className="vpipe absolute inset-0" />
+          </div>
+
           {EXPERIENCES.map((exp, i) => (
             <div
               key={i}
-              className="grid gap-2 border-b border-line py-8 sm:grid-cols-[7rem_1fr] sm:gap-8"
+              className="relative grid gap-2 border-b border-line py-9 sm:grid-cols-[6rem_1fr] sm:gap-12 sm:pl-12"
             >
-              <div className="pt-1 font-mono text-xs tabular-nums leading-relaxed text-ink-400">
+              <div className="font-mono text-xs tabular-nums leading-relaxed text-ink-400">
                 {exp.year}
               </div>
 
-              <div className={i === 0 ? "border-l-2 border-brand pl-6" : "pl-6"}>
-                <h3 className="text-lg font-semibold text-ink">{exp.role}</h3>
+              {/* node bead on the pipeline */}
+              <span className="absolute left-[6.5rem] top-[2.6rem] hidden -translate-x-1/2 sm:block">
+                <span
+                  className={`grid place-items-center rounded-full bg-canvas ${
+                    i === 0 ? "h-4 w-4 ring-2 ring-brand/30" : "h-3 w-3 ring-1 ring-line"
+                  }`}
+                >
+                  <span className={`rounded-full bg-brand ${i === 0 ? "h-2 w-2" : "h-1.5 w-1.5"}`} />
+                </span>
+              </span>
+
+              <div>
+                <div className="flex items-baseline gap-2">
+                  <h3 className="text-lg font-semibold text-ink">{exp.role}</h3>
+                  {i === 0 && (
+                    <span className="rounded-full bg-brand-soft px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-wide text-brand">
+                      Current
+                    </span>
+                  )}
+                </div>
                 <p className="text-sm font-medium text-ink-500">{exp.company}</p>
 
                 <p className="mt-3 max-w-[64ch] text-sm leading-[1.7] text-ink-500">

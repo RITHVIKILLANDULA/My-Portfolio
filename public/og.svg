@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="42%" r="55%">
+      <stop offset="0%" stop-color="#eef0ff" />
+      <stop offset="60%" stop-color="#fbfaf9" />
+      <stop offset="100%" stop-color="#fbfaf9" />
+    </radialGradient>
+    <linearGradient id="crystal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6c68e8" />
+      <stop offset="100%" stop-color="#4b47d6" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#glow)" />
+  <rect width="1200" height="6" fill="#4b47d6" />
+
+  <text x="90" y="150" font-size="22" letter-spacing="6" fill="#9a938a">RITHVIK ILLANDULA</text>
+  <text x="86" y="250" font-size="84" font-weight="700" letter-spacing="-2" fill="#1a1714">AI Data Analyst</text>
+  <text x="90" y="312" font-size="27" fill="#3a352f">Turning messy, multi-source data into decisions.</text>
+
+  <g font-family="'Courier New', monospace">
+    <text x="92" y="430" font-size="46" font-weight="700" fill="#1a1714">1M+</text>
+    <text x="92" y="462" font-size="16" letter-spacing="2" fill="#9a938a">RECORDS</text>
+    <text x="282" y="430" font-size="46" font-weight="700" fill="#1a1714">2h&#8594;35m</text>
+    <text x="282" y="462" font-size="16" letter-spacing="2" fill="#9a938a">NIGHTLY RUN</text>
+    <text x="552" y="430" font-size="46" font-weight="700" fill="#1a1714">80%</text>
+    <text x="552" y="462" font-size="16" letter-spacing="2" fill="#9a938a">LESS MANUAL</text>
+    <text x="702" y="430" font-size="46" font-weight="700" fill="#4b47d6">15+</text>
+    <text x="702" y="462" font-size="16" letter-spacing="2" fill="#9a938a">DASHBOARDS</text>
+  </g>
+
+  <text x="90" y="560" font-size="20" fill="#6b645b" font-family="'Courier New', monospace">Deloitte  /  University at Buffalo  /  GCP Professional Data Engineer</text>
+
+  <g transform="translate(975, 300)">
+    <circle r="170" fill="#4b47d6" opacity="0.06" />
+    <circle r="135" fill="none" stroke="#c7c1f3" stroke-width="1.5" stroke-dasharray="3 9" />
+    <circle r="100" fill="none" stroke="#4b47d6" stroke-width="2" stroke-dasharray="48 16" opacity="0.85" />
+    <g stroke="#a9a3ee" stroke-width="1.5" opacity="0.6">
+      <line x1="0" y1="0" x2="-95" y2="-95" />
+      <line x1="0" y1="0" x2="120" y2="-40" />
+      <line x1="0" y1="0" x2="55" y2="120" />
+      <line x1="0" y1="0" x2="-110" y2="70" />
+    </g>
+    <circle cx="-95" cy="-95" r="7" fill="#6c68e8" />
+    <circle cx="120" cy="-40" r="6" fill="#38bdf8" />
+    <circle cx="55" cy="120" r="7" fill="#2dd4bf" />
+    <circle cx="-110" cy="70" r="6" fill="#a5b4fc" />
+    <rect x="-38" y="-38" width="76" height="76" rx="18" transform="rotate(45)" fill="url(#crystal)" />
+    <text x="0" y="6" text-anchor="middle" font-size="16" letter-spacing="3" fill="#ffffff" font-family="'Courier New', monospace">DATA</text>
+  </g>
+</svg>

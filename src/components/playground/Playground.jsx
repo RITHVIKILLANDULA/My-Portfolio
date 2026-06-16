@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiCpu, FiMessageSquare } from "react-icons/fi";
 import SectionHeading from "../site/SectionHeading";
 import Reveal from "../ui/Reveal";
@@ -15,6 +15,14 @@ const TABS = [
 
 export default function Playground() {
   const [tab, setTab] = useState("churn");
+
+  // let the hero's "Ask my AI" hook open straight into the RAG demo
+  useEffect(() => {
+    const open = () => setTab("rag");
+    window.addEventListener("rai:ask", open);
+    if (window.location.hash === "#ask") setTab("rag");
+    return () => window.removeEventListener("rai:ask", open);
+  }, []);
 
   return (
     <section id="playground" className="section">

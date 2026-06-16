@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { FiArrowRight, FiDownload } from "react-icons/fi";
+import { FiArrowRight, FiDownload, FiMessageSquare } from "react-icons/fi";
 import { HERO_NAME, HERO_CONTENT, RESUME_URL, RUNTIME_SERIES } from "../../constants";
 import RoleCycler from "../ui/RoleCycler";
 
@@ -150,9 +150,15 @@ export default function HeroWorld() {
         </motion.p>
 
         <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.32, ease }} className="mt-8 flex flex-wrap items-center gap-3">
-          <a href="#projects" className="btn-primary group">
-            Explore the work <FiArrowRight className="transition-transform duration-200 group-hover:translate-x-0.5" />
+          <a
+            href="#playground"
+            onClick={() => window.dispatchEvent(new CustomEvent("rai:ask"))}
+            className="btn-primary group"
+          >
+            <FiMessageSquare /> Ask my AI about me
+            <FiArrowRight className="transition-transform duration-200 group-hover:translate-x-0.5" />
           </a>
+          <a href="#projects" className="btn-ghost">Explore the work</a>
           <a href={RESUME_URL} target="_blank" rel="noreferrer" className="btn-ghost">
             <FiDownload /> Résumé
           </a>
