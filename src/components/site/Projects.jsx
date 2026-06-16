@@ -15,12 +15,12 @@ export default function Projects() {
     <section id="projects" className="section">
       <div className="mx-auto max-w-5xl px-5 sm:px-8">
         <SectionHeading
+          index="04"
           kicker="Projects"
           title="Selected work"
           intro="Models, pipelines, and apps — built end to end."
         />
 
-        {/* filters */}
         <div className="mb-8 flex flex-wrap gap-2">
           {PROJECT_FILTERS.map((f) => {
             const on = filter === f;
@@ -30,38 +30,40 @@ export default function Projects() {
                 key={f}
                 onClick={() => setFilter(f)}
                 className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
-                  on
-                    ? "border-brand bg-brand text-white"
-                    : "border-line bg-paper text-ink-500 hover:border-ink-400 hover:text-ink"
+                  on ? "border-brand bg-brand text-white" : "border-line bg-paper text-ink-500 hover:border-ink-300 hover:text-ink"
                 }`}
               >
                 {f}
-                <span className="ml-1.5 opacity-60">{count}</span>
+                <span className="ml-1.5 nums opacity-60">{count}</span>
               </button>
             );
           })}
         </div>
 
-        {/* grid */}
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((p, i) => (
-            <Reveal as="article" key={p.title} delay={(i % 3) * 0.05} className="card card-hover group flex h-full flex-col p-5">
+            <Reveal
+              as="article"
+              key={p.title}
+              delay={(i % 3) * 0.05}
+              className={`card card-hover group flex h-full flex-col p-5 ${
+                p.featured ? "border-l-2 border-l-brand" : ""
+              }`}
+            >
               <div className="mb-3 flex items-center justify-between">
-                <span className="font-mono text-[0.62rem] uppercase tracking-wide text-ink-400">
+                <span className="font-mono text-[0.62rem] uppercase tracking-[0.12em] text-ink-400">
                   {p.category}
                 </span>
                 {p.featured && (
-                  <span className="rounded-full bg-brand-soft px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wide text-brand">
+                  <span className="font-mono text-[0.55rem] uppercase tracking-[0.14em] text-brand">
                     Featured
                   </span>
                 )}
               </div>
 
-              <h3 className="flex items-start gap-1.5 text-base font-semibold leading-snug text-ink">
+              <h3 className="flex items-start gap-1.5 font-display text-base font-semibold leading-snug text-ink">
                 {p.title}
-                {p.link && (
-                  <FiArrowUpRight className="mt-0.5 shrink-0 text-ink-400 transition-colors group-hover:text-brand" />
-                )}
+                {p.link && <FiArrowUpRight className="mt-0.5 shrink-0 text-ink-400 transition-colors group-hover:text-brand" />}
               </h3>
 
               <p className="mb-4 mt-2 flex-1 text-[0.82rem] leading-relaxed text-ink-500">
@@ -79,9 +81,9 @@ export default function Projects() {
                   href={p.link}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-4 inline-flex items-center gap-1.5 border-t border-line pt-3 text-xs font-medium text-brand"
+                  className="group/link mt-4 inline-flex items-center gap-1.5 border-t border-line pt-3 text-xs font-medium text-brand"
                 >
-                  Live demo <FiArrowUpRight />
+                  Live demo <FiArrowUpRight className="transition-transform duration-200 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
                 </a>
               )}
             </Reveal>

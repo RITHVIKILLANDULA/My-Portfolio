@@ -21,6 +21,9 @@ export const HERO_ROLES = [
 
 export const HERO_CONTENT = `Give me messy, multi-source data and I'll hand you decisions. 4+ years across Deloitte, WAFU & UB turning chaos into clarity — 1M+ records modeled, manual work cut 80%, pipelines that run themselves. SQL, BigQuery, and LLMs are where I play.`;
 
+// the real "2h → 35m nightly runtime cut" arc — the site's signature sparkline
+export const RUNTIME_SERIES = [120, 118, 112, 121, 108, 99, 94, 88, 76, 71, 63, 55, 44, 35];
+
 export const ABOUT_TEXT = `I'm the analyst companies call when the data won't behave. Across Deloitte, WAFU, and the University at Buffalo, I've taken six tangled source systems of TV/media and adtech data and turned them into reporting people actually trust — and act on.
 
 I move fast and I move precisely. I profile and validate with Python, R, and SQL; orchestrate pipelines with Airflow, Spark, and BigQuery; ship 15+ Tableau and Power BI dashboards; and put LLMs to work with LangChain, RAG, and Vertex AI. I obsess over the unglamorous parts — reconciliation, anomaly detection, lineage — so the insights come out bulletproof.

@@ -11,30 +11,24 @@ import Reveal from "../ui/Reveal";
 
 export default function About() {
   return (
-    <section id="about" className="section bg-mist">
+    <section id="about" className="section">
       <div className="mx-auto max-w-5xl px-5 sm:px-8">
-        <SectionHeading
-          kicker="About"
-          title="The analyst behind the dashboards"
-        />
+        <SectionHeading index="01" kicker="About" title="The analyst behind the dashboards" />
 
-        <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr]">
-          {/* bio */}
+        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr]">
+          {/* bio + impact ledger */}
           <Reveal>
-            <div className="space-y-4">
+            <div className="max-w-[60ch] space-y-4">
               {ABOUT_TEXT.split("\n\n").map((p, i) => (
-                <p key={i} className="leading-relaxed text-ink-700">
-                  {p}
-                </p>
+                <p key={i} className="leading-[1.7] text-ink-700">{p}</p>
               ))}
             </div>
 
-            {/* impact */}
-            <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="mt-8 border-t border-line">
               {IMPACT.map((m) => (
-                <div key={m.k} className="card p-4">
-                  <div className="font-display text-2xl font-bold text-brand">{m.k}</div>
-                  <div className="mt-1 text-[0.72rem] leading-tight text-ink-400">{m.v}</div>
+                <div key={m.k} className="flex items-baseline justify-between gap-4 border-b border-line py-2.5">
+                  <span className="text-sm text-ink-500">{m.v}</span>
+                  <span className="nums font-mono text-sm font-medium text-ink">{m.k}</span>
                 </div>
               ))}
             </div>
@@ -51,7 +45,7 @@ export default function About() {
                   <div>
                     <p className="font-semibold text-ink">{e.title}</p>
                     <p className="text-sm text-ink-500">{e.school}</p>
-                    <p className="mt-0.5 text-xs text-ink-400">{e.year} · {e.detail}</p>
+                    <p className="mt-0.5 font-mono text-xs text-ink-400">{e.year} · {e.detail}</p>
                   </div>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-1.5 border-t border-line pt-4">

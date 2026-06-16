@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -9,50 +9,60 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-paper font-sans text-ink antialiased;
+    @apply bg-canvas font-sans text-ink antialiased;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
   ::selection {
-    background: rgba(79, 70, 229, 0.16);
-  }
-  h1,
-  h2,
-  h3 {
-    @apply tracking-tight;
+    background: rgba(75, 71, 214, 0.14);
   }
 }
 
 @layer components {
-  /* clean white card */
+  /* raised card on warm paper */
   .card {
-    @apply rounded-2xl border border-line bg-paper shadow-card;
+    @apply rounded-xl border border-line bg-paper shadow-card;
   }
   .card-hover {
-    @apply transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card-hover;
+    @apply transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-card-hover;
   }
 
-  /* small tag */
+  /* small mono tag */
   .chip {
     @apply inline-flex items-center rounded-md border border-line bg-mist px-2 py-0.5 font-mono text-[0.68rem] text-ink-500;
   }
 
-  /* uppercase mono section label */
+  /* mono section label */
   .kicker {
-    @apply font-mono text-[0.68rem] font-medium uppercase tracking-[0.18em] text-brand;
+    @apply font-mono text-[0.7rem] font-medium uppercase tracking-[0.22em] text-ink-400;
   }
 
-  /* buttons */
+  /* buttons — primary is "lit" (gradient + inner highlight) */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-brand transition-all hover:bg-brand-600;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium text-white shadow-brand transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5;
+    background: linear-gradient(180deg, #5a56e0 0%, #4b47d6 100%);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(180deg, #4b47d6 0%, #3e3abf 100%);
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-paper px-5 py-2.5 text-sm font-medium text-ink-700 transition-colors hover:border-ink-400 hover:text-ink;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-paper px-5 py-2.5 text-sm font-medium text-ink-700 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-ink-300 hover:text-ink;
   }
 
-  /* section vertical rhythm */
   .section {
     @apply scroll-mt-24 py-20 sm:py-28;
+  }
+
+  /* tabular figures — for an analyst, numbers should column up */
+  .nums {
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+  }
+
+  /* faint dotted texture for the hero only */
+  .dotgrid {
+    background-image: radial-gradient(circle at 1px 1px, rgba(26, 23, 20, 0.05) 1px, transparent 0);
+    background-size: 22px 22px;
   }
 }
 
@@ -62,7 +72,7 @@
   appearance: none;
   height: 4px;
   border-radius: 9999px;
-  background: #e6e8ec;
+  background: #ece9e4;
   outline: none;
 }
 .range::-webkit-slider-thumb {
@@ -71,16 +81,16 @@
   height: 16px;
   width: 16px;
   border-radius: 9999px;
-  background: #4f46e5;
+  background: #4b47d6;
   cursor: pointer;
   border: 2px solid #ffffff;
-  box-shadow: 0 1px 4px rgba(12, 13, 16, 0.2);
+  box-shadow: 0 1px 4px rgba(26, 23, 20, 0.2);
 }
 .range::-moz-range-thumb {
   height: 16px;
   width: 16px;
   border-radius: 9999px;
-  background: #4f46e5;
+  background: #4b47d6;
   cursor: pointer;
   border: 2px solid #ffffff;
 }
