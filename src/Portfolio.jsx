@@ -1,5 +1,6 @@
 import useScrollSpy from "./hooks/useScrollSpy";
 
+import Atmosphere from "./components/site/Atmosphere";
 import Navbar from "./components/site/Navbar";
 import HeroWorld from "./components/site/HeroWorld";
 import About from "./components/site/About";
@@ -24,7 +25,8 @@ export default function Portfolio() {
   const active = useScrollSpy(SECTION_IDS);
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="min-h-screen text-ink">
+      <Atmosphere />
       <Navbar active={active} />
       <main>
         <HeroWorld />

@@ -3,6 +3,7 @@ import { FiArrowUpRight } from "react-icons/fi";
 import { PROJECTS, PROJECT_FILTERS } from "../../constants";
 import SectionHeading from "./SectionHeading";
 import Reveal from "../ui/Reveal";
+import Tilt from "../ui/Tilt";
 
 export default function Projects() {
   const [filter, setFilter] = useState("All");
@@ -42,11 +43,9 @@ export default function Projects() {
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((p, i) => (
-            <Reveal
-              as="article"
-              key={p.title}
-              delay={(i % 3) * 0.05}
-              className={`card card-hover group flex h-full flex-col p-5 ${
+            <Reveal key={p.title} delay={(i % 3) * 0.05} className="h-full">
+              <Tilt
+              className={`card group flex h-full flex-col p-5 hover:border-ink-300 hover:shadow-card-hover ${
                 p.featured ? "border-l-2 border-l-brand" : ""
               }`}
             >
@@ -86,6 +85,7 @@ export default function Projects() {
                   Live demo <FiArrowUpRight className="transition-transform duration-200 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
                 </a>
               )}
+              </Tilt>
             </Reveal>
           ))}
         </div>
