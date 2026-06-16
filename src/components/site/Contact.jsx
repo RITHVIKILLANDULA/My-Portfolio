@@ -38,7 +38,7 @@ export default function Contact() {
 
       <div className="relative mx-auto max-w-5xl px-5 sm:px-8">
         <SectionHeading
-          index="06"
+          index="08"
           kicker="Contact"
           title="Let's talk"
           intro="Have a dataset, a dashboard, or a role in mind? I'd love to hear from you."

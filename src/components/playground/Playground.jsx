@@ -25,13 +25,13 @@ export default function Playground() {
   }, []);
 
   return (
-    <section id="playground" className="section">
+    <section id="ai-lab" className="section">
       <div className="mx-auto max-w-5xl px-5 sm:px-8">
         <SectionHeading
           index="05"
-          kicker="Playground"
-          title="Two real models, in your browser"
-          intro="No server, no API key — both of these run entirely on your device."
+          kicker="AI Lab"
+          title="Models running live, in your browser"
+          intro="Not screenshots — two real models you can drive right now. No server, no API key; everything runs on your device."
         />
 
         <div className="mb-4 flex gap-2">

@@ -1,11 +1,5 @@
 import { HiOutlineAcademicCap, HiOutlineCheckBadge } from "react-icons/hi2";
-import {
-  ABOUT_TEXT,
-  IMPACT,
-  EDUCATION,
-  COURSEWORK,
-  CERTIFICATIONS,
-} from "../../constants";
+import { ABOUT_TEXT, IMPACT, EDUCATION, CERTIFICATIONS } from "../../constants";
 import SectionHeading from "./SectionHeading";
 import Reveal from "../ui/Reveal";
 
@@ -34,22 +28,23 @@ export default function About() {
             </div>
           </Reveal>
 
-          {/* education + certs */}
-          <Reveal delay={0.1} className="space-y-5">
+          {/* education (3 degrees) + certs */}
+          <Reveal delay={0.1} className="space-y-4">
+            <p className="kicker">Education · three CS degrees</p>
             {EDUCATION.map((e) => (
               <div key={e.title} className="card p-5">
                 <div className="flex items-start gap-3">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-brand-soft text-brand">
-                    <HiOutlineAcademicCap className="text-xl" />
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-soft text-brand">
+                    <HiOutlineAcademicCap className="text-lg" />
                   </span>
-                  <div>
-                    <p className="font-semibold text-ink">{e.title}</p>
+                  <div className="min-w-0">
+                    <p className="font-semibold leading-tight text-ink">{e.title}</p>
                     <p className="text-sm text-ink-500">{e.school}</p>
-                    <p className="mt-0.5 font-mono text-xs text-ink-400">{e.year} · {e.detail}</p>
+                    <p className="mt-0.5 font-mono text-[0.7rem] text-ink-400">{e.year} · {e.detail}</p>
                   </div>
                 </div>
-                <div className="mt-4 flex flex-wrap gap-1.5 border-t border-line pt-4">
-                  {COURSEWORK.slice(0, 6).map((c) => (
+                <div className="mt-3 flex flex-wrap gap-1.5 border-t border-line pt-3">
+                  {e.coursework.slice(0, 5).map((c) => (
                     <span key={c} className="chip">{c}</span>
                   ))}
                 </div>

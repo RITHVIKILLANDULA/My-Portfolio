@@ -2,40 +2,43 @@
 export const RESUME_URL = import.meta.env.BASE_URL + "Rithvik_Illandula_Resume.pdf";
 
 export const NAV_LINKS = [
-  { id: "home", label: "Home" },
   { id: "about", label: "About" },
-  { id: "skills", label: "Skills" },
-  { id: "experience", label: "Experience" },
+  { id: "expertise", label: "Expertise" },
   { id: "projects", label: "Projects" },
-  { id: "playground", label: "Playground" },
+  { id: "ai-lab", label: "AI Lab" },
+  { id: "experience", label: "Experience" },
+  { id: "recruiter", label: "Recruiter" },
   { id: "contact", label: "Contact" },
 ];
 
 export const HERO_NAME = "Rithvik Illandula";
 export const HERO_ROLES = [
-  "AI Data Analyst",
-  "Data Analytics Engineer",
-  "Data Problem-Solver",
-  "Insight Architect",
+  "Data Engineer",
+  "AI Engineer",
+  "Software Engineer",
+  "New-Grad SDE",
 ];
 
-export const HERO_CONTENT = `Give me messy, multi-source data and I'll hand you decisions. 4+ years across Deloitte, WAFU & UB turning chaos into clarity — 1M+ records modeled, manual work cut 80%, pipelines that run themselves. SQL, BigQuery, and LLMs are where I play.`;
+export const HERO_TAGLINE =
+  "Building scalable data platforms, intelligent AI systems, and production-ready software.";
+
+export const HERO_CONTENT = `I design data platforms, AI applications, and backend systems end to end — pipelines that run themselves, RAG and ML tools that reason over real data, and clean, production-ready software. Three CS degrees and 4+ years across Deloitte, WAFU, and the University at Buffalo turning messy, multi-source data into reliable systems.`;
 
 // the real "2h → 35m nightly runtime cut" arc — the site's signature sparkline
 export const RUNTIME_SERIES = [120, 118, 112, 121, 108, 99, 94, 88, 76, 71, 63, 55, 44, 35];
 
-export const ABOUT_TEXT = `I'm the analyst companies call when the data won't behave. Across Deloitte, WAFU, and the University at Buffalo, I've taken six tangled source systems of TV/media and adtech data and turned them into reporting people actually trust — and act on.
+export const ABOUT_TEXT = `I'm an engineer who works across the whole stack of modern data and AI — from the SQL and pipelines underneath, to the ML and LLM systems on top, to the backend services that ship it. Three CS degrees (Diploma → B.Tech → M.S.) and 4+ years across Deloitte, WAFU, and the University at Buffalo taught me to build systems that are reliable, measurable, and production-ready.
 
-I move fast and I move precisely. I profile and validate with Python, R, and SQL; orchestrate pipelines with Airflow, Spark, and BigQuery; ship 15+ Tableau and Power BI dashboards; and put LLMs to work with LangChain, RAG, and Vertex AI. I obsess over the unglamorous parts — reconciliation, anomaly detection, lineage — so the insights come out bulletproof.
+On the data side I orchestrate pipelines with Airflow, Spark, and BigQuery and obsess over the unglamorous parts — reconciliation, anomaly detection, lineage. On the AI side I build RAG systems, ML models, and LLM tools with LangChain, FAISS, and Vertex AI. And with a CS foundation in Java, C++, DSA, system design, and databases, I write clean, tested software, not just notebooks.
 
-The scoreboard: 1M+ records modeled, nightly runtimes cut from 2 hours to 35 minutes, manual review down 80%, 40+ mappings documented. Finishing an M.S. in Computer Science, I build data systems that don't just report the past — they reason about it. Hand me the hardest data problem in the room; I'll make it look easy.`;
+The scoreboard: 1M+ records modeled, nightly runtimes cut from 2 hours to 35 minutes, manual review down 80%, 15+ dashboards and a dozen+ shipped projects. Hand me a hard systems problem across data, AI, or software — I'll design it, build it, and make it run.`;
 
 // Animated headline counters
 export const STATS = [
-  { value: 4, suffix: "+", label: "Years in Data", decimals: 0 },
-  { value: 15, suffix: "+", label: "Dashboards Shipped", decimals: 0 },
-  { value: 40, suffix: "+", label: "Source Mappings", decimals: 0 },
-  { value: 80, suffix: "%", label: "Manual Review Cut", decimals: 0 },
+  { value: 4, suffix: "+", label: "Years Building", decimals: 0 },
+  { value: 12, suffix: "+", label: "Projects Shipped", decimals: 0 },
+  { value: 3, suffix: "", label: "CS Degrees", decimals: 0 },
+  { value: 1, suffix: "M+", label: "Records Modeled", decimals: 0 },
 ];
 
 // Secondary impact metrics (shown in About)
@@ -108,6 +111,18 @@ export const SKILL_CATEGORIES = [
       { name: "Data Modeling", level: 86 },
     ],
   },
+  {
+    name: "Software Engineering",
+    accent: "#2dd4bf",
+    skills: [
+      { name: "Java", level: 84 },
+      { name: "C++", level: 80 },
+      { name: "Data Structures & Algorithms", level: 86 },
+      { name: "System Design", level: 80 },
+      { name: "REST APIs", level: 84 },
+      { name: "Git / CI-CD", level: 85 },
+    ],
+  },
 ];
 
 // Flat tag list for the 3D rotating skill-sphere
@@ -150,24 +165,41 @@ export const RESUME_SUMMARY = `The person you want on your data. 4+ years turnin
 
 export const EDUCATION = [
   {
-    year: "2025 JAN — 2026 MAY",
+    year: "2025 — 2026",
     title: "M.S. Computer Science",
     school: "University at Buffalo, SUNY",
-    detail: "Focus: data, analytics & machine learning",
+    detail: "ML, deep learning & data-intensive computing",
+    coursework: [
+      "Machine Learning", "Deep Learning", "Data Intensive Computing",
+      "Analysis of Algorithms", "Operating Systems", "Computer Architecture",
+      "Computer Security", "Computer Networks",
+    ],
+  },
+  {
+    year: "2021 — 2024",
+    title: "B.Tech, Computer Science & Engineering",
+    school: "Lovely Professional University",
+    detail: "Core CS, software engineering & cloud",
+    coursework: [
+      "Data Structures & Algorithms", "Design & Analysis of Algorithms",
+      "Artificial Intelligence", "DBMS", "Java", "Python", "Software Engineering",
+      "Operating Systems", "Computer Networks", "Cloud Computing", "Data Science with R",
+    ],
+  },
+  {
+    year: "2017 — 2021",
+    title: "Diploma, Computer Science",
+    school: "Government Institute of Electronics",
+    detail: "Systems, programming & electronics foundations",
+    coursework: [
+      "C++ with Data Structures", "OS & System Programming", "Computer Architecture",
+      "Microprocessors", "Embedded Systems", ".NET Programming", "Networking",
+      "Digital Electronics", "Verilog HDL",
+    ],
   },
 ];
 
-export const COURSEWORK = [
-  "Machine Learning",
-  "Deep Learning",
-  "Data Intensive Computing",
-  "Analysis of Algorithms",
-  "Computer Networks",
-  "Computer Security",
-  "Operating Systems",
-  "Computer Architecture",
-  "Project Management",
-];
+export const COURSEWORK = EDUCATION[0].coursework;
 
 export const CERTIFICATIONS = [
   "Microsoft PL-300 (Power BI Data Analyst)",
@@ -297,3 +329,64 @@ export const CONTACT = {
   linkedin: "https://www.linkedin.com/in/rithvik-illandula/",
   github: "https://github.com/RITHVIKILLANDULA",
 };
+
+// Four expertise pillars (Expertise section)
+export const EXPERTISE = [
+  {
+    icon: "pipeline",
+    title: "Data Engineering",
+    blurb: "Reliable, scalable pipelines that turn raw, multi-source data into trusted analytics.",
+    stack: ["SQL", "Airflow", "BigQuery", "Spark / PySpark", "Databricks", "ETL / ELT", "Data Modeling"],
+  },
+  {
+    icon: "ai",
+    title: "AI Engineering",
+    blurb: "LLM apps, RAG, vector search, and ML workflows that reason over real data.",
+    stack: ["LangChain", "RAG", "FAISS", "OpenAI", "Vertex AI", "scikit-learn", "XGBoost", "MLflow"],
+  },
+  {
+    icon: "code",
+    title: "Software Engineering",
+    blurb: "Clean, tested, production-ready software with strong backend and system-design fundamentals.",
+    stack: ["Python", "Java", "C++", "REST APIs", "DSA", "System Design", "DBMS"],
+  },
+  {
+    icon: "cloud",
+    title: "Cloud & Infrastructure",
+    blurb: "Deploying and automating systems across the cloud with reliable, repeatable workflows.",
+    stack: ["GCP", "Docker", "Cloud SQL", "CI/CD", "Monitoring", "Snowflake"],
+  },
+];
+
+// Recruiter Mode
+export const TARGET_ROLES = [
+  "Data Engineer",
+  "AI / ML Engineer",
+  "Software Engineer",
+  "New-Grad SDE",
+  "Applied AI Engineer",
+  "Cloud / Data Platform Engineer",
+];
+
+export const ROLE_FIT = [
+  {
+    role: "Data Engineer",
+    projects: ["Data Quality & Anomaly Pipeline", "BigQuery ML Analytics"],
+    skills: ["SQL", "Airflow", "BigQuery", "Spark"],
+  },
+  {
+    role: "AI / ML Engineer",
+    projects: ["PDF-Insight (RAG)", "Telco Churn", "Citi Bike Demand"],
+    skills: ["LLMs", "RAG", "Vector DBs", "scikit-learn"],
+  },
+  {
+    role: "Software Engineer / SDE",
+    projects: ["Imagify (MERN)", "NLP Toolkit", "This portfolio"],
+    skills: ["Java", "Python", "REST APIs", "System Design"],
+  },
+  {
+    role: "Cloud / Data Platform",
+    projects: ["BigQuery ML Analytics", "Data Quality Pipeline"],
+    skills: ["GCP", "Docker", "BigQuery", "CI/CD"],
+  },
+];

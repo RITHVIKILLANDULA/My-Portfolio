@@ -7,10 +7,10 @@ export default function Skills() {
     <section id="skills" className="section">
       <div className="mx-auto max-w-5xl px-5 sm:px-8">
         <SectionHeading
-          index="02"
+          index="03"
           kicker="Skills"
-          title="The toolkit"
-          intro="From raw SQL and self-running pipelines to forecasting models and LLM-powered tools."
+          title="The full stack"
+          intro="Languages, data, AI, cloud, and software-engineering fundamentals — the tools I reach for."
         />
 
         <Reveal className="border-t border-line">

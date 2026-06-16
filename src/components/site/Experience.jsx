@@ -6,7 +6,7 @@ export default function Experience() {
   return (
     <section id="experience" className="section">
       <div className="mx-auto max-w-5xl px-5 sm:px-8">
-        <SectionHeading index="03" kicker="Experience" title="Where the work has shipped" />
+        <SectionHeading index="06" kicker="Experience" title="Where the work has shipped" />
 
         <Reveal className="relative border-t border-line">
           {/* the career pipeline spine (desktop) */}

@@ -15,8 +15,8 @@
   <rect width="1200" height="6" fill="#4b47d6" />
 
   <text x="90" y="150" font-size="22" letter-spacing="6" fill="#9a938a">RITHVIK ILLANDULA</text>
-  <text x="86" y="250" font-size="84" font-weight="700" letter-spacing="-2" fill="#1a1714">AI Data Analyst</text>
-  <text x="90" y="312" font-size="27" fill="#3a352f">Turning messy, multi-source data into decisions.</text>
+  <text x="86" y="250" font-size="78" font-weight="700" letter-spacing="-2" fill="#1a1714">Data · AI · Software</text>
+  <text x="90" y="312" font-size="26" fill="#3a352f">Scalable data platforms, intelligent AI, production software.</text>
 
   <g font-family="'Courier New', monospace">
     <text x="92" y="430" font-size="46" font-weight="700" fill="#1a1714">1M+</text>

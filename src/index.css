@@ -140,6 +140,13 @@
 .spin-rev { animation: spin-rev 50s linear infinite; transform-origin: center; }
 .dashflow { stroke-dasharray: 4 8; animation: dashflow 1.4s linear infinite; }
 
+/* AI guide — blinking eyes */
+@keyframes blink {
+  0%, 91%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.12); }
+}
+.blink { animation: blink 4.5s ease-in-out infinite; transform-origin: center; }
+
 /* vertical career pipeline */
 @keyframes vflow { to { background-position: 0 18px; } }
 .vpipe {

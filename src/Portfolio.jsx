@@ -4,20 +4,25 @@ import Atmosphere from "./components/site/Atmosphere";
 import Navbar from "./components/site/Navbar";
 import HeroWorld from "./components/site/HeroWorld";
 import About from "./components/site/About";
+import Expertise from "./components/site/Expertise";
 import Skills from "./components/site/Skills";
-import Experience from "./components/site/Experience";
 import Projects from "./components/site/Projects";
 import Playground from "./components/playground/Playground";
+import Experience from "./components/site/Experience";
+import RecruiterMode from "./components/site/RecruiterMode";
 import Contact from "./components/site/Contact";
 import Footer from "./components/site/Footer";
+import Guide from "./components/site/Guide";
 
 const SECTION_IDS = [
   "home",
   "about",
+  "expertise",
   "skills",
-  "experience",
   "projects",
-  "playground",
+  "ai-lab",
+  "experience",
+  "recruiter",
   "contact",
 ];
 
@@ -32,13 +37,16 @@ export default function Portfolio() {
       <main id="main">
         <HeroWorld />
         <About />
+        <Expertise />
         <Skills />
-        <Experience />
         <Projects />
         <Playground />
+        <Experience />
+        <RecruiterMode />
         <Contact />
       </main>
       <Footer />
+      <Guide active={active} />
     </div>
   );
 }

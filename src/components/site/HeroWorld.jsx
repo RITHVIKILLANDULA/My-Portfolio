@@ -1,6 +1,6 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { FiArrowRight, FiDownload, FiMessageSquare } from "react-icons/fi";
-import { HERO_NAME, HERO_CONTENT, RESUME_URL, RUNTIME_SERIES } from "../../constants";
+import { HERO_NAME, HERO_TAGLINE, HERO_CONTENT, RESUME_URL, RUNTIME_SERIES } from "../../constants";
 import RoleCycler from "../ui/RoleCycler";
 
 const ease = [0.16, 1, 0.3, 1];
@@ -145,7 +145,11 @@ export default function HeroWorld() {
           <RoleCycler />
         </motion.p>
 
-        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.24, ease }} className="mt-7 max-w-[46ch] text-[1.0625rem] leading-[1.7] text-ink-700">
+        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.22, ease }} className="mt-5 max-w-[44ch] font-display text-lg font-medium leading-snug text-ink sm:text-xl">
+          {HERO_TAGLINE}
+        </motion.p>
+
+        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.28, ease }} className="mt-5 max-w-[48ch] text-[1.0625rem] leading-[1.7] text-ink-700">
           {HERO_CONTENT}
         </motion.p>
 
