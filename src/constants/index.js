@@ -15,8 +15,15 @@ export const HERO_NAME = "Rithvik Illandula";
 export const HERO_ROLES = [
   "Data Engineer",
   "AI Engineer",
+  "Machine Learning Engineer",
   "Software Engineer",
   "New-Grad SDE",
+  "Applied AI Engineer",
+  "Backend Engineer",
+  "Cloud / Data Engineer",
+  "Data Analytics Engineer",
+  "AI Data Analyst",
+  "Data Problem-Solver",
 ];
 
 export const HERO_TAGLINE =

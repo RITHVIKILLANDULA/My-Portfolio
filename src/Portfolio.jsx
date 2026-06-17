@@ -1,5 +1,6 @@
 import useScrollSpy from "./hooks/useScrollSpy";
 
+import Loader from "./components/site/Loader";
 import Atmosphere from "./components/site/Atmosphere";
 import Navbar from "./components/site/Navbar";
 import HeroWorld from "./components/site/HeroWorld";
@@ -31,6 +32,7 @@ export default function Portfolio() {
 
   return (
     <div className="min-h-screen text-ink">
+      <Loader />
       <a href="#main" className="skip-link">Skip to content</a>
       <Atmosphere />
       <Navbar active={active} />

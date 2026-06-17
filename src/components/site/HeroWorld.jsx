@@ -132,28 +132,26 @@ export default function HeroWorld() {
         style={{ x: farX, y: farY }}
         className="relative z-10 mx-auto w-full max-w-5xl px-5 sm:px-8"
       >
-        <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }} className="kicker mb-6">
+        <p className="kicker mb-6">
           <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-emerald-500 align-middle" />
           Welcome to my data &amp; AI world
-        </motion.p>
+        </p>
 
-        <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.08, ease }} className="font-display text-display text-ink">
-          {HERO_NAME}
-        </motion.h1>
+        <h1 className="font-display text-display text-ink">{HERO_NAME}</h1>
 
-        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.16, ease }} className="mt-4 font-display text-2xl font-medium text-brand sm:text-3xl">
+        <p className="mt-4 font-display text-2xl font-medium text-brand sm:text-3xl">
           <RoleCycler />
-        </motion.p>
+        </p>
 
-        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.22, ease }} className="mt-5 max-w-[44ch] font-display text-lg font-medium leading-snug text-ink sm:text-xl">
+        <p className="mt-5 max-w-[44ch] font-display text-lg font-medium leading-snug text-ink sm:text-xl">
           {HERO_TAGLINE}
-        </motion.p>
+        </p>
 
-        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.28, ease }} className="mt-5 max-w-[48ch] text-[1.0625rem] leading-[1.7] text-ink-700">
+        <p className="mt-5 max-w-[48ch] text-[1.0625rem] leading-[1.7] text-ink-700">
           {HERO_CONTENT}
-        </motion.p>
+        </p>
 
-        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.32, ease }} className="mt-8 flex flex-wrap items-center gap-3">
+        <div className="mt-8 flex flex-wrap items-center gap-3">
           <a
             href="#ai-lab"
             onClick={() => window.dispatchEvent(new CustomEvent("rai:ask"))}
@@ -166,10 +164,10 @@ export default function HeroWorld() {
           <a href={RESUME_URL} target="_blank" rel="noreferrer" className="btn-ghost">
             <FiDownload /> Résumé
           </a>
-        </motion.div>
+        </div>
 
         {/* always-visible scene for tablet & mobile (lg shows the full one) */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.4, ease }} className="mt-12 lg:hidden">
+        <div className="mt-12 lg:hidden">
           <div className="relative overflow-hidden rounded-3xl border border-line bg-paper/60 p-6 backdrop-blur-sm">
             <div className="dotgrid pointer-events-none absolute inset-0 opacity-40" />
             <div className="relative flex flex-col items-center gap-7 sm:flex-row sm:justify-between">
@@ -209,7 +207,7 @@ export default function HeroWorld() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </motion.div>
     </section>
   );
