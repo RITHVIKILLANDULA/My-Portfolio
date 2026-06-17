@@ -3,6 +3,7 @@ import { EXPERTISE } from "../../constants";
 import SectionHeading from "./SectionHeading";
 import Reveal from "../ui/Reveal";
 import Tilt from "../ui/Tilt";
+import PillarViz from "../ui/PillarViz";
 
 const ICONS = {
   pipeline: FiDatabase,
@@ -28,6 +29,7 @@ export default function Expertise() {
             return (
               <Reveal key={p.title} delay={(i % 2) * 0.08} className="h-full">
                 <Tilt className="card group flex h-full flex-col p-6 hover:border-ink-300 hover:shadow-card-hover">
+                  <PillarViz kind={p.icon} />
                   <div className="mb-4 flex items-center gap-3">
                     <span className="grid h-11 w-11 place-items-center rounded-xl bg-brand-soft text-brand transition-colors group-hover:bg-brand group-hover:text-white">
                       <Icon className="text-xl" />

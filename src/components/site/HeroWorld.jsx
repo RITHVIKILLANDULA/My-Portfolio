@@ -155,7 +155,7 @@ export default function HeroWorld() {
 
         <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.32, ease }} className="mt-8 flex flex-wrap items-center gap-3">
           <a
-            href="#playground"
+            href="#ai-lab"
             onClick={() => window.dispatchEvent(new CustomEvent("rai:ask"))}
             className="btn-primary group"
           >
@@ -166,6 +166,49 @@ export default function HeroWorld() {
           <a href={RESUME_URL} target="_blank" rel="noreferrer" className="btn-ghost">
             <FiDownload /> Résumé
           </a>
+        </motion.div>
+
+        {/* always-visible scene for tablet & mobile (lg shows the full one) */}
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.4, ease }} className="mt-12 lg:hidden">
+          <div className="relative overflow-hidden rounded-3xl border border-line bg-paper/60 p-6 backdrop-blur-sm">
+            <div className="dotgrid pointer-events-none absolute inset-0 opacity-40" />
+            <div className="relative flex flex-col items-center gap-7 sm:flex-row sm:justify-between">
+              <div className="relative h-40 w-40 shrink-0">
+                <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(108,104,232,0.22),transparent_64%)] [animation:corepulse_5s_ease-in-out_infinite]" />
+                <svg className="spin-slow absolute inset-0 h-full w-full" viewBox="0 0 160 160" fill="none">
+                  <circle cx="80" cy="80" r="68" stroke="#c7c1f3" strokeWidth="1" strokeDasharray="2 7" />
+                  <circle cx="80" cy="80" r="58" stroke="#d8d3f2" strokeWidth="1" />
+                </svg>
+                <svg className="spin-rev absolute inset-0 h-full w-full" viewBox="0 0 160 160" fill="none">
+                  <circle cx="80" cy="80" r="46" stroke="#4b47d6" strokeWidth="1.5" strokeDasharray="30 12" />
+                  <circle cx="80" cy="34" r="3.5" fill="#6c68e8" />
+                  <circle cx="126" cy="80" r="3" fill="#38bdf8" />
+                  <circle cx="80" cy="126" r="3.5" fill="#2dd4bf" />
+                </svg>
+                <div className="absolute left-1/2 top-1/2 grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 rotate-45 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand shadow-[0_14px_40px_-12px_rgba(75,71,214,0.6)]">
+                  <span className="-rotate-45 font-mono text-[0.5rem] font-medium tracking-widest text-white/90">DATA</span>
+                </div>
+              </div>
+
+              <div className="grid w-full grid-cols-2 gap-3">
+                <div className="floaty rounded-2xl border border-line bg-paper/80 px-3.5 py-3 shadow-card">
+                  <p className="kicker mb-1 !text-[0.5rem]">churn model</p>
+                  <p className="nums font-display text-2xl font-semibold text-ink">97<span className="text-base text-ink-400">%</span></p>
+                </div>
+                <div className="floaty rounded-2xl border border-line bg-paper/80 px-3.5 py-3 shadow-card" style={{ animationDelay: "0.6s" }}>
+                  <p className="kicker mb-1 !text-[0.5rem]">records</p>
+                  <p className="nums font-display text-2xl font-semibold text-brand">1M+</p>
+                </div>
+                <div className="floaty col-span-2 rounded-2xl border border-line bg-paper/80 px-3.5 py-3 shadow-card" style={{ animationDelay: "1.1s" }}>
+                  <p className="kicker mb-1.5 !text-[0.5rem]">nightly runtime · 2h → 35m</p>
+                  <svg viewBox="0 0 200 36" className="h-9 w-full">
+                    <path d={`${spark(RUNTIME_SERIES, 200, 36)} L194 30 L6 30 Z`} fill="rgba(75,71,214,0.10)" />
+                    <path d={spark(RUNTIME_SERIES, 200, 36)} fill="none" stroke="#4b47d6" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
         </motion.div>
       </motion.div>
     </section>
