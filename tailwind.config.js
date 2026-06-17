@@ -9,34 +9,35 @@ export default {
         mono: ["Geist Mono", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       fontSize: {
-        display: ["clamp(3rem,7vw,5.25rem)", { lineHeight: "0.95", letterSpacing: "-0.035em", fontWeight: "600" }],
+        display: ["clamp(3rem,7vw,5.5rem)", { lineHeight: "0.95", letterSpacing: "-0.035em", fontWeight: "600" }],
         h2: ["clamp(1.75rem,3vw,2.5rem)", { lineHeight: "1.05", letterSpacing: "-0.025em", fontWeight: "600" }],
         stat: ["clamp(2rem,3.5vw,2.75rem)", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "600" }],
       },
       colors: {
-        // warm-paper editorial system — one bespoke indigo accent
-        canvas: "#fbfaf9", // page (warm off-white, never pure white)
-        paper: "#ffffff", // raised cards
-        mist: "#f4f2ef", // warm wash / small fills
-        line: "#ece9e4", // warm hairline
+        // cinematic dark — deep, refined, one glowing accent
+        canvas: "#08090e", // page (near-black, faint blue)
+        paper: "#101219", // raised surfaces / cards
+        mist: "#171a23", // subtle fill
+        line: "#262a36", // borders / hairlines
         ink: {
-          DEFAULT: "#1a1714", // headings (warm charcoal)
-          700: "#3a352f", // strong body
-          500: "#6b645b", // body / muted
-          400: "#9a938a", // labels
-          300: "#c4bdb3", // faint index numerals
+          DEFAULT: "#f3f4f8", // headings
+          700: "#c6cad6", // strong body
+          500: "#9094a3", // body / muted
+          400: "#666b7a", // labels
+          300: "#474b58", // faint
         },
         brand: {
-          DEFAULT: "#4b47d6", // bespoke indigo-violet
-          600: "#3e3abf", // hover
-          500: "#6c68e8", // light
-          soft: "#efeefb", // tint
+          DEFAULT: "#7c78f0", // glowing indigo (brighter for dark)
+          600: "#6c68e8",
+          500: "#9d99ff",
+          soft: "#1a1930", // dark indigo tint (chips / pills)
         },
       },
       boxShadow: {
-        card: "0 1px 2px rgba(26,23,20,0.03)",
-        "card-hover": "0 10px 34px -12px rgba(26,23,20,0.14)",
-        brand: "inset 0 1px 0 rgba(255,255,255,0.18), 0 8px 24px -8px rgba(75,71,214,0.40)",
+        card: "0 1px 2px rgba(0,0,0,0.4)",
+        "card-hover": "0 18px 50px -16px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,120,240,0.12)",
+        brand: "inset 0 1px 0 rgba(255,255,255,0.16), 0 10px 30px -8px rgba(124,120,240,0.5)",
+        glow: "0 0 40px -8px rgba(124,120,240,0.45)",
       },
       keyframes: {
         "fade-up": {

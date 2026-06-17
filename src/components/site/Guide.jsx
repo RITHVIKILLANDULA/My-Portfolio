@@ -21,13 +21,13 @@ const TIPS = {
 function Bot({ size = 40 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden>
-      <line x1="24" y1="6" x2="24" y2="11" stroke="#4b47d6" strokeWidth="2" strokeLinecap="round" />
+      <line x1="24" y1="6" x2="24" y2="11" stroke="#7c78f0" strokeWidth="2" strokeLinecap="round" />
       <circle cx="24" cy="5" r="2.5" fill="#6c68e8" />
-      <rect x="9" y="11" width="30" height="26" rx="9" fill="#fff" stroke="#4b47d6" strokeWidth="2" />
+      <rect x="9" y="11" width="30" height="26" rx="9" fill="#fff" stroke="#7c78f0" strokeWidth="2" />
       <rect x="14" y="17" width="20" height="13" rx="6" fill="#eef1ff" />
       <g className="blink">
-        <circle cx="20" cy="23.5" r="2.4" fill="#4b47d6" />
-        <circle cx="28" cy="23.5" r="2.4" fill="#4b47d6" />
+        <circle cx="20" cy="23.5" r="2.4" fill="#7c78f0" />
+        <circle cx="28" cy="23.5" r="2.4" fill="#7c78f0" />
       </g>
       <path d="M21 33 q3 2 6 0" stroke="#9a938a" strokeWidth="1.6" strokeLinecap="round" fill="none" />
     </svg>

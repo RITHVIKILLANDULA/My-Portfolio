@@ -22,7 +22,7 @@ export default function Navbar({ active }) {
     >
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3.5 sm:px-8">
         <a href="#home" className="flex items-center gap-2.5 font-semibold text-ink">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-ink text-sm font-bold text-white">
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-sm font-bold text-white shadow-glow">
             RI
           </span>
           <span className="hidden text-[0.95rem] sm:block">Rithvik Illandula</span>
@@ -62,7 +62,7 @@ export default function Navbar({ active }) {
       {/* mobile menu */}
       {open && (
         <div className="fixed inset-0 z-[80] md:hidden">
-          <div className="absolute inset-0 bg-ink/20 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)} />
           <div className="absolute right-0 top-0 flex h-full w-72 flex-col gap-1 border-l border-line bg-paper p-6 pt-5">
             <button onClick={() => setOpen(false)} aria-label="Close" className="mb-4 self-end text-2xl text-ink-500">
               <HiX />
