@@ -10,19 +10,19 @@ export default function Experience() {
 
         <Reveal className="relative border-t border-line">
           {/* the career spine (desktop) */}
-          <div className="absolute bottom-8 left-[6.5rem] top-10 hidden w-px bg-gradient-to-b from-brand/30 via-line to-transparent sm:block" />
+          <div className="absolute bottom-8 left-[7.75rem] top-10 hidden w-px bg-gradient-to-b from-brand/30 via-line to-transparent sm:block" />
 
           {EXPERIENCES.map((exp, i) => (
             <div
               key={i}
-              className="relative grid gap-2 border-b border-line py-9 sm:grid-cols-[6rem_1fr] sm:gap-12 sm:pl-12"
+              className="relative grid gap-2 border-b border-line py-9 sm:grid-cols-[6.5rem_1fr] sm:gap-10"
             >
               <div className="font-mono text-xs tabular-nums leading-relaxed text-ink-400">
                 {exp.year}
               </div>
 
-              {/* node bead on the pipeline */}
-              <span className="absolute left-[6.5rem] top-[2.6rem] hidden -translate-x-1/2 sm:block">
+              {/* node bead on the spine, in the gap (clear of the dates) */}
+              <span className="absolute left-[7.75rem] top-[2.6rem] hidden -translate-x-1/2 sm:block">
                 <span
                   className={`grid place-items-center rounded-full bg-canvas ${
                     i === 0 ? "h-4 w-4 ring-2 ring-brand/30" : "h-3 w-3 ring-1 ring-line"
