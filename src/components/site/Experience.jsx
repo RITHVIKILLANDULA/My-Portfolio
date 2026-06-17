@@ -9,10 +9,8 @@ export default function Experience() {
         <SectionHeading index="06" kicker="Experience" title="Where the work has shipped" />
 
         <Reveal className="relative border-t border-line">
-          {/* the career pipeline spine (desktop) */}
-          <div className="absolute bottom-8 left-[6.5rem] top-10 hidden w-px bg-line sm:block">
-            <span className="vpipe absolute inset-0" />
-          </div>
+          {/* the career spine (desktop) */}
+          <div className="absolute bottom-8 left-[6.5rem] top-10 hidden w-px bg-gradient-to-b from-brand/30 via-line to-transparent sm:block" />
 
           {EXPERIENCES.map((exp, i) => (
             <div

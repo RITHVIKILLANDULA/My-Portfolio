@@ -26,10 +26,7 @@ export default function SectionHeading({ index, kicker, title, intro, center }) 
         </span>
         <span className="font-mono text-[0.7rem] tabular-nums text-ink-400">{index}</span>
         <span className="kicker">{kicker}</span>
-        <svg className="h-1 flex-1" viewBox="0 0 400 2" preserveAspectRatio="none" aria-hidden>
-          <line x1="0" y1="1" x2="400" y2="1" stroke="#ece9e4" strokeWidth="2" />
-          <line x1="0" y1="1" x2="400" y2="1" stroke="#6c68e8" strokeWidth="2" strokeDasharray="3 9" opacity="0.5" className="dashflow" />
-        </svg>
+        <span className="h-px flex-1 bg-gradient-to-r from-line to-transparent" />
       </div>
       <h2 className="max-w-2xl font-display text-h2 text-ink">{title}</h2>
       {intro && <p className="mt-3 max-w-2xl leading-relaxed text-ink-500">{intro}</p>}
