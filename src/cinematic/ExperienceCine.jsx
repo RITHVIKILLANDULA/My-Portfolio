@@ -9,18 +9,20 @@ export default function ExperienceCine() {
   return (
     <section id="experience" className="border-t border-line py-24 sm:py-36">
       <div className="mx-auto max-w-6xl px-6 sm:px-10">
-        <Reveal>
-          <p className="mb-3 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-brand-500">
+        <Reveal kind="kicker">
+          <p className="mb-4 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-brand-500">
             experience
           </p>
-          <h2 className="max-w-[16ch] font-display font-semibold leading-[1.05] tracking-[-0.03em] text-ink text-[clamp(2rem,5.5vw,3.4rem)]">
+        </Reveal>
+        <Reveal kind="heading">
+          <h2 className="max-w-[22ch] font-display text-h2 text-ink">
             Where the work shipped.
           </h2>
         </Reveal>
 
-        <div className="mt-14 space-y-px">
+        <div className="mt-14">
           {EXPERIENCES.map((e, i) => (
-            <Reveal key={e.company} delay={i * 0.05}>
+            <Reveal key={e.company} kind="item" delay={i * 0.04}>
               <div className="grid gap-3 border-t border-line py-10 sm:grid-cols-[10rem_1fr] sm:gap-10 sm:py-12">
                 <div>
                   <p className="font-mono text-[0.72rem] tabular-nums text-ink-400">{e.year}</p>
@@ -34,8 +36,8 @@ export default function ExperienceCine() {
                   <h3 className="font-display text-xl font-semibold tracking-[-0.01em] text-ink sm:text-2xl">
                     {e.role}
                   </h3>
-                  <p className="mt-0.5 text-sm font-medium text-ink-500">{e.company}</p>
-                  <p className="mt-4 max-w-[58ch] text-[0.95rem] leading-[1.7] text-ink-500">
+                  <p className="mt-1 text-base font-medium text-ink-700">{e.company}</p>
+                  <p className="mt-4 max-w-[60ch] text-[0.95rem] leading-[1.7] text-ink-500">
                     {e.description}
                   </p>
                   <div className="mt-5 flex flex-wrap gap-2">

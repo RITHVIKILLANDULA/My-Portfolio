@@ -9,8 +9,10 @@ export default {
         mono: ["Geist Mono", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       fontSize: {
+        hero: ["clamp(2.9rem,9vw,6.75rem)", { lineHeight: "0.93", letterSpacing: "-0.035em", fontWeight: "600" }],
         display: ["clamp(3rem,7vw,5.5rem)", { lineHeight: "0.95", letterSpacing: "-0.035em", fontWeight: "600" }],
-        h2: ["clamp(1.75rem,3vw,2.5rem)", { lineHeight: "1.05", letterSpacing: "-0.025em", fontWeight: "600" }],
+        h2: ["clamp(2rem,5vw,3.25rem)", { lineHeight: "1.04", letterSpacing: "-0.03em", fontWeight: "600" }],
+        statement: ["clamp(2rem,5.5vw,3.6rem)", { lineHeight: "1.04", letterSpacing: "-0.032em", fontWeight: "600" }],
         stat: ["clamp(2rem,3.5vw,2.75rem)", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "600" }],
       },
       colors: {

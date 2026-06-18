@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { motion, useScroll } from "framer-motion";
+import useLenis from "../hooks/useLenis";
 import Loader from "../components/site/Loader";
 import CinematicHero from "./CinematicHero";
 import StatementBand from "./StatementBand";
@@ -10,8 +12,8 @@ import ContactCine from "./ContactCine";
 import { RESUME_URL } from "../constants";
 
 /**
- * The cinematic single-page portfolio: one smooth scroll, top to bottom, big
- * type, sections gliding in as you go. Everything visible without a click.
+ * The cinematic single-page portfolio: one smooth (Lenis) scroll, top to bottom,
+ * big type, sections gliding in as you go. Everything visible without a click.
  */
 const LINKS = [
   { id: "work", label: "build" },
@@ -23,6 +25,7 @@ const LINKS = [
 
 function Nav() {
   const [solid, setSolid] = useState(false);
+  const { scrollYProgress } = useScroll();
   useEffect(() => {
     const onScroll = () => setSolid(window.scrollY > 24);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -48,17 +51,23 @@ function Nav() {
             href={RESUME_URL}
             target="_blank"
             rel="noreferrer"
-            className="rounded-full border border-line px-3.5 py-1.5 text-ink-700 transition-colors hover:border-ink-400 hover:text-ink"
+            className="rounded-full border border-brand/40 bg-brand-soft px-3.5 py-1.5 text-brand-500 transition-colors hover:border-brand/70"
           >
             résumé
           </a>
         </nav>
       </div>
+      {/* scroll progress */}
+      <motion.div
+        className="h-px origin-left bg-brand"
+        style={{ scaleX: scrollYProgress, opacity: solid ? 1 : 0 }}
+      />
     </header>
   );
 }
 
 export default function CinematicSite() {
+  useLenis();
   return (
     <div className="relative bg-canvas text-ink">
       <a href="#work" className="skip-link">Skip to content</a>

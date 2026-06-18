@@ -1,37 +1,68 @@
-import { FiArrowRight, FiArrowDown } from "react-icons/fi";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { FiArrowRight, FiArrowDown, FiDownload } from "react-icons/fi";
 import RoleCycler from "../components/ui/RoleCycler";
-import { HERO_NAME, RESUME_URL } from "../constants";
+import { RESUME_URL } from "../constants";
+
+const reduced =
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /**
- * Apple-style cinematic hero: full viewport, big type, soft ambient depth, and
- * the role crossfade. Settled on load (no sliding text — the loader covers the
- * entrance); the cinematic motion lives in the scroll reveals below.
+ * Apple-style cinematic hero: full viewport, big type, soft ambient depth, a
+ * trust line, and the role crossfade. Settled on load (the loader covers entry —
+ * no sliding text). The only scroll motion is a gentle parallax exit as you
+ * leave, so the section hands off smoothly to the work below.
  */
 export default function CinematicHero() {
-  return (
-    <section id="top" className="relative flex min-h-[100svh] items-center overflow-hidden">
-      {/* soft ambient depth — premium, not particles */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="drift-a absolute -left-[10%] top-[8%] h-[55vh] w-[55vh] rounded-full bg-[radial-gradient(circle,rgba(124,120,240,0.18),transparent_68%)] blur-2xl" />
-        <div className="drift-b absolute -right-[8%] bottom-[2%] h-[50vh] w-[50vh] rounded-full bg-[radial-gradient(circle,rgba(108,104,232,0.14),transparent_70%)] blur-2xl" />
-        <div className="dotgrid absolute inset-0 opacity-[0.35]" />
-      </div>
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const opacity = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
+  const glow = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
 
-      <div className="relative mx-auto w-full max-w-6xl px-6 sm:px-10">
+  return (
+    <section ref={ref} id="top" className="relative flex min-h-[100svh] items-center overflow-hidden">
+      {/* soft ambient depth — premium, not particles */}
+      <motion.div className="pointer-events-none absolute inset-0" style={{ scale: reduced ? 1 : glow }}>
+        <div className="drift-a absolute -left-[10%] top-[6%] h-[58vh] w-[58vh] rounded-full bg-[radial-gradient(circle,rgba(124,120,240,0.20),transparent_68%)] blur-2xl" />
+        <div className="drift-b absolute -right-[8%] bottom-[0%] h-[48vh] w-[48vh] rounded-full bg-[radial-gradient(circle,rgba(108,104,232,0.12),transparent_70%)] blur-2xl" />
+      </motion.div>
+      <div className="dotgrid pointer-events-none absolute inset-0 opacity-[0.3]" />
+
+      <motion.div
+        className="relative mx-auto w-full max-w-6xl px-6 sm:px-10"
+        style={reduced ? undefined : { y, opacity }}
+      >
         <p className="mb-6 flex items-center gap-2.5 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-ink-400">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+          <span className="relative grid h-2 w-2 place-items-center">
+            <span className="absolute h-2 w-2 animate-ping rounded-full bg-brand-500/50" />
+            <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
+          </span>
           available for data · AI · software roles
         </p>
 
-        <h1 className="font-display font-semibold leading-[0.92] tracking-[-0.04em] text-ink text-[clamp(2.9rem,9.5vw,7rem)]">
+        <h1 className="font-display text-hero text-ink">
           Rithvik
           <br />
           Illandula
         </h1>
 
-        <p className="mt-7 max-w-[34ch] font-display leading-[1.15] tracking-[-0.02em] text-ink-700 text-[clamp(1.35rem,3.6vw,2.4rem)]">
-          I build data &amp; AI systems
-          <br className="hidden sm:block" /> that actually ship.
+        <p className="mt-7 max-w-[26ch] font-display leading-[1.12] tracking-[-0.02em] text-ink-700 text-[clamp(1.4rem,3.6vw,2.4rem)]">
+          I build data &amp; AI systems that actually ship.
+        </p>
+
+        <p className="mt-7 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-ink-400">
+          <span>Deloitte</span>
+          <span className="text-ink-300">/</span>
+          <span>University at Buffalo</span>
+          <span className="text-ink-300">/</span>
+          <span>3 CS degrees</span>
+          <span className="text-ink-300">/</span>
+          <span>4+ yrs</span>
         </p>
 
         <p className="mt-5 font-mono text-sm text-ink-500 sm:text-base">
@@ -43,8 +74,8 @@ export default function CinematicHero() {
 
         <div className="mt-10 flex flex-wrap items-center gap-3">
           <a
-            href="#work"
-            className="group inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-600"
+            href="#projects"
+            className="group inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-medium text-white shadow-brand transition-[transform,background-color] duration-200 hover:bg-brand-600 hover:-translate-y-0.5 active:translate-y-0"
           >
             View the work
             <FiArrowRight className="transition-transform group-hover:translate-x-0.5" />
@@ -55,14 +86,14 @@ export default function CinematicHero() {
             rel="noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-line px-6 py-3 text-sm font-medium text-ink-700 transition-colors hover:border-ink-400 hover:text-ink"
           >
-            Résumé
+            <FiDownload className="text-sm" /> Résumé
           </a>
         </div>
-      </div>
+      </motion.div>
 
       {/* scroll cue */}
       <a
-        href="#work"
+        href="#projects"
         aria-label="Scroll to work"
         className="absolute bottom-7 left-1/2 -translate-x-1/2 text-ink-400 transition-colors hover:text-ink"
       >

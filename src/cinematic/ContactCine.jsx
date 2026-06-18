@@ -11,11 +11,13 @@ export default function ContactCine() {
   return (
     <section id="contact" className="border-t border-line py-24 sm:py-40">
       <div className="mx-auto max-w-6xl px-6 sm:px-10">
-        <Reveal>
+        <Reveal kind="kicker">
           <p className="mb-3 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-brand-500">
             contact
           </p>
-          <h2 className="max-w-[16ch] font-display font-semibold leading-[1.02] tracking-[-0.03em] text-ink text-[clamp(2.4rem,7vw,5rem)]">
+        </Reveal>
+        <Reveal kind="heading">
+          <h2 className="max-w-[20ch] font-display font-semibold leading-[1.02] tracking-[-0.03em] text-ink text-[clamp(2.4rem,7vw,5rem)]">
             Let&apos;s build something.
           </h2>
         </Reveal>
