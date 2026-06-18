@@ -1,5 +1,5 @@
-import ConsoleShell from "./console/ConsoleShell";
+import CinematicSite from "./cinematic/CinematicSite";
 
 export default function App() {
-  return <ConsoleShell />;
+  return <CinematicSite />;
 }
