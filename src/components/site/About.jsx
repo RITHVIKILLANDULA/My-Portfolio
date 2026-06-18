@@ -9,7 +9,7 @@ export default function About() {
       <div className="mx-auto max-w-5xl px-5 sm:px-8">
         <SectionHeading index="01" kicker="About" title="The analyst behind the dashboards" />
 
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr]">
+        <div className="grid gap-8 md:grid-cols-[1.3fr_1fr] md:gap-10 lg:gap-12">
           {/* bio + impact ledger */}
           <Reveal>
             <div className="max-w-[60ch] space-y-4">

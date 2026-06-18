@@ -33,17 +33,17 @@ export default function HeroWorld() {
       </div>
 
       {/* readability scrim + glow */}
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-canvas/85 via-canvas/30 to-canvas/95 sm:bg-gradient-to-r sm:from-canvas sm:via-canvas/65 sm:to-transparent" />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-canvas/85 via-canvas/35 to-canvas/95 md:bg-gradient-to-r md:from-canvas md:via-canvas/65 md:to-transparent" />
       <div className="pointer-events-none absolute right-[12%] top-[22%] z-[1] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(124,120,240,0.16),transparent_70%)] blur-2xl" />
 
       {/* floating metric cards (over the universe) */}
-      <div className="pointer-events-none absolute inset-0 z-[2] hidden lg:block">
-        <GlassCard className="right-[7%] top-[20%]">
+      <div className="pointer-events-none absolute inset-0 z-[2] hidden md:block">
+        <GlassCard className="right-[5%] top-[16%]">
           <p className="kicker mb-1 !text-[0.55rem]">churn model</p>
           <p className="nums font-display text-3xl font-semibold text-ink">97<span className="text-xl text-ink-400">%</span></p>
           <p className="font-mono text-[0.55rem] text-ink-400">logistic · client-side</p>
         </GlassCard>
-        <GlassCard className="right-[24%] bottom-[24%]">
+        <GlassCard className="right-[6%] bottom-[16%]">
           <p className="kicker mb-1.5 !text-[0.55rem]">nightly runtime</p>
           <svg viewBox="0 0 150 40" className="h-10 w-40">
             <path d={`${spark(RUNTIME_SERIES, 150, 40)} L144 34 L6 34 Z`} fill="rgba(124,120,240,0.16)" />
@@ -70,7 +70,7 @@ export default function HeroWorld() {
           {HERO_TAGLINE}
         </p>
 
-        <p className="mt-5 max-w-[48ch] text-[1.0625rem] leading-[1.7] text-ink-500">
+        <p className="mt-5 max-w-[48ch] text-[1.0625rem] leading-[1.7] text-ink-700">
           {HERO_CONTENT}
         </p>
 
@@ -110,7 +110,7 @@ export default function HeroWorld() {
 function GlassCard({ children, className = "" }) {
   return (
     <div className={`absolute ${className}`}>
-      <div className="floaty rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.6)] backdrop-blur-md">
+      <div className="floaty rounded-2xl border border-line bg-paper/70 px-4 py-3 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.7)] backdrop-blur-md">
         {children}
       </div>
     </div>

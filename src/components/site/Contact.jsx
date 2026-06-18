@@ -22,16 +22,16 @@ export default function Contact() {
   return (
     <section id="contact" className="section relative overflow-hidden">
       {/* exit portal — pipelines converging to a send point */}
-      <div aria-hidden className="pointer-events-none absolute right-0 top-1/2 hidden h-[520px] w-[520px] -translate-y-1/2 translate-x-1/4 lg:block">
-        <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(108,104,232,0.14),transparent_66%)] [animation:corepulse_6s_ease-in-out_infinite]" />
+      <div aria-hidden className="pointer-events-none absolute right-0 top-1/2 hidden h-[400px] w-[400px] -translate-y-1/2 translate-x-1/4 md:block lg:h-[520px] lg:w-[520px]">
+        <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(124,120,240,0.16),transparent_66%)] [animation:corepulse_6s_ease-in-out_infinite]" />
         <svg className="absolute inset-0 h-full w-full" viewBox="0 0 520 520" fill="none">
-          <path d="M40 90 C 200 160, 230 230, 260 260" stroke="#a9a3ee" strokeWidth="1.5" className="dashflow" />
-          <path d="M30 430 C 200 360, 230 300, 260 260" stroke="#86d8f0" strokeWidth="1.5" className="dashflow" />
-          <path d="M120 30 C 230 150, 250 230, 260 260" stroke="#9fe6d2" strokeWidth="1.5" className="dashflow" />
-          <circle cx="260" cy="260" r="130" stroke="#c7c1f3" strokeWidth="1" strokeDasharray="2 8" className="spin-slow" style={{ transformOrigin: "260px 260px" }} />
-          <circle cx="260" cy="260" r="92" stroke="#4b47d6" strokeWidth="1.5" strokeDasharray="44 16" opacity="0.7" className="spin-rev" style={{ transformOrigin: "260px 260px" }} />
+          <path d="M40 90 C 200 160, 230 230, 260 260" stroke="#9d99ff" strokeWidth="1.5" className="dashflow" />
+          <path d="M30 430 C 200 360, 230 300, 260 260" stroke="#6c68e8" strokeWidth="1.5" className="dashflow" />
+          <path d="M120 30 C 230 150, 250 230, 260 260" stroke="#7c78f0" strokeWidth="1.5" className="dashflow" />
+          <circle cx="260" cy="260" r="130" stroke="#474b58" strokeWidth="1" strokeDasharray="2 8" className="spin-slow" style={{ transformOrigin: "260px 260px" }} />
+          <circle cx="260" cy="260" r="92" stroke="#7c78f0" strokeWidth="1.5" strokeDasharray="44 16" opacity="0.7" className="spin-rev" style={{ transformOrigin: "260px 260px" }} />
         </svg>
-        <div className="absolute left-1/2 top-1/2 grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 rotate-45 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand shadow-[0_16px_44px_-12px_rgba(75,71,214,0.6)]">
+        <div className="absolute left-1/2 top-1/2 grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 rotate-45 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand shadow-[0_16px_44px_-12px_rgba(124,120,240,0.6)]">
           <FiArrowUpRight className="-rotate-45 text-xl text-white" />
         </div>
       </div>
@@ -44,10 +44,10 @@ export default function Contact() {
           intro="Have a dataset, a dashboard, or a role in mind? I'd love to hear from you."
         />
 
-        <Reveal>
+        <Reveal className="md:max-w-[32rem] lg:max-w-[36rem]">
           <a
             href={MAILTO}
-            className="group inline-block font-display text-3xl font-semibold tracking-tight text-ink transition-colors hover:text-brand sm:text-5xl"
+            className="group inline-block max-w-full break-words font-display text-[clamp(1.5rem,7vw,3rem)] font-semibold tracking-tight text-ink transition-colors hover:text-brand sm:text-5xl"
           >
             {CONTACT.email}
             <FiArrowUpRight className="ml-1 inline-block align-top text-2xl text-ink-400 transition-all duration-200 group-hover:translate-x-1 group-hover:text-brand sm:text-3xl" />
@@ -58,7 +58,7 @@ export default function Contact() {
               View résumé
             </a>
             <button onClick={copy} className="btn-ghost">
-              {copied ? <FiCheck className="text-emerald-500" /> : <FiCopy />}
+              {copied ? <FiCheck className="text-emerald-400" /> : <FiCopy />}
               {copied ? "Copied" : "Copy email"}
             </button>
             <a href={CONTACT.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="grid h-10 w-10 place-items-center rounded-xl border border-line text-ink-400 transition-colors hover:border-ink-300 hover:text-brand">

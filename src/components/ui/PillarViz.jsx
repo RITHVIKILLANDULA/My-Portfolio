@@ -4,10 +4,10 @@
  * .floaty motion, bright and on-brand.
  */
 const VIO = "#6c68e8";
-const SKY = "#38bdf8";
-const TEAL = "#2dd4bf";
-const BRAND = "#4b47d6";
-const FAINT = "#c7c1f3";
+const SKY = "#7c78f0";
+const TEAL = "#6c68e8";
+const BRAND = "#7c78f0";
+const FAINT = "#474b58";
 
 function Pipeline() {
   const xs = [26, 78, 130, 178];

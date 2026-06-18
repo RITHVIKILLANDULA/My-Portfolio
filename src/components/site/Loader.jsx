@@ -52,15 +52,15 @@ export default function Loader() {
         <div className="relative mb-8 h-24 w-24">
           <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(108,104,232,0.25),transparent_64%)] [animation:corepulse_2.4s_ease-in-out_infinite]" />
           <svg className="spin-slow absolute inset-0 h-full w-full" viewBox="0 0 96 96" fill="none">
-            <circle cx="48" cy="48" r="40" stroke="#c7c1f3" strokeWidth="1" strokeDasharray="2 7" />
+            <circle cx="48" cy="48" r="40" stroke="#474b58" strokeWidth="1" strokeDasharray="2 7" />
           </svg>
           <svg className="spin-rev absolute inset-0 h-full w-full" viewBox="0 0 96 96" fill="none">
-            <circle cx="48" cy="48" r="28" stroke="#4b47d6" strokeWidth="1.5" strokeDasharray="22 10" />
+            <circle cx="48" cy="48" r="28" stroke="#7c78f0" strokeWidth="1.5" strokeDasharray="22 10" />
             <circle cx="48" cy="20" r="2.5" fill="#6c68e8" />
-            <circle cx="76" cy="48" r="2" fill="#38bdf8" />
-            <circle cx="48" cy="76" r="2.5" fill="#2dd4bf" />
+            <circle cx="76" cy="48" r="2" fill="#9d99ff" />
+            <circle cx="48" cy="76" r="2.5" fill="#6c68e8" />
           </svg>
-          <div className="absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 rotate-45 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-brand shadow-[0_12px_36px_-10px_rgba(75,71,214,0.6)]">
+          <div className="absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 rotate-45 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-brand shadow-[0_12px_36px_-10px_rgba(124, 120, 240,0.6)]">
             <span className="-rotate-45 font-mono text-[0.5rem] font-bold tracking-widest text-white">RI</span>
           </div>
         </div>

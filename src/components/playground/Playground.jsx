@@ -88,7 +88,7 @@ function ChurnDemo() {
 
   const pct = Math.round(prob * 100);
   const risk = pct >= 66 ? "High" : pct >= 33 ? "Medium" : "Low";
-  const riskColor = pct >= 66 ? "#dc2626" : pct >= 33 ? "#d97706" : "#059669";
+  const riskColor = pct >= 66 ? "#f87171" : pct >= 33 ? "#fbbf24" : "#34d399";
 
   return (
     <div>
@@ -142,10 +142,10 @@ function ChurnDemo() {
                     <span className="absolute left-1/2 h-full w-px bg-line" />
                     <span
                       className="absolute h-1.5 rounded-full"
-                      style={{ left: up ? "50%" : `calc(50% - ${w}%)`, width: `${w}%`, background: up ? "#dc2626" : "#059669" }}
+                      style={{ left: up ? "50%" : `calc(50% - ${w}%)`, width: `${w}%`, background: up ? "#f87171" : "#34d399" }}
                     />
                   </div>
-                  <span className="w-8 shrink-0 text-right font-mono" style={{ color: up ? "#dc2626" : "#059669" }}>
+                  <span className="w-8 shrink-0 text-right font-mono" style={{ color: up ? "#f87171" : "#34d399" }}>
                     {up ? "+" : ""}{d.v.toFixed(1)}
                   </span>
                 </div>

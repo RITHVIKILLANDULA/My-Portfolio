@@ -34,7 +34,7 @@ export default function Experience() {
 
               <div>
                 <div className="flex items-baseline gap-2">
-                  <h3 className="text-lg font-semibold text-ink">{exp.role}</h3>
+                  <h3 className="font-display text-lg font-semibold text-ink">{exp.role}</h3>
                   {i === 0 && (
                     <span className="rounded-full bg-brand-soft px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-wide text-brand">
                       Current

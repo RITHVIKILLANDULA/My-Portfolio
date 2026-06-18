@@ -52,7 +52,7 @@ export default function RagDemo() {
         <div>
           <p className="text-sm font-semibold text-ink">
             Ask My Background
-            {ready && <span className="ml-2 text-[0.6rem] font-medium text-emerald-600">● model loaded</span>}
+            {ready && <span className="ml-2 text-[0.6rem] font-medium text-emerald-400">● model loaded</span>}
           </p>
           <p className="font-mono text-[0.6rem] text-ink-400">
             all-MiniLM-L6-v2 embeddings · cosine retrieval · 100% in your browser

@@ -4,6 +4,7 @@ export const RESUME_URL = import.meta.env.BASE_URL + "Rithvik_Illandula_Resume.p
 export const NAV_LINKS = [
   { id: "about", label: "About" },
   { id: "expertise", label: "Expertise" },
+  { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
   { id: "ai-lab", label: "AI Lab" },
   { id: "experience", label: "Experience" },
