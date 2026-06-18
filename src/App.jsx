@@ -1,5 +1,5 @@
-import Portfolio from "./Portfolio";
+import ConsoleShell from "./console/ConsoleShell";
 
 export default function App() {
-  return <Portfolio />;
+  return <ConsoleShell />;
 }

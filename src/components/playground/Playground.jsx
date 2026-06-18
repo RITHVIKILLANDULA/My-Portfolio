@@ -61,7 +61,7 @@ export default function Playground() {
   );
 }
 
-function ChurnDemo() {
+export function ChurnDemo() {
   const [tenure, setTenure] = useState(8);
   const [monthly, setMonthly] = useState(85);
   const [contract, setContract] = useState(0);
