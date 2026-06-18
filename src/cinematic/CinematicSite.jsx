@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, useScroll } from "framer-motion";
 import useLenis from "../hooks/useLenis";
-import World from "../three/World";
 import Loader from "../components/site/Loader";
 import CinematicHero from "./CinematicHero";
 import StatementBand from "./StatementBand";
@@ -70,9 +69,8 @@ function Nav() {
 export default function CinematicSite() {
   useLenis();
   return (
-    <div className="relative text-ink">
+    <div className="relative bg-canvas text-ink">
       <a href="#work" className="skip-link">Skip to content</a>
-      <World />
       <Nav />
       <main>
         <CinematicHero />
