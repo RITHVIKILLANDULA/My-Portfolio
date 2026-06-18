@@ -55,7 +55,7 @@ export default function StatementBand() {
         {/* signature: the real nightly-runtime curve, drawing as you scroll in */}
         <div ref={ref} className="mt-16">
           <Reveal kind="body">
-            <div className="rounded-2xl border border-line bg-paper/40 p-6 sm:p-8">
+            <div className="rounded-2xl border border-line bg-paper/70 p-6 sm:p-8">
               <div className="mb-5 flex items-end justify-between">
                 <div>
                   <p className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-ink-400">

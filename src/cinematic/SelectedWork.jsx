@@ -63,7 +63,7 @@ export default function SelectedWork() {
                   exit={{ opacity: 0, scale: 0.98 }}
                   transition={{ duration: 0.28, ease: EASE }}
                   whileHover={{ y: -4 }}
-                  className={`group flex h-full flex-col rounded-2xl border bg-paper/40 p-6 transition-[border-color,box-shadow] duration-300 hover:border-ink-300 hover:shadow-card-hover sm:p-7 ${
+                  className={`group flex h-full flex-col rounded-2xl border bg-paper/70 p-6 transition-[border-color,box-shadow] duration-300 hover:border-ink-300 hover:shadow-card-hover sm:p-7 ${
                     p.featured ? "border-ink-300/70" : "border-line"
                   }`}
                 >

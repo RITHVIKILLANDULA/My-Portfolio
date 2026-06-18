@@ -33,7 +33,7 @@ export default function LiveDemos() {
 
         <div className="mt-12 space-y-6">
           <Reveal kind="body">
-            <div className="rounded-2xl border border-line bg-paper/40 p-6 sm:p-8">
+            <div className="rounded-2xl border border-line bg-paper/70 p-6 sm:p-8">
               <p className="mb-6 flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.16em] text-ink-400">
                 <FiCpu className="text-brand-500" /> model 01 · churn-logreg · client-side
               </p>
@@ -42,7 +42,7 @@ export default function LiveDemos() {
           </Reveal>
 
           <Reveal kind="body">
-            <div className="min-h-[280px] rounded-2xl border border-line bg-paper/40 p-6 sm:p-8">
+            <div className="min-h-[280px] rounded-2xl border border-line bg-paper/70 p-6 sm:p-8">
               <p className="mb-6 flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.16em] text-ink-400">
                 <FiMessageSquare className="text-brand-500" /> model 02 · MiniLM retrieval · on-device
               </p>

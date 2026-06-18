@@ -26,12 +26,9 @@ export default function CinematicHero() {
 
   return (
     <section ref={ref} id="top" className="relative flex min-h-[100svh] items-center overflow-hidden">
-      {/* soft ambient depth — premium, not particles */}
-      <motion.div className="pointer-events-none absolute inset-0" style={{ scale: reduced ? 1 : glow }}>
-        <div className="drift-a absolute -left-[10%] top-[6%] h-[58vh] w-[58vh] rounded-full bg-[radial-gradient(circle,rgba(124,120,240,0.20),transparent_68%)] blur-2xl" />
-        <div className="drift-b absolute -right-[8%] bottom-[0%] h-[48vh] w-[48vh] rounded-full bg-[radial-gradient(circle,rgba(108,104,232,0.12),transparent_70%)] blur-2xl" />
-      </motion.div>
-      <div className="dotgrid pointer-events-none absolute inset-0 opacity-[0.3]" />
+      {/* legibility scrim — keeps the left-column type crisp over the living 3D form */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-canvas via-canvas/85 to-transparent sm:via-canvas/70" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-canvas to-transparent" />
 
       <motion.div
         className="relative mx-auto w-full max-w-6xl px-6 sm:px-10"
