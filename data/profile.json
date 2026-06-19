@@ -1,0 +1,160 @@
+{
+  "name": {
+    "first": "Rithvik",
+    "last": "Illandula",
+    "full": "Rithvik Illandula"
+  },
+  "email": "rithvik.illandula@gmail.com",
+  "tagline": "Building reliable data platforms, AI systems, and the software that ships them.",
+  "description": "Data, AI, and Software Engineer with 4+ years across Deloitte, WAFU, and the University at Buffalo, and three CS degrees. I build pipelines, ML/LLM systems, and production-ready software.",
+  "roles": {
+    "short": "Data / AI / Software Engineer",
+    "detailed": "Data Engineer | AI / ML Engineer | Software Engineer"
+  },
+  "location": {
+    "based": "Buffalo, New York",
+    "availability": "Buffalo / Remote"
+  },
+  "available": true,
+  "bio": "Engineer who works across the whole stack of modern data and AI — from the SQL and pipelines underneath, to the ML and LLM systems on top, to the backend services that ship it. Three CS degrees (Diploma to B.Tech to M.S.) and 4+ years across Deloitte, WAFU, and the University at Buffalo taught me to build systems that are reliable, measurable, and production-ready. I cut a nightly pipeline from 2 hours to 35 minutes, modeled 1M+ records, and cut manual review 80%.",
+  "stats": [
+    { "value": "4+", "label": "Years Experience" },
+    { "value": "3", "label": "CS Degrees" },
+    { "value": "12+", "label": "Projects Shipped" }
+  ],
+  "skills": [
+    "Data Engineering",
+    "AI / ML Engineering",
+    "Software Engineering",
+    "Python",
+    "SQL",
+    "Airflow",
+    "BigQuery",
+    "Spark / PySpark",
+    "Databricks",
+    "LangChain",
+    "RAG",
+    "Vector DBs / FAISS",
+    "scikit-learn",
+    "XGBoost",
+    "MLflow",
+    "GCP",
+    "Tableau / Power BI",
+    "Java / C++"
+  ],
+  "experience": [
+    {
+      "id": 1,
+      "role": "AI Data Analyst",
+      "company": "University at Buffalo",
+      "companyShort": "UNIVERSITY AT BUFFALO",
+      "type": "Full-time",
+      "location": "Buffalo, NY",
+      "period": "Feb 2025",
+      "periodEnd": "May 2026",
+      "bullets": [
+        "Built Python, SQL, Airflow, and BigQuery workflows that collect, cleanse, validate, and prepare 25+ operational and research datasets for reporting and exploratory analysis.",
+        "Defined data-collection standards and 5 recurring quality controls with faculty and SMEs — completeness, duplicates, schema drift, late files, and exception trends.",
+        "Profiled datasets with Python, R, SQL, Pandas, and NumPy to surface outliers, compare baselines, and evaluate correlations for stakeholder review.",
+        "Optimized recurring SQL jobs and partitioned BigQuery tables, cutting nightly processing from 2 hours to 35 minutes while preserving audit logs and recovery steps."
+      ],
+      "desc": "Built and optimized data pipelines and quality controls; cut nightly runtime 2h to 35m and modeled 1M+ records for reporting and analysis.",
+      "tech": ["Python", "SQL", "Airflow", "BigQuery", "R", "Pandas", "Data Quality"]
+    },
+    {
+      "id": 2,
+      "role": "Data Analytics Engineer",
+      "company": "Deloitte",
+      "companyShort": "DELOITTE",
+      "type": "Full-time",
+      "location": "India",
+      "period": "Jan 2022",
+      "periodEnd": "Dec 2024",
+      "bullets": [
+        "Analyzed TV/media datasets — audience, campaign, transaction, and reference data from 6 source systems — using Python, SQL, Spark, Databricks, and Airflow for client reporting and KPI analysis.",
+        "Built 15+ Tableau and Power BI dashboards tracking audience-segment trends, campaign KPI movement, delayed events, and data completeness.",
+        "Documented 40+ source-to-target mappings and implemented reconciliation, cleansing, and data-quality rules — cutting manual review effort by 80%.",
+        "Translated audience, campaign, and transaction trends into client-ready insight summaries across entertainment and news clients."
+      ],
+      "desc": "TV/media data engineering and analytics: 15+ dashboards, 6 source systems unified, 80% less manual review across enterprise client reporting.",
+      "tech": ["Python", "SQL", "Spark", "Databricks", "Airflow", "Tableau", "Power BI", "Reconciliation"]
+    },
+    {
+      "id": 3,
+      "role": "Data Analyst",
+      "company": "WAFU Technologies",
+      "companyShort": "WAFU",
+      "type": "Full-time",
+      "location": "India",
+      "period": "Dec 2020",
+      "periodEnd": "Aug 2021",
+      "bullets": [
+        "Analyzed adtech event, campaign, customer-transaction, order, inventory, and payment-workflow data across 4 client applications using SQL, Python, and NoSQL.",
+        "Built monitoring queries covering 5 categories of operational and ad-event exceptions — event mismatches, order issues, rejected records, inventory gaps, and recurring failures.",
+        "Modeled 6+ reporting tables and optimized MySQL queries for agency reporting, campaign visibility, and operational performance monitoring."
+      ],
+      "desc": "Adtech data analysis and monitoring across 4 client apps: exception detection, reporting models, and MySQL optimization.",
+      "tech": ["SQL", "Python", "NoSQL", "MySQL", "Adtech", "Monitoring"]
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "title": "Customer Churn Prediction",
+      "subtitle": "ML on 500k+ records",
+      "type": "Machine Learning",
+      "link": "https://github.com/RITHVIKILLANDULA",
+      "image": "/My-Portfolio/assets/project-artgenio1.png",
+      "tech": ["Python", "scikit-learn", "XGBoost", "Random Forest", "ML"],
+      "desc": "Churn prediction models using Logistic Regression, XGBoost, and Random Forest over 500,000+ customer records, surfacing the behavioral drivers of churn and shipping a web app to expose churn-risk insights."
+    },
+    {
+      "id": 2,
+      "title": "PDF-Insight RAG Assistant",
+      "subtitle": "LangChain + FAISS Q&A",
+      "type": "GenAI / LLM",
+      "link": "https://github.com/RITHVIKILLANDULA",
+      "image": "/My-Portfolio/assets/project-easyfolio1.png",
+      "tech": ["Python", "LangChain", "FAISS", "Gemini-Pro", "RAG"],
+      "desc": "A retrieval-augmented Q&A app: PDFs are vectorized with OpenAI embeddings and stored in FAISS, and Gemini-Pro generates context-aware answers, orchestrated end-to-end with LangChain."
+    }
+  ],
+  "publications": [
+    {
+      "id": 1,
+      "title": "Data Quality & Anomaly Detection Pipeline",
+      "platform": "Project",
+      "year": "2025",
+      "link": "https://github.com/RITHVIKILLANDULA",
+      "desc": "A data-quality workflow using profiling rules, statistical thresholds, and anomaly detection to flag missing values, duplicates, volume spikes, and abnormal time-series patterns before they reach reporting."
+    },
+    {
+      "id": 2,
+      "title": "BigQuery ML Customer Analytics",
+      "platform": "Project",
+      "year": "2025",
+      "link": "https://github.com/RITHVIKILLANDULA",
+      "desc": "A GCP analytics pipeline profiling customer behavior and trends with BigQuery ML and Vertex AI, orchestrated with Airflow and PySpark."
+    },
+    {
+      "id": 3,
+      "title": "Citi Bike Demand Forecasting",
+      "platform": "Project",
+      "year": "2025",
+      "link": "https://github.com/RITHVIKILLANDULA",
+      "desc": "An end-to-end ML pipeline forecasting hourly Citi Bike demand with LightGBM over 1M+ trips — 20+ MLflow experiments and a 12 to 15% MAE improvement."
+    },
+    {
+      "id": 4,
+      "title": "Three CS Degrees",
+      "platform": "Education",
+      "year": "2017-2026",
+      "link": "mailto:rithvik.illandula@gmail.com",
+      "desc": "Diploma in CS, B.Tech in CSE, and an M.S. in CS at the University at Buffalo — a deep foundation in Java, C++, DSA, DBMS, OS, networks, and software engineering."
+    }
+  ],
+  "socials": [
+    { "label": "GitHub", "href": "https://github.com/RITHVIKILLANDULA" },
+    { "label": "LinkedIn", "href": "https://www.linkedin.com/in/rithvik-illandula/" }
+  ]
+}
