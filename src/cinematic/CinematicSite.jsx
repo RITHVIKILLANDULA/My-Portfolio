@@ -3,6 +3,7 @@ import { motion, useScroll } from "framer-motion";
 import useLenis from "../hooks/useLenis";
 import Loader from "../components/site/Loader";
 import CinematicHero from "./CinematicHero";
+import RecruiterQuickview from "./RecruiterQuickview";
 import StatementBand from "./StatementBand";
 import WhatIBuild from "./WhatIBuild";
 import SelectedWork from "./SelectedWork";
@@ -74,6 +75,7 @@ export default function CinematicSite() {
       <Nav />
       <main>
         <CinematicHero />
+        <RecruiterQuickview />
         <StatementBand />
         <WhatIBuild />
         <SelectedWork />

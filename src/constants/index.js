@@ -313,11 +313,11 @@ export const PROJECTS = [
     technologies: ["React", "Node.js", "Express", "MongoDB", "Clipdrop API"],
   },
   {
-    title: "Personal Portfolio · Data World",
+    title: "This Portfolio · WebGL + on-device ML",
     category: "Web App",
     description:
-      "This site — an immersive, interactive 3D 'data world.' A live WebGL particle constellation, a rotating data-core, decode-text animations, an interactive skill-sphere, and animated data visualizations bring the work to life.",
-    technologies: ["React", "Three.js", "Framer Motion", "Tailwind", "Vite"],
+      "This site. A smooth single-page build where my real 2h→35m pipeline runtime renders as an interactive WebGL terrain you scrub with scroll, and two real models — a churn predictor and a MiniLM retrieval engine — run entirely in your browser, no server.",
+    technologies: ["React", "Three.js", "transformers.js", "Framer Motion", "Vite"],
   },
 ];
 

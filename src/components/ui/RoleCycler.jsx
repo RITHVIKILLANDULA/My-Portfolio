@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { HERO_ROLES } from "../../constants";
 
 /**
- * Rotates through the role titles with a clean crossfade — no typewriter, no
- * blinking caret. Subtle and modern; the word swaps, nothing types.
+ * Rotates through a tight set of target roles with a clean crossfade — no
+ * typewriter, no caret. Settles on the first role under reduced-motion.
  */
+const ROLES = ["Data Engineer", "AI / ML Engineer", "Software Engineer", "Applied AI Engineer"];
+const reduced =
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 export default function RoleCycler() {
   const [i, setI] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(() => setI((x) => (x + 1) % HERO_ROLES.length), 3000);
+    if (reduced) return;
+    const id = setInterval(() => setI((x) => (x + 1) % ROLES.length), 2800);
     return () => clearInterval(id);
   }, []);
+
+  if (reduced) return <span>{ROLES[0]}</span>;
 
   return (
     <span className="relative inline-flex align-baseline">
@@ -25,7 +32,7 @@ export default function RoleCycler() {
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="inline-block"
         >
-          {HERO_ROLES[i]}
+          {ROLES[i]}
         </motion.span>
       </AnimatePresence>
     </span>
