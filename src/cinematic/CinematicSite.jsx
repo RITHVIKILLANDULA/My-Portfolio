@@ -10,7 +10,7 @@ import WhatIBuild from "./WhatIBuild";
 import SelectedWork from "./SelectedWork";
 import LiveDemos from "./LiveDemos";
 import ExperienceCine from "./ExperienceCine";
-import ContactCine from "./ContactCine";
+import ForgeFooter from "../forge/ForgeFooter";
 import { RESUME_URL } from "../constants";
 
 /**
@@ -84,7 +84,7 @@ export default function CinematicSite() {
         <SelectedWork />
         <LiveDemos />
         <ExperienceCine />
-        <ContactCine />
+        <ForgeFooter />
       </main>
       <Loader />
     </div>
