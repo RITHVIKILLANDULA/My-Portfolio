@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import { gsap } from '@/lib/gsap'
 import profile from '@/data/profile.json'
 import content from '@/data/content.json'
+import ForgeBackdrop from '@/components/visual/ForgeBackdrop'
 import styles from '@/styles/sections/VideoIntro.module.css'
 
 const CinematicLayer = dynamic(() => import('@/components/three/CinematicLayer'), { ssr: false })
@@ -122,22 +123,8 @@ export default function VideoIntro() {
   return (
     <section className={styles.section}>
 
-      {/* 1 - Blurred ambient background (static portrait) */}
-      <img
-        src="/My-Portfolio/assets/portrait.png"
-        aria-hidden="true"
-        alt=""
-        className={styles.bgVideo}
-      />
-
-      {/* 2 - Main portrait */}
-      <img
-        ref={videoRef}
-        data-testid="intro-video"
-        src="/My-Portfolio/assets/portrait.png"
-        alt=""
-        className={styles.mainVideo}
-      />
+      {/* 1+2 - Abstract forged-metal backdrop (no photo here; portrait lives only in About) */}
+      <ForgeBackdrop variant="intro" className={styles.bgVideo} />
 
       {/* 3 - Cinematic gradient overlay */}
       <div className={styles.overlay} />

@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, Fragment } from 'react'
-import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { FaGithub, FaLinkedinIn, FaInstagram } from 'react-icons/fa'
 import { FiArrowUpRight } from 'react-icons/fi'
@@ -9,6 +8,8 @@ import { gsap } from '@/lib/gsap'
 
 import profile from '@/data/profile.json'
 import content from '@/data/content.json'
+import ForgeBackdrop from '@/components/visual/ForgeBackdrop'
+import HeroNarration from '@/components/agent/HeroNarration'
 import styles from '@/styles/sections/HeroSection.module.css'
 
 const HeroBackground = dynamic(() => import('@/components/three/HeroBackground'), { ssr: false })
@@ -96,13 +97,14 @@ export default function HeroSection() {
 
       <HeroBackground />
 
-      {/* Photo */}
+      {/* Abstract forged-metal backdrop (portrait lives only in About) */}
       <div ref={photoRef} className={styles.photo}>
-        <Image
-          src="/My-Portfolio/assets/hero1.png" alt={profile.name.full}
-          fill priority quality={100}
-          sizes="(min-width: 768px) 55vw, 100vw"
-          className={styles.photoImg}
+        <ForgeBackdrop
+          variant="hero"
+          style={{
+            WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, #000 32%)',
+            maskImage: 'linear-gradient(90deg, transparent 0%, #000 32%)',
+          }}
         />
       </div>
 
@@ -148,6 +150,9 @@ export default function HeroSection() {
           <p ref={firstName} className={styles.name}>{profile.name.first}</p>
           <p ref={lastName}  className={styles.name}>{profile.name.last}</p>
         </div>
+
+        {/* Live voice narration (under the name) */}
+        <HeroNarration />
 
         {/* Tag Pills */}
         <div ref={pillsRef} className={styles.pills}>

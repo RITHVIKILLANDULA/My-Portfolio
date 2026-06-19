@@ -10,6 +10,8 @@ import ProjectsSection       from '@/components/sections/ProjectsSection'
 import WorkExperienceSection from '@/components/sections/WorkExperienceSection'
 import PublicationsFooterSection from '@/components/sections/PublicationsFooterSection'
 import ScreenLoader from '@/components/sections/ScreenLoader'
+import AiAgent      from '@/components/agent/AiAgent'
+import AudioTour    from '@/components/agent/AudioTour'
 import profile               from '@/data/profile.json'
 
 // Snap: 0=video 1=hero 2=about 3..4=projects 5=work-exp 6=publications 7=footer (mobile: 6=publications 7=footer)
@@ -177,6 +179,12 @@ export default function Home() {
           <PublicationsFooterSection />
         </div>
       </main>
+
+      {/* Audio résumé tour (opens on the Résumé button) */}
+      <AudioTour />
+
+      {/* Floating AI assistant — answers questions about Rithvik (hidden during the intro loader) */}
+      {!showLoader && <AiAgent />}
     </>
   )
 }

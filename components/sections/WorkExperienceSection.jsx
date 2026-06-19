@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import Image from 'next/image'
 import { gsap } from '@/lib/gsap'
 import profile from '@/data/profile.json'
+import ForgeBackdrop from '@/components/visual/ForgeBackdrop'
 import styles from '@/styles/sections/WorkExperienceSection.module.css'
 
 const EXPS = profile.experience
@@ -100,14 +100,7 @@ export default function WorkExperienceSection() {
     <section ref={sectionRef} className={styles.section}>
 
       <div className={styles.bgImg} aria-hidden>
-        <Image
-          src="/My-Portfolio/assets/work-experience.webp"
-          alt=""
-          fill
-          quality={100}
-          sizes="100vw"
-          className={styles.bgImgEl}
-        />
+        <ForgeBackdrop variant="work" />
       </div>
 
       <div className={styles.header}>

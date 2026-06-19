@@ -2,9 +2,9 @@
 'use client'
 
 import { useEffect, useRef, Fragment } from 'react'
-import Image from 'next/image'
 import * as THREE from 'three'
 import { gsap } from '@/lib/gsap'
+import ForgeBackdrop from '@/components/visual/ForgeBackdrop'
 import {
   FaGithub, FaLinkedinIn, FaMedium, FaInstagram, FaYoutube, FaEnvelope,
 } from 'react-icons/fa'
@@ -330,33 +330,17 @@ export default function PublicationsFooterSection() {
         <canvas ref={canvasRef} className={styles.glCanvas} />
         <video ref={videoSrcRef} className={styles.hiddenVideo} />
 
-        {/* ── Mobile background image (footer phase - mobile only) ── */}
+        {/* ── Mobile background (footer phase - mobile only) ── */}
         <div className={styles.mobileFooterBg}>
-          <Image
-            src="/My-Portfolio/assets/mobile-footer.webp"
-            alt=""
-            fill
-            quality={100}
-            className={styles.mobileFooterBgImg}
-            sizes="100vw"
-            priority={false}
-          />
+          <ForgeBackdrop variant="footer" />
         </div>
 
         {/* ── Mobile permanent dark overlay - keeps image visually identical across all 3 sections ── */}
         <div className={styles.mobileDarkOverlay} aria-hidden />
 
-        {/* ── Floating image: starts left, moves to center ── */}
+        {/* ── Floating panel: starts full-width, moves to center (abstract; portrait lives only in About) ── */}
         <div ref={imageWrapRef} className={styles.imageWrap}>
-          <Image
-            src="/My-Portfolio/assets/portrait-footer.jpeg"
-            alt=""
-            fill
-            quality={100}
-            className={styles.imageEl}
-            sizes="(max-width: 767px) 100vw, 50vw"
-            priority={false}
-          />
+          <ForgeBackdrop variant="footer" className={styles.imageEl} />
           <div ref={imageOverlayRef} className={styles.imageOverlay} />
         </div>
 

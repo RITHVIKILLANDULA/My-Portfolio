@@ -11,6 +11,11 @@ import { gsap } from '@/lib/gsap'
 import profile from '@/data/profile.json'
 import styles from '@/styles/ui/Navbar.module.css'
 import { FaBars, FaTimes } from 'react-icons/fa'
+import { FiHeadphones } from 'react-icons/fi'
+
+function playResumeTour() {
+  window.dispatchEvent(new CustomEvent('start-audio-tour'))
+}
 
 // idx matches snap position in page.js (0=video,1=hero,2=about,3-4=projects,5=work-exp,6=publications,7=footer)
 const NAV_ITEMS = [
@@ -117,12 +122,28 @@ export default function Navbar() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <a
-          href={`mailto:${profile.email}`}
-          className={`${styles.emailBtn} rounded-full text-xs font-semibold px-5 h-8`}
-        >
-          Email me
-        </a>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem' }}>
+          <button
+            type="button"
+            onClick={playResumeTour}
+            aria-label="Play audio résumé tour"
+            className="rounded-full text-xs font-semibold px-4 h-8"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+              background: 'linear-gradient(180deg,#ff7a2f,#e85f1a)', color: '#160b03',
+              boxShadow: '0 6px 18px rgba(232,95,26,0.35)', cursor: 'pointer', border: 0,
+            }}
+          >
+            <FiHeadphones size={13} /> Résumé
+          </button>
+
+          <a
+            href={`mailto:${profile.email}`}
+            className={`${styles.emailBtn} rounded-full text-xs font-semibold px-5 h-8`}
+          >
+            Email me
+          </a>
+        </div>
 
         <button
           className={styles.hamburger}
@@ -152,6 +173,13 @@ export default function Navbar() {
               {label}
             </button>
           ))}
+          <button
+            className={styles.mobileNavLink}
+            onClick={() => { playResumeTour(); setMenuOpen(false) }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#ffb061' }}
+          >
+            <FiHeadphones size={15} /> Résumé (audio tour)
+          </button>
           <a
             href={`mailto:${profile.email}`}
             className={styles.mobileMailLink}
