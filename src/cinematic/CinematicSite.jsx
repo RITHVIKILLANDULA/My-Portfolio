@@ -11,6 +11,7 @@ import SelectedWork from "./SelectedWork";
 import LiveDemos from "./LiveDemos";
 import ExperienceCine from "./ExperienceCine";
 import ForgeFooter from "../forge/ForgeFooter";
+import ForgeAvatar from "../forge/ForgeAvatar";
 import { RESUME_URL } from "../constants";
 
 /**
@@ -41,7 +42,8 @@ function Nav() {
       }`}
     >
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6 sm:px-10">
-        <a href="#top" className="font-display text-sm font-semibold tracking-tight text-ink">
+        <a href="#top" className="flex items-center gap-2.5 font-display text-sm font-semibold tracking-tight text-ink">
+          <ForgeAvatar size={32} online={false} />
           Rithvik Illandula
         </a>
         <nav className="flex items-center gap-5 font-mono text-[0.72rem] text-ink-500 sm:gap-6">

@@ -145,6 +145,12 @@ html.lenis body {
 .drift-a { animation: drift-a 16s ease-in-out infinite; }
 .drift-b { animation: drift-b 20s ease-in-out infinite; }
 
+/* avatar: glow pulse + scanline sweep */
+@keyframes avatar-glow { 0%, 100% { box-shadow: 0 0 0 1px rgba(255,122,47,0.25), 0 0 34px -6px rgba(255,122,47,0.35); } 50% { box-shadow: 0 0 0 1px rgba(255,122,47,0.4), 0 0 48px -4px rgba(255,122,47,0.6); } }
+.avatar-glow { animation: avatar-glow 3.6s ease-in-out infinite; }
+@keyframes scanmove { from { transform: translateY(-100%); } to { transform: translateY(100%); } }
+.scanmove { animation: scanmove 4.5s linear infinite; }
+
 /* about: infinite skill marquee */
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .marquee-track { animation: marquee 32s linear infinite; }

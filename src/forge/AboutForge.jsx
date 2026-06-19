@@ -1,8 +1,8 @@
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { FiMail } from "react-icons/fi";
 import Reveal from "../cinematic/Reveal";
+import ForgeAvatar from "./ForgeAvatar";
 import { ABOUT_TEXT, SKILL_TAGS, CONTACT } from "../constants";
-import heroPortrait from "../assets/Hero-portrait.jpg";
 
 /**
  * About — reference-style split: a warm-graded framed portrait with a signature
@@ -21,25 +21,12 @@ export default function AboutForge() {
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 sm:px-10 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
         {/* portrait + signature + socials */}
         <Reveal kind="item">
-          <div className="relative">
-            <div className="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-2xl border border-line">
-              <img
-                src={heroPortrait}
-                alt="Rithvik Illandula"
-                className="h-full w-full object-cover"
-                style={{ filter: "saturate(0.88) contrast(1.05) brightness(0.95)" }}
-              />
-              <div className="absolute inset-0 mix-blend-soft-light" style={{ background: "linear-gradient(180deg, rgba(255,122,47,0.22), rgba(255,122,47,0.04))" }} />
-              <div className="absolute inset-x-0 bottom-0 h-1/3" style={{ background: "linear-gradient(0deg, rgba(8,7,10,0.85), transparent)" }} />
-              <p
-                className="absolute bottom-4 left-5 font-display text-3xl font-semibold italic tracking-tight"
-                style={{ color: "#ffd9a8" }}
-              >
-                Rithvik
-              </p>
-            </div>
-
-            <div className="mt-5 flex max-w-sm gap-3">
+          <div className="flex flex-col items-center text-center md:items-start md:text-left">
+            <ForgeAvatar size={260} />
+            <p className="mt-6 font-display text-3xl font-semibold italic tracking-tight" style={{ color: "#ffd9a8" }}>
+              Rithvik
+            </p>
+            <div className="mt-4 flex gap-3">
               {SOCIALS.map(({ Icon, href, label }) => (
                 <a
                   key={label}
