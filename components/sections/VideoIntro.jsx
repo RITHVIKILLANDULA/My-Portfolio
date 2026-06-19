@@ -6,6 +6,8 @@ import { gsap } from '@/lib/gsap'
 import profile from '@/data/profile.json'
 import content from '@/data/content.json'
 import ForgeBackdrop from '@/components/visual/ForgeBackdrop'
+import DataField from '@/components/visual/DataField'
+import RoleCycler from '@/components/visual/RoleCycler'
 import styles from '@/styles/sections/VideoIntro.module.css'
 
 const CinematicLayer = dynamic(() => import('@/components/three/CinematicLayer'), { ssr: false })
@@ -126,19 +128,32 @@ export default function VideoIntro() {
       {/* 1+2 - Abstract forged-metal backdrop (no photo here; portrait lives only in About) */}
       <ForgeBackdrop variant="intro" className={styles.bgVideo} />
 
-      {/* 3 - Cinematic gradient overlay */}
+      {/* 3 - Living data / AI network */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 3, opacity: 0.92 }}>
+        <DataField />
+      </div>
+
+      {/* 4 - Cinematic gradient overlay */}
       <div className={styles.overlay} />
 
-      {/* 4 - Three.js cinematic bokeh layer (desktop only) */}
+      {/* 5 - Three.js cinematic bokeh layer (desktop only) */}
       {!isMobile && <CinematicLayer />}
 
-      {/* 5 - Landing text */}
+      {/* 6 - Landing text */}
       <div className={styles.heroContent}>
-        <p ref={greetRef} className={styles.eyebrow}>{content.site.tagline}</p>
+        <p ref={greetRef} className={styles.eyebrow}>
+          <span aria-hidden="true" style={{
+            display: 'inline-block', width: '7px', height: '7px', borderRadius: '9999px',
+            background: '#36d399', boxShadow: '0 0 8px #36d399', marginRight: '0.5rem', verticalAlign: 'middle',
+          }} />
+          Open to work · Open to relocation across the U.S.
+        </p>
         <h1 ref={nameRef} className={styles.name}>
           {profile.name.first}<br />{profile.name.last}
         </h1>
-        <p ref={roleRef} className={styles.role}>{profile.roles.detailed}</p>
+        <p ref={roleRef} className={styles.role}>
+          <RoleCycler />
+        </p>
       </div>
 
       {/* 6 - Paused overlay */}

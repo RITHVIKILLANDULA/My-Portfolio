@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { FiX, FiPlay, FiPause, FiSkipForward, FiSkipBack, FiDownload } from 'react-icons/fi'
 import useVoice from '@/lib/useVoice'
+import TourStage from '@/components/agent/TourStage'
 
 const RESUME_PDF = '/My-Portfolio/Rithvik_Illandula_Resume.pdf'
 
@@ -111,6 +112,8 @@ export default function AudioTour() {
           <button className="tour-x" onClick={close} aria-label="Close tour"><FiX size={18} /></button>
         </header>
 
+        <TourStage idx={idx} />
+
         <div className="tour-caption" aria-live="polite">
           {voice.supportsTTS ? (
             <p><span className="lit">{lit}</span><span className="rest">{rest}</span></p>
@@ -149,11 +152,11 @@ export default function AudioTour() {
       </div>
 
       <style jsx>{`
-        .tour-wrap { position: fixed; inset: 0; z-index: 95; display: grid; place-items: end center; padding: 0 1rem 1.6rem; }
-        .tour-scrim { position: absolute; inset: 0; background: rgba(4,3,5,0.55); backdrop-filter: blur(3px); animation: tour-in 0.3s ease both; }
+        .tour-wrap { position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; padding: 1.5rem 1rem; overflow-y: auto; }
+        .tour-scrim { position: absolute; inset: 0; background: rgba(4,3,5,0.62); backdrop-filter: blur(4px); animation: tour-in 0.3s ease both; }
         .tour-card {
-          position: relative; width: min(620px, 100%); color: #f4efe9;
-          background: rgba(12,10,13,0.95); border: 1px solid rgba(255,122,47,0.3);
+          position: relative; width: min(720px, 100%); color: #f4efe9; margin: auto;
+          background: rgba(12,10,13,0.96); border: 1px solid rgba(255,122,47,0.3);
           border-radius: 1.2rem; padding: 1.2rem 1.3rem 1rem; outline: none;
           box-shadow: 0 30px 90px rgba(0,0,0,0.65); animation: tour-rise 0.35s cubic-bezier(0.2,0.8,0.2,1) both;
         }
@@ -175,7 +178,7 @@ export default function AudioTour() {
         .tour-eq.on i:nth-child(4) { animation-delay: 0.1s; }
         @keyframes tour-eq { 0%,100% { height: 5px; } 50% { height: 20px; } }
 
-        .tour-caption { min-height: 7.5rem; max-height: 30vh; overflow-y: auto; margin-bottom: 0.9rem; }
+        .tour-caption { min-height: 5rem; max-height: 22vh; overflow-y: auto; margin: 0.9rem 0; }
         .tour-caption p { font-size: 1.02rem; line-height: 1.65; margin: 0; }
         .tour-caption .lit { color: #fff; }
         .tour-caption .rest { color: rgba(244,239,233,0.4); }

@@ -9,6 +9,7 @@ import { gsap } from '@/lib/gsap'
 import profile from '@/data/profile.json'
 import content from '@/data/content.json'
 import ForgeBackdrop from '@/components/visual/ForgeBackdrop'
+import RoleCycler from '@/components/visual/RoleCycler'
 import HeroNarration from '@/components/agent/HeroNarration'
 import styles from '@/styles/sections/HeroSection.module.css'
 
@@ -142,7 +143,7 @@ export default function HeroSection() {
         {/* Greeting */}
         <div className={styles.greeting}>
           <p ref={greetRef} className={styles.greetText}>{"Hi, I'm"}</p>
-          <p ref={roleRef}  className={styles.roleText}>{profile.roles.short}</p>
+          <p ref={roleRef}  className={styles.roleText}><RoleCycler /></p>
         </div>
 
         {/* Stacked Name */}
@@ -199,7 +200,7 @@ export default function HeroSection() {
               <span className={styles.availStatus}>{content.hero.availableLabel}</span>
             </div>
             <p className={styles.locationLine}>Based in {profile.location.based}</p>
-            <p className={styles.locationLine}>Available {profile.location.availability}</p>
+            <p className={styles.locationLine}>{profile.location.availability}</p>
           </div>
         )}
       </div>

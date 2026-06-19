@@ -13,7 +13,7 @@
   },
   "location": {
     "based": "Buffalo, New York",
-    "availability": "Buffalo / Remote"
+    "availability": "Open to relocation across the U.S."
   },
   "available": true,
   "bio": "Engineer who works across the whole stack of modern data and AI — from the SQL and pipelines underneath, to the ML and LLM systems on top, to the backend services that ship it. Three CS degrees (Diploma to B.Tech to M.S.) and 4+ years across Deloitte, WAFU, and the University at Buffalo taught me to build systems that are reliable, measurable, and production-ready. I cut a nightly pipeline from 2 hours to 35 minutes, modeled 1M+ records, and cut manual review 80%.",

@@ -5,7 +5,7 @@
   "hero": {
     "taglineHighlight": "Data & AI",
     "freelanceNote": "Open to Data Engineer, AI / ML Engineer, and Software Engineer roles.",
-    "availableLabel": "Available for opportunities",
+    "availableLabel": "Open to work",
     "pills": ["Data Engineer", "AI / ML Engineer", "Software Engineer", "RAG & LLMs"],
     "specialistStat": { "value": "Data + AI", "label": "Engineer" }
   },
