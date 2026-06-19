@@ -5,6 +5,7 @@ import Loader from "../components/site/Loader";
 import ForgeHero from "../forge/ForgeHero";
 import RecruiterQuickview from "./RecruiterQuickview";
 import StatementBand from "./StatementBand";
+import AboutForge from "../forge/AboutForge";
 import WhatIBuild from "./WhatIBuild";
 import SelectedWork from "./SelectedWork";
 import LiveDemos from "./LiveDemos";
@@ -17,6 +18,7 @@ import { RESUME_URL } from "../constants";
  * big type, sections gliding in as you go. Everything visible without a click.
  */
 const LINKS = [
+  { id: "about", label: "about" },
   { id: "work", label: "build" },
   { id: "projects", label: "work" },
   { id: "live", label: "demos" },
@@ -77,6 +79,7 @@ export default function CinematicSite() {
         <ForgeHero />
         <RecruiterQuickview />
         <StatementBand />
+        <AboutForge />
         <WhatIBuild />
         <SelectedWork />
         <LiveDemos />
