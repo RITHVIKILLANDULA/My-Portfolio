@@ -1,34 +1,36 @@
 import { FiArrowRight, FiArrowDown, FiDownload } from "react-icons/fi";
 import ParticleField from "./ParticleField";
 import { RESUME_URL } from "../constants";
+import heroPortrait from "../assets/Hero-portrait.jpg";
+
+const HERO_IMG = heroPortrait;
 
 /**
  * Forge-style cinematic hero: a dark industrial base, a warm forged-metal glow,
- * ambient embers, and huge bold typography. Settled on load. Warm amber accent
- * on near-black — the "exploring a real digital workshop" register.
+ * ambient embers, huge molten typography on the left, and a warm-graded portrait
+ * on the right that fades into the dark. Degrades to type-only if no photo yet.
  */
 export default function ForgeHero() {
   return (
-    <section
-      id="top"
-      className="relative flex min-h-[100svh] items-center overflow-hidden"
-      style={{ background: "#08070a" }}
-    >
+    <section id="top" className="relative flex min-h-[100svh] items-center overflow-hidden" style={{ background: "#08070a" }}>
+      {/* portrait — right side, warm-graded, fading into the dark */}
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-full lg:w-[58%]">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${HERO_IMG})`, filter: "saturate(0.85) contrast(1.05) brightness(0.92)" }}
+        />
+        {/* amber forge grade */}
+        <div className="absolute inset-0 mix-blend-soft-light" style={{ background: "linear-gradient(180deg, rgba(255,122,47,0.25), rgba(255,122,47,0.05))" }} />
+        {/* readability scrims: dark from left + bottom + top */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, #08070a 8%, rgba(8,7,10,0.7) 32%, rgba(8,7,10,0.15) 70%, rgba(8,7,10,0.55) 100%)" }} />
+        <div className="absolute inset-x-0 bottom-0 h-40" style={{ background: "linear-gradient(0deg, #08070a, transparent)" }} />
+        <div className="absolute inset-x-0 top-0 h-28" style={{ background: "linear-gradient(180deg, #08070a, transparent)" }} />
+      </div>
+
       {/* forged-metal warm glow */}
       <div
         className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(120% 90% at 70% 110%, rgba(255,122,47,0.28) 0%, rgba(255,122,47,0.08) 28%, transparent 55%), radial-gradient(80% 60% at 12% -10%, rgba(255,176,97,0.10) 0%, transparent 50%)",
-        }}
-      />
-      {/* brushed-metal sheen */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.5]"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(255,255,255,0.015) 0%, transparent 18%, transparent 82%, rgba(0,0,0,0.5) 100%)",
-        }}
+        style={{ background: "radial-gradient(110% 80% at 78% 108%, rgba(255,122,47,0.22) 0%, transparent 52%), radial-gradient(70% 55% at 10% -8%, rgba(255,176,97,0.08) 0%, transparent 50%)" }}
       />
       <ParticleField />
 
@@ -56,12 +58,12 @@ export default function ForgeHero() {
           Illandula
         </h1>
 
-        <p className="mt-8 max-w-[30ch] text-[clamp(1.05rem,2vw,1.5rem)] leading-[1.5]" style={{ color: "#d8c9bb" }}>
+        <p className="mt-8 max-w-[26ch] text-[clamp(1.05rem,2vw,1.5rem)] leading-[1.5]" style={{ color: "#e2d4c6" }}>
           I forge data &amp; AI systems that actually ship — pipelines, models,
           and the software around them.
         </p>
 
-        <p className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.7rem] uppercase tracking-[0.18em]" style={{ color: "#8c7a6a" }}>
+        <p className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.7rem] uppercase tracking-[0.18em]" style={{ color: "#a08f7e" }}>
           <span>Deloitte</span><span style={{ color: "#5a4c40" }}>/</span>
           <span>University at Buffalo</span><span style={{ color: "#5a4c40" }}>/</span>
           <span>3 CS degrees</span><span style={{ color: "#5a4c40" }}>/</span>
@@ -89,7 +91,7 @@ export default function ForgeHero() {
         </div>
       </div>
 
-      <div className="absolute bottom-7 left-1/2 -translate-x-1/2" style={{ color: "#8c7a6a" }}>
+      <div className="absolute bottom-7 left-1/2 -translate-x-1/2" style={{ color: "#a08f7e" }}>
         <FiArrowDown className="scrollcue text-lg" />
       </div>
     </section>
