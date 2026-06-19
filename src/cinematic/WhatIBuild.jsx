@@ -10,7 +10,7 @@ export default function WhatIBuild() {
     <section id="work" className="border-t border-line py-24 sm:py-36">
       <div className="mx-auto max-w-6xl px-6 sm:px-10">
         <Reveal kind="kicker">
-          <p className="mb-12 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-brand-500 sm:mb-16">
+          <p className="mb-12 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-forge-500 sm:mb-16">
             what I build
           </p>
         </Reveal>

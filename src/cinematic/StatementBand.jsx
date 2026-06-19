@@ -81,7 +81,7 @@ export default function StatementBand() {
     <section className="border-t border-line py-24 sm:py-36">
       <div className="mx-auto max-w-6xl px-6 sm:px-10">
         <Reveal kind="kicker">
-          <p className="mb-4 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-brand-500">the work</p>
+          <p className="mb-4 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-forge-500">the work</p>
         </Reveal>
         <Reveal kind="statement">
           <h2 className="max-w-[24ch] font-display font-semibold text-statement text-ink">
@@ -99,8 +99,8 @@ export default function StatementBand() {
                     nightly pipeline runtime
                   </p>
                   <p className="mt-1.5 font-display text-[clamp(1.6rem,4vw,2.4rem)] font-semibold tracking-[-0.02em] text-ink">
-                    2h <span className="text-brand-500">→</span> 35m
-                    <span className="ml-3 align-middle font-mono text-[0.7rem] font-normal text-brand-500">−71%</span>
+                    2h <span className="text-forge-500">→</span> 35m
+                    <span className="ml-3 align-middle font-mono text-[0.7rem] font-normal text-forge-500">−71%</span>
                   </p>
                 </div>
                 {use3D && (
@@ -110,7 +110,7 @@ export default function StatementBand() {
                         key={t.label}
                         onClick={() => setForced(t.v)}
                         className={`px-2.5 py-1 font-mono text-[0.6rem] uppercase tracking-wide transition-colors ${
-                          forced === t.v ? "bg-brand-soft text-brand-500" : "text-ink-400 hover:text-ink-700"
+                          forced === t.v ? "bg-forge-soft text-forge-500" : "text-ink-400 hover:text-ink-700"
                         }`}
                       >
                         {t.label}
@@ -134,7 +134,7 @@ export default function StatementBand() {
               <div className="mt-3 flex items-center justify-between font-mono text-[0.58rem] uppercase tracking-[0.1em] text-ink-400">
                 <span>120m · 6 sources</span>
                 <span className="hidden sm:inline">ingest · validate · transform · model · load</span>
-                <span className="text-brand-500">35m · merged</span>
+                <span className="text-forge-500">35m · merged</span>
               </div>
             </div>
           </Reveal>
@@ -146,7 +146,7 @@ export default function StatementBand() {
             <Reveal key={f.label} kind="item" delay={i * 0.07}>
               <p className="font-display text-stat font-semibold text-ink">
                 <Counter value={f.value} className="tabular-nums" />
-                <span className="text-brand-500">{f.suffix}</span>
+                <span className="text-forge-500">{f.suffix}</span>
               </p>
               <p className="mt-2 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-ink-400">{f.label}</p>
             </Reveal>

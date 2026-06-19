@@ -16,30 +16,39 @@ export default {
         stat: ["clamp(2rem,3.5vw,2.75rem)", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "600" }],
       },
       colors: {
-        // cinematic dark — deep, refined, one glowing accent
-        canvas: "#08090e", // page (near-black, faint blue)
-        paper: "#101219", // raised surfaces / cards
-        mist: "#171a23", // subtle fill
-        line: "#262a36", // borders / hairlines
+        // dark forged metal — warm near-black base, dual accent
+        canvas: "#08070a", // page (warm near-black)
+        paper: "#131017", // raised surfaces / cards (dark metal)
+        mist: "#1b1820", // subtle fill
+        line: "#2a2630", // borders / hairlines (warm-tinted)
         ink: {
-          DEFAULT: "#f3f4f8", // headings
-          700: "#c6cad6", // strong body
-          500: "#9094a3", // body / muted
-          400: "#666b7a", // labels
-          300: "#474b58", // faint
+          DEFAULT: "#f4efe9", // headings (warm white)
+          700: "#cec3b8", // strong body
+          500: "#9a8e80", // body / muted
+          400: "#6f6356", // labels
+          300: "#463f38", // faint
         },
+        // FORGE — molten amber, the primary brand / "forge" accent
+        forge: {
+          DEFAULT: "#ff7a2f",
+          600: "#e85f1a",
+          500: "#ffb061",
+          soft: "#20140c", // dark amber tint (chips / pills)
+        },
+        // BRAND — indigo, reserved for the data/AI compute moments
         brand: {
-          DEFAULT: "#7c78f0", // glowing indigo (brighter for dark)
+          DEFAULT: "#7c78f0",
           600: "#6c68e8",
           500: "#9d99ff",
-          soft: "#1a1930", // dark indigo tint (chips / pills)
+          soft: "#1a1930",
         },
       },
       boxShadow: {
         card: "0 1px 2px rgba(0,0,0,0.4)",
-        "card-hover": "0 18px 50px -16px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,120,240,0.12)",
-        brand: "inset 0 1px 0 rgba(255,255,255,0.16), 0 10px 30px -8px rgba(124,120,240,0.5)",
-        glow: "0 0 40px -8px rgba(124,120,240,0.45)",
+        "card-hover": "0 18px 50px -16px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,122,47,0.14)",
+        brand: "inset 0 1px 0 rgba(255,255,255,0.16), 0 10px 30px -8px rgba(255,122,47,0.5)",
+        forge: "inset 0 1px 0 rgba(255,255,255,0.18), 0 12px 40px -10px rgba(255,122,47,0.55)",
+        glow: "0 0 40px -8px rgba(255,122,47,0.45)",
       },
       keyframes: {
         "fade-up": {

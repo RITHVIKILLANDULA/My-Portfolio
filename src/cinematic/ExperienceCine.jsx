@@ -10,7 +10,7 @@ export default function ExperienceCine() {
     <section id="experience" className="border-t border-line py-24 sm:py-36">
       <div className="mx-auto max-w-6xl px-6 sm:px-10">
         <Reveal kind="kicker">
-          <p className="mb-4 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-brand-500">
+          <p className="mb-4 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-forge-500">
             experience
           </p>
         </Reveal>
@@ -27,7 +27,7 @@ export default function ExperienceCine() {
                 <div>
                   <p className="font-mono text-[0.72rem] tabular-nums text-ink-400">{e.year}</p>
                   {i === 0 && (
-                    <span className="mt-2 inline-block rounded-full bg-brand-soft px-2.5 py-0.5 font-mono text-[0.55rem] uppercase tracking-wide text-brand-500">
+                    <span className="mt-2 inline-block rounded-full bg-forge-soft px-2.5 py-0.5 font-mono text-[0.55rem] uppercase tracking-wide text-forge-500">
                       current
                     </span>
                   )}
@@ -44,7 +44,7 @@ export default function ExperienceCine() {
                     {e.metrics.map((m) => (
                       <span
                         key={m}
-                        className="rounded-md bg-brand-soft px-2.5 py-1 font-mono text-[0.66rem] text-brand-500"
+                        className="rounded-md bg-forge-soft px-2.5 py-1 font-mono text-[0.66rem] text-forge-500"
                       >
                         {m}
                       </span>

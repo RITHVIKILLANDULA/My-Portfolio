@@ -14,7 +14,7 @@ export default function RecruiterQuickview() {
     <section id="fit" className="border-t border-line py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-6 sm:px-10">
         <Reveal kind="kicker">
-          <p className="mb-3 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-brand-500">
+          <p className="mb-3 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-forge-500">
             for recruiters
           </p>
         </Reveal>
@@ -32,7 +32,7 @@ export default function RecruiterQuickview() {
                 className="group flex h-full flex-col rounded-2xl border border-line bg-paper/60 p-6 transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-ink-300"
               >
                 <p className="font-display text-lg font-semibold tracking-[-0.01em] text-ink">
-                  <span className="text-brand-500">→</span> {r.role}
+                  <span className="text-forge-500">→</span> {r.role}
                 </p>
                 <div className="mt-4 flex-1">
                   <p className="font-mono text-[0.58rem] uppercase tracking-[0.14em] text-ink-400">proof</p>

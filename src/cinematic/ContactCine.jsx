@@ -12,7 +12,7 @@ export default function ContactCine() {
     <section id="contact" className="border-t border-line py-24 sm:py-40">
       <div className="mx-auto max-w-6xl px-6 sm:px-10">
         <Reveal kind="kicker">
-          <p className="mb-3 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-brand-500">
+          <p className="mb-3 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-forge-500">
             contact
           </p>
         </Reveal>
@@ -25,7 +25,7 @@ export default function ContactCine() {
         <Reveal delay={0.06}>
           <a
             href={`mailto:${CONTACT.email}`}
-            className="mt-8 inline-flex items-center gap-3 font-display font-semibold tracking-[-0.02em] text-ink-700 transition-colors hover:text-brand-500 text-[clamp(1.3rem,4.5vw,2.4rem)]"
+            className="mt-8 inline-flex items-center gap-3 font-display font-semibold tracking-[-0.02em] text-ink-700 transition-colors hover:text-forge-500 text-[clamp(1.3rem,4.5vw,2.4rem)]"
           >
             {CONTACT.email}
             <FiArrowUpRight className="shrink-0" />
@@ -38,7 +38,7 @@ export default function ContactCine() {
               href={RESUME_URL}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-600"
+              className="inline-flex items-center gap-2 rounded-full bg-forge px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-forge-600"
             >
               <FiDownload className="text-sm" /> Résumé
             </a>

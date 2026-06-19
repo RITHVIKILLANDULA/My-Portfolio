@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, useScroll } from "framer-motion";
 import useLenis from "../hooks/useLenis";
 import Loader from "../components/site/Loader";
-import CinematicHero from "./CinematicHero";
+import ForgeHero from "../forge/ForgeHero";
 import RecruiterQuickview from "./RecruiterQuickview";
 import StatementBand from "./StatementBand";
 import WhatIBuild from "./WhatIBuild";
@@ -52,7 +52,7 @@ function Nav() {
             href={RESUME_URL}
             target="_blank"
             rel="noreferrer"
-            className="rounded-full border border-brand/40 bg-brand-soft px-3.5 py-1.5 text-brand-500 transition-colors hover:border-brand/70"
+            className="rounded-full border border-forge/40 bg-forge-soft px-3.5 py-1.5 text-forge-500 transition-colors hover:border-forge/70"
           >
             résumé
           </a>
@@ -60,7 +60,7 @@ function Nav() {
       </div>
       {/* scroll progress */}
       <motion.div
-        className="h-px origin-left bg-brand"
+        className="h-px origin-left bg-forge"
         style={{ scaleX: scrollYProgress, opacity: solid ? 1 : 0 }}
       />
     </header>
@@ -74,7 +74,7 @@ export default function CinematicSite() {
       <a href="#work" className="skip-link">Skip to content</a>
       <Nav />
       <main>
-        <CinematicHero />
+        <ForgeHero />
         <RecruiterQuickview />
         <StatementBand />
         <WhatIBuild />

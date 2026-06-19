@@ -23,7 +23,7 @@ export default function SelectedWork() {
     <section id="projects" className="border-t border-line py-24 sm:py-36">
       <div className="mx-auto max-w-6xl px-6 sm:px-10">
         <Reveal kind="kicker">
-          <p className="mb-4 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-brand-500">
+          <p className="mb-4 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-forge-500">
             selected work
           </p>
         </Reveal>
@@ -41,7 +41,7 @@ export default function SelectedWork() {
                 onClick={() => setFilter(f)}
                 className={`rounded-full border px-3.5 py-1.5 font-mono text-[0.72rem] transition-[transform,color,border-color,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 active:translate-y-0 ${
                   filter === f
-                    ? "border-brand bg-brand text-white"
+                    ? "border-forge bg-forge text-white"
                     : "border-line text-ink-500 hover:border-ink-400 hover:text-ink"
                 }`}
               >
@@ -72,8 +72,8 @@ export default function SelectedWork() {
                       {p.category}
                     </span>
                     {p.featured && (
-                      <span className="flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-brand-500">
-                        <span className="h-1 w-1 rounded-full bg-brand-500" /> featured
+                      <span className="flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-forge-500">
+                        <span className="h-1 w-1 rounded-full bg-forge-500" /> featured
                       </span>
                     )}
                   </div>
@@ -81,7 +81,7 @@ export default function SelectedWork() {
                   <h3 className="flex items-start gap-2 font-display text-xl font-semibold leading-snug tracking-[-0.01em] text-ink sm:text-[1.4rem]">
                     {p.title}
                     {p.link && (
-                      <FiArrowUpRight className="mt-1 shrink-0 text-ink-400 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-brand-500" />
+                      <FiArrowUpRight className="mt-1 shrink-0 text-ink-400 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-forge-500" />
                     )}
                   </h3>
 
@@ -105,7 +105,7 @@ export default function SelectedWork() {
                       href={p.link}
                       target="_blank"
                       rel="noreferrer"
-                      className="mt-5 inline-flex items-center gap-1.5 border-t border-line pt-4 font-mono text-[0.72rem] text-brand-500"
+                      className="mt-5 inline-flex items-center gap-1.5 border-t border-line pt-4 font-mono text-[0.72rem] text-forge-500"
                     >
                       live demo <FiArrowUpRight />
                     </a>
