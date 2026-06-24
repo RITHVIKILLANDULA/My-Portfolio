@@ -18,14 +18,19 @@ function playResumeTour() {
 }
 
 // idx matches snap position in page.js (0=video,1=hero,2=about,3-4=projects,5=work-exp,6=publications,7=footer)
+// fractions along the 3D scroll-journey (0 = intro … 1 = contact)
 const NAV_ITEMS = [
-  { label: 'Home',         idx: 0 },
-  { label: 'About',        idx: 2 },
-  { label: 'Work',         idx: 3 },
-  { label: 'Experience',   idx: 5 },
-  { label: 'Impact',       idx: 6 },
-  { label: 'Contact',      idx: 7 },
+  { label: 'Home',    frac: 0 },
+  { label: 'About',   frac: 0.2 },
+  { label: 'Skills',  frac: 0.4 },
+  { label: 'Work',    frac: 0.6 },
+  { label: 'Impact',  frac: 0.8 },
+  { label: 'Contact', frac: 1 },
 ]
+
+function gotoFrac(frac) {
+  window.dispatchEvent(new CustomEvent('journey-goto', { detail: frac }))
+}
 
 function getIST() {
   return new Date().toLocaleTimeString('en-US', {
@@ -101,18 +106,11 @@ export default function Navbar() {
 
         <NavigationMenu className={styles.navMenu}>
           <NavigationMenuList className="flex gap-6">
-            {NAV_ITEMS.map(({ label, idx }) => (
+            {NAV_ITEMS.map(({ label, frac }) => (
               <NavigationMenuItem key={label}>
                 <NavigationMenuLink
                   className={styles.navLink}
-                  onClick={() => {
-                    const scroller = document.querySelector('main')
-                    if (scroller) gsap.to(scroller, {
-                      scrollTop: idx * window.innerHeight,
-                      duration: 1.0,
-                      ease: 'power3.inOut',
-                    })
-                  }}
+                  onClick={() => gotoFrac(frac)}
                   style={{ cursor: 'pointer' }}
                 >
                   {label}
@@ -156,19 +154,11 @@ export default function Navbar() {
 
       {menuOpen && (
         <div className={styles.mobileMenu}>
-          {NAV_ITEMS.map(({ label, idx }) => (
+          {NAV_ITEMS.map(({ label, frac }) => (
             <button
               key={label}
               className={styles.mobileNavLink}
-              onClick={() => {
-                const scroller = document.querySelector('main')
-                if (scroller) gsap.to(scroller, {
-                  scrollTop: idx * window.innerHeight,
-                  duration: 1.0,
-                  ease: 'power3.inOut',
-                })
-                setMenuOpen(false)
-              }}
+              onClick={() => { gotoFrac(frac); setMenuOpen(false) }}
             >
               {label}
             </button>
