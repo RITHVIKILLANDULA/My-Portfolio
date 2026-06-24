@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import profile from '@/data/profile.json'
 import HeroNarration from '@/components/agent/HeroNarration'
+import ProjectShowcase from '@/components/journey/ProjectShowcase'
 
 const AMBER  = new THREE.Color('#ff7a2f')
 const AMBER2 = new THREE.Color('#ffb061')
@@ -347,15 +348,9 @@ export default function Journey3D() {
           <div className="jr-chips">{SK.map(s => <span key={s} className="jr-chip">{s}</span>)}</div>
         </section>
 
-        <section ref={set(3)} className="jr-sec">
+        <section ref={set(3)} className="jr-sec jr-sec-work">
           <p className="jr-kicker">03 — Work</p>
-          <h2 className="jr-h2">Selected projects.</h2>
-          <p className="jr-hint">↗ hover the floating screens around you — click one to ask my AI about it</p>
-          <ul className="jr-list">
-            <li><b>Telco Churn</b> — XGBoost over 500K+ records</li>
-            <li><b>Citi Bike Demand</b> — LightGBM, 1M+ trips, 12–15% MAE gain</li>
-            <li><b>PDF-Insight</b> — RAG assistant (LangChain · FAISS)</li>
-          </ul>
+          <ProjectShowcase />
         </section>
 
         <section ref={set(4)} className="jr-sec">
