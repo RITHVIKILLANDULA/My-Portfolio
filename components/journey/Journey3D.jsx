@@ -203,8 +203,10 @@ export default function Journey3D() {
       overlayRefs.current.forEach((el, i) => {
         if (!el) return
         const center = i / (n - 1), d = Math.abs(target - center), span = 0.5 / (n - 1)
-        el.style.opacity = Math.max(0, 1 - d / span).toFixed(3)
+        const o = Math.max(0, 1 - d / span)
+        el.style.opacity = o.toFixed(3)
         el.style.transform = `translateY(${(target - center) * 60}px)`
+        el.setAttribute('data-active', o > 0.55 ? '1' : '0')
       })
       const zi = Math.round(target * (ZONES.length - 1))
       railRefs.current.forEach((el, i) => el && el.setAttribute('data-active', i === zi ? '1' : '0'))
@@ -305,7 +307,13 @@ export default function Journey3D() {
     return () => window.removeEventListener('journey-goto', goto)
   }, [])
 
-  const SK = ['Python', 'SQL', 'BigQuery', 'Airflow', 'Spark', 'Databricks', 'LangChain', 'RAG', 'scikit-learn', 'XGBoost', 'Tableau', 'Power BI']
+  const SKILLGROUPS = [
+    { label: 'Languages & Cloud', items: ['Python', 'SQL', 'BigQuery', 'GCP', 'Airflow', 'Spark', 'Databricks', 'Snowflake'] },
+    { label: 'AI & LLMs', items: ['LangChain', 'RAG', 'OpenAI / GPT', 'FAISS', 'Vertex AI', 'Prompt Eng.'] },
+    { label: 'Machine Learning', items: ['scikit-learn', 'XGBoost', 'LightGBM', 'Forecasting', 'MLflow'] },
+    { label: 'Visualization & BI', items: ['Tableau', 'Power BI', 'DAX', 'KPI Dashboards'] },
+  ]
+  const EXP = [['Deloitte', 'Data Analytics Engineer', "’22–’24"], ['WAFU', 'Data Analyst', "’20–’21"], ['UB', 'AI Data Analyst · M.S. CS', "’25–’26"]]
   const set = (i) => (el) => { overlayRefs.current[i] = el }
   const setRail = (i) => (el) => { railRefs.current[i] = el }
 
@@ -328,45 +336,67 @@ export default function Journey3D() {
       </nav>
 
       <div className="jr-overlays">
-        <section ref={set(0)} className="jr-sec">
-          <p className="jr-kicker"><span className="jr-dot" /> Open to work · relocating across the U.S.</p>
-          <h1 className="jr-title">Rithvik<br />Illandula</h1>
-          <p className="jr-lead">Data · AI · Software Engineer — building reliable, measurable systems across data pipelines, ML, and the services that ship them.</p>
-          <HeroNarration />
-          <p className="jr-scrollcue">scroll to enter the data world · move to look around ↓</p>
+        {/* INTRO */}
+        <section ref={set(0)} data-active="0" className="jr-sec">
+          <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-dot" /> Open to work · relocating across the U.S.</p>
+          <h1 className="jr-title" data-r style={{ '--i': 1 }}>Rithvik<br />Illandula</h1>
+          <p className="jr-lead" data-r style={{ '--i': 2 }}>Data · AI · Software Engineer — building reliable, measurable systems across data pipelines, ML, and the services that ship them.</p>
+          <div data-r style={{ '--i': 3 }}><HeroNarration /></div>
+          <p className="jr-scrollcue" data-r style={{ '--i': 4 }}>scroll to enter the data world · move to look around ↓</p>
         </section>
 
-        <section ref={set(1)} className="jr-sec">
-          <p className="jr-kicker">01 — About</p>
-          <h2 className="jr-h2">4+ years turning messy data into decisions.</h2>
-          <p className="jr-lead">Across Deloitte, WAFU Technologies, and the University at Buffalo. Three CS degrees. I work the whole stack — SQL &amp; pipelines underneath, ML &amp; LLM systems on top.</p>
-        </section>
-
-        <section ref={set(2)} className="jr-sec">
-          <p className="jr-kicker">02 — Skills</p>
-          <h2 className="jr-h2">The stack I build with.</h2>
-          <div className="jr-chips">{SK.map(s => <span key={s} className="jr-chip">{s}</span>)}</div>
-        </section>
-
-        <section ref={set(3)} className="jr-sec jr-sec-work">
-          <p className="jr-kicker">03 — Work</p>
-          <ProjectShowcase />
-        </section>
-
-        <section ref={set(4)} className="jr-sec">
-          <p className="jr-kicker">04 — Impact</p>
-          <h2 className="jr-h2">By the numbers.</h2>
-          <div className="jr-stats">
-            <div><span>1M+</span>records</div><div><span>80%</span>less review</div>
-            <div><span>71%</span>faster pipeline</div><div><span>25+</span>datasets</div>
+        {/* ABOUT */}
+        <section ref={set(1)} data-active="0" className="jr-sec">
+          <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-idx">01</span> About</p>
+          <h2 className="jr-h2" data-r style={{ '--i': 1 }}>I turn messy, multi-source<br />data into decisions.</h2>
+          <p className="jr-lead" data-r style={{ '--i': 2 }}>4+ years · three CS degrees. I work the whole stack — SQL &amp; pipelines underneath, ML &amp; LLM systems on top.</p>
+          <div className="jr-tl">
+            {EXP.map(([c, role, yr], i) => (
+              <div key={c} className="jr-tl-node" data-r style={{ '--i': 3 + i }}>
+                <span className="jr-tl-dot" />
+                <b>{c}</b><span>{role}</span><em>{yr}</em>
+              </div>
+            ))}
           </div>
         </section>
 
-        <section ref={set(5)} className="jr-sec">
-          <p className="jr-kicker">05 — Contact</p>
-          <h2 className="jr-h2">Let&apos;s build something.</h2>
-          <p className="jr-lead">{profile.email}</p>
-          <div className="jr-cta">
+        {/* SKILLS */}
+        <section ref={set(2)} data-active="0" className="jr-sec">
+          <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-idx">02</span> Skills</p>
+          <h2 className="jr-h2" data-r style={{ '--i': 1 }}>The stack I build with.</h2>
+          <div className="jr-skills">
+            {SKILLGROUPS.map((g, i) => (
+              <div key={g.label} className="jr-skill-group" data-r style={{ '--i': 2 + i }}>
+                <p className="jr-skill-label"><span className="jr-skill-bar" /> {g.label}</p>
+                <p className="jr-skill-items">{g.items.join('  ·  ')}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* WORK */}
+        <section ref={set(3)} data-active="0" className="jr-sec jr-sec-work">
+          <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-idx">03</span> Work</p>
+          <div data-r style={{ '--i': 1 }}><ProjectShowcase /></div>
+        </section>
+
+        {/* IMPACT */}
+        <section ref={set(4)} data-active="0" className="jr-sec">
+          <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-idx">04</span> Impact</p>
+          <h2 className="jr-h2" data-r style={{ '--i': 1 }}>Measured, not claimed.</h2>
+          <div className="jr-stats">
+            {[['1M+', 'records modeled'], ['80%', 'less manual review'], ['71%', 'faster pipeline'], ['25+', 'datasets validated']].map(([v, l], i) => (
+              <div key={l} data-r style={{ '--i': 2 + i }}><span>{v}</span>{l}</div>
+            ))}
+          </div>
+        </section>
+
+        {/* CONTACT */}
+        <section ref={set(5)} data-active="0" className="jr-sec">
+          <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-idx">05</span> Contact</p>
+          <h2 className="jr-h2" data-r style={{ '--i': 1 }}>Let&apos;s build something.</h2>
+          <p className="jr-lead" data-r style={{ '--i': 2 }}>{profile.email}</p>
+          <div className="jr-cta" data-r style={{ '--i': 3 }}>
             <a href={`mailto:${profile.email}`} className="jr-btn">Email me</a>
             <button className="jr-btn ghost" onClick={() => window.dispatchEvent(new CustomEvent('start-audio-tour'))}>▶ Audio résumé</button>
           </div>
@@ -428,7 +458,32 @@ export default function Journey3D() {
         .jr-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.7rem 1.4rem; border-radius: 9999px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: 0; text-decoration: none; background: linear-gradient(180deg, #ff7a2f, #e85f1a); color: #160b03; transition: transform .2s; }
         .jr-btn:hover { transform: translateY(-2px); }
         .jr-btn.ghost { background: transparent; border: 1px solid rgba(255,122,47,0.5); color: #ffb061; }
-        @media (max-width: 640px) { .jr-sec { padding: 0 7vw; } .jr-stats { grid-template-columns: 1fr 1fr; } }
+
+        /* staged reveal (Scout-style) */
+        .jr-sec [data-r] { opacity: 0; transform: translateY(26px);
+          transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); transition-delay: calc(var(--i,0) * .085s); }
+        .jr-sec[data-active="1"] [data-r] { opacity: 1; transform: none; }
+
+        /* numbered section index */
+        .jr-idx { font-family: ui-monospace, "SFMono-Regular", monospace; color: #ff7a2f; margin-right: 0.7rem; position: relative; padding-right: 1.7rem; }
+        .jr-idx::after { content: ''; position: absolute; right: 0; top: 50%; width: 1.1rem; height: 1px; background: rgba(255,122,47,0.55); }
+
+        /* about timeline */
+        .jr-tl { display: flex; gap: 1.8rem; margin-top: 1.8rem; flex-wrap: wrap; }
+        .jr-tl-node { display: flex; flex-direction: column; gap: 0.15rem; position: relative; padding-left: 1.1rem; }
+        .jr-tl-dot { position: absolute; left: 0; top: 0.5rem; width: 8px; height: 8px; border-radius: 9999px; background: #ff7a2f; box-shadow: 0 0 9px rgba(255,122,47,0.9); }
+        .jr-tl-node b { color: #fff; font-size: 1.05rem; font-weight: 800; }
+        .jr-tl-node span { color: rgba(244,239,233,0.7); font-size: 0.8rem; }
+        .jr-tl-node em { color: #ffb061; font-size: 0.72rem; font-style: normal; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+
+        /* skills groups */
+        .jr-skills { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2.6rem; max-width: 42rem; margin-top: 1.5rem; }
+        .jr-skill-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.13em; color: #ffb061; font-weight: 700; margin-bottom: 0.45rem; }
+        .jr-skill-bar { width: 16px; height: 2px; background: #ff7a2f; }
+        .jr-skill-items { font-size: 0.92rem; color: rgba(244,239,233,0.82); line-height: 1.55; }
+
+        @media (max-width: 640px) { .jr-sec { padding: 0 7vw; } .jr-stats { grid-template-columns: 1fr 1fr; } .jr-skills { grid-template-columns: 1fr; gap: 1.1rem; } .jr-tl { gap: 1.1rem; } }
+        @media (prefers-reduced-motion: reduce) { .jr-sec [data-r] { transition: none; opacity: 1; transform: none; } }
       `}</style>
     </>
   )
