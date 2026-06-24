@@ -6,6 +6,7 @@ import Lenis from 'lenis'
 import profile from '@/data/profile.json'
 import HeroNarration from '@/components/agent/HeroNarration'
 import ProjectShowcase from '@/components/journey/ProjectShowcase'
+import RoleCycler from '@/components/visual/RoleCycler'
 
 const AMBER  = new THREE.Color('#ff7a2f')
 const AMBER2 = new THREE.Color('#ffb061')
@@ -67,6 +68,14 @@ export default function Journey3D() {
     const floor2 = new THREE.GridHelper(160, 160, 0x3a2a18, 0x1a1426)
     floor2.position.y = GROUND + 0.02; floor2.material.transparent = true; floor2.material.opacity = 0.4
     scene.add(floor2); disp.push(floor2.geometry, floor2.material)
+    // circuit-board traces + via nodes on the floor (data, not pavement)
+    const cvia = []; for (let i = 0; i < 64; i++) cvia.push(new THREE.Vector3((Math.random() - 0.5) * 120, GROUND + 0.05, -Math.random() * 240 + 20))
+    const cvp = new Float32Array(cvia.length * 3); cvia.forEach((v, i) => cvp.set([v.x, v.y, v.z], i * 3))
+    const cvg = new THREE.BufferGeometry(); cvg.setAttribute('position', new THREE.BufferAttribute(cvp, 3))
+    scene.add(new THREE.Points(cvg, new THREE.PointsMaterial({ size: 0.45, map: sprite, color: AMBER2, transparent: true, opacity: 0.7, depthWrite: false, blending: THREE.AdditiveBlending }))); disp.push(cvg)
+    const tr = []; for (let i = 0; i + 1 < cvia.length; i += 2) { const a = cvia[i], b = cvia[i + 1]; tr.push(a.x, a.y, a.z, b.x, a.y, a.z, b.x, a.y, a.z, b.x, b.y, b.z) }
+    const trg = new THREE.BufferGeometry(); trg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(tr), 3))
+    scene.add(new THREE.LineSegments(trg, new THREE.LineBasicMaterial({ color: 0xff7a2f, transparent: true, opacity: 0.13 }))); disp.push(trg)
     function horizonGlow(x, z, color, s) {
       const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprite, color, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }))
       sp.position.set(x, GROUND + 6, z); sp.scale.set(s, s * 0.5, 1); scene.add(sp)
@@ -113,16 +122,31 @@ export default function Journey3D() {
     /* city */
     function city(zc) {
       const g = new THREE.Group(); g.position.z = zc
-      const geo = new THREE.BoxGeometry(2.4, 1, 2.4)
-      const mat = new THREE.MeshStandardMaterial({ color: 0x0e0e1a, emissive: 0x231640, emissiveIntensity: 1.1, metalness: 0.7, roughness: 0.3 })
-      const rows = 14, inst = new THREE.InstancedMesh(geo, mat, rows * 2), d = new THREE.Object3D(), tops = []
+      // LOW server-rack blades both sides — reads as a compute cluster, not buildings
+      const bg = new THREE.BoxGeometry(3.4, 0.16, 1.9)
+      const bm = new THREE.MeshStandardMaterial({ color: 0x101019, emissive: 0x14122a, emissiveIntensity: 0.7, metalness: 0.85, roughness: 0.28 })
+      const racks = 13, inst = new THREE.InstancedMesh(bg, bm, racks * 2 * 9), d = new THREE.Object3D(), leds = []
       let k = 0
-      for (let r = 0; r < rows; r++) for (const side of [-1, 1]) {
-        const h = 4 + Math.random() * 16, x = side * (6 + Math.random() * 12), z = -r * 6 - 4
-        d.position.set(x, GROUND + h / 2, z); d.scale.set(1, h, 1); d.updateMatrix(); inst.setMatrixAt(k, d.matrix); inst.setColorAt(k, Math.random() < 0.5 ? AMBER : INDIGO); tops.push([x, GROUND + h, z]); k++
+      for (let r = 0; r < racks; r++) for (const side of [-1, 1]) {
+        const x = side * (5.5 + Math.random() * 3.5), z = -r * 5 - 4, stack = 5 + Math.floor(Math.random() * 4)
+        for (let b = 0; b < stack; b++) {
+          d.position.set(x, GROUND + 0.5 + b * 0.4, z); d.rotation.set(0, side < 0 ? 0.14 : -0.14, 0); d.updateMatrix(); inst.setMatrixAt(k, d.matrix)
+          leds.push([x + side * 1.5, GROUND + 0.5 + b * 0.4, z]); k++
+        }
       }
-      g.add(inst); disp.push(geo, mat)
-      tops.forEach(([x, y, z]) => { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprite, color: Math.random() < 0.5 ? AMBER2 : INDIGO, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.85 })); sp.position.set(x, y, z); sp.scale.setScalar(1.4); g.add(sp) })
+      inst.count = k; g.add(inst); disp.push(bg, bm)
+      const lp = new Float32Array(leds.length * 3), lc = new Float32Array(leds.length * 3)
+      leds.forEach((p, i) => { lp.set(p, i * 3); const c = Math.random() < 0.5 ? AMBER2 : INDIGO; lc.set([c.r, c.g, c.b], i * 3) })
+      const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.BufferAttribute(lp, 3)); lg.setAttribute('color', new THREE.BufferAttribute(lc, 3))
+      g.add(new THREE.Points(lg, new THREE.PointsMaterial({ size: 0.17, map: sprite, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }))); disp.push(lg)
+      // neural lattice floating above the racks
+      const nodes = []; for (let i = 0; i < 44; i++) nodes.push(new THREE.Vector3((Math.random() - 0.5) * 9, GROUND + 3 + Math.random() * 8, -14 - Math.random() * 34))
+      const npos = new Float32Array(nodes.length * 3); nodes.forEach((v, i) => npos.set([v.x, v.y, v.z], i * 3))
+      const ng = new THREE.BufferGeometry(); ng.setAttribute('position', new THREE.BufferAttribute(npos, 3))
+      g.add(new THREE.Points(ng, new THREE.PointsMaterial({ size: 0.32, map: sprite, color: AMBER2, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }))); disp.push(ng)
+      const epos = []; for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) if (nodes[i].distanceTo(nodes[j]) < 5.5) epos.push(nodes[i].x, nodes[i].y, nodes[i].z, nodes[j].x, nodes[j].y, nodes[j].z)
+      const eg = new THREE.BufferGeometry(); eg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(epos), 3))
+      g.add(new THREE.LineSegments(eg, new THREE.LineBasicMaterial({ color: 0x7c78f0, transparent: true, opacity: 0.26 }))); disp.push(eg)
       scene.add(g); disp.push(g); return g
     }
     /* monitors — INTERACTIVE (hover + click → ask AI) */
@@ -147,20 +171,22 @@ export default function Journey3D() {
       })
       scene.add(g); disp.push(g); return g
     }
-    /* monoliths */
+    /* holographic floating stat panels (not obelisks) */
     function monoliths(zc) {
-      const g = new THREE.Group(); g.position.z = zc; const vals = ['1M+', '80%', '71%', '25+', '6', '15+']
-      vals.forEach((v, i) => {
-        const h = 9 + (i % 3) * 4, x = (i - vals.length / 2) * 5 + 2, z = -8 - (i % 2) * 6, col = i % 2 ? INDIGO : AMBER
-        const m = new THREE.Mesh(new THREE.BoxGeometry(1.4, h, 1.4), new THREE.MeshStandardMaterial({ color: 0x0e0e1a, emissive: col, emissiveIntensity: 0.8, metalness: 0.6, roughness: 0.3 }))
-        m.position.set(x, GROUND + h / 2, z); g.add(m); disp.push(m.geometry, m.material)
-        const cv = document.createElement('canvas'); cv.width = 256; cv.height = 128
-        const cx = cv.getContext('2d'); cx.fillStyle = i % 2 ? '#ffb061' : '#ff944d'; cx.font = 'bold 86px Inter, sans-serif'; cx.textAlign = 'center'; cx.fillText(v, 128, 96)
-        const lp = new THREE.Mesh(new THREE.PlaneGeometry(3, 1.5), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, side: THREE.DoubleSide }))
-        lp.position.set(x, GROUND + h + 1.4, z); g.add(lp); disp.push(lp.geometry, lp.material)
-        const cap = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprite, color: i % 2 ? INDIGO : AMBER2, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })); cap.position.set(x, GROUND + h, z); cap.scale.setScalar(2.2); g.add(cap)
+      const g = new THREE.Group(); g.position.z = zc; const rings = []
+      const stats = [['1M+', 'records'], ['80%', 'review ↓'], ['71%', 'faster'], ['25+', 'datasets'], ['6', 'sources'], ['15+', 'dashboards']]
+      stats.forEach((s, i) => {
+        const ang = (i / stats.length) * Math.PI * 2, x = Math.cos(ang) * 8.5, y = GROUND + 4.5 + Math.sin(i * 1.6) * 3, z = -14 - Math.sin(ang) * 7, col = i % 2 ? INDIGO : AMBER
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(1.7, 0.035, 12, 50), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.75 }))
+        ring.position.set(x, y, z); g.add(ring); rings.push(ring); disp.push(ring.geometry, ring.material)
+        const cv = document.createElement('canvas'); cv.width = 256; cv.height = 160; const cx = cv.getContext('2d')
+        cx.textAlign = 'center'; cx.fillStyle = i % 2 ? '#ffb061' : '#ff944d'; cx.font = 'bold 74px Inter, sans-serif'; cx.fillText(s[0], 128, 78)
+        cx.fillStyle = 'rgba(244,239,233,0.72)'; cx.font = '600 24px Inter, sans-serif'; cx.fillText(s[1], 128, 120)
+        const pl = new THREE.Mesh(new THREE.PlaneGeometry(2.7, 1.7), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, side: THREE.DoubleSide }))
+        pl.position.set(x, y, z); g.add(pl); disp.push(pl.geometry, pl.material)
+        const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprite, color: col, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending, depthWrite: false })); glow.position.set(x, y, z); glow.scale.setScalar(3.6); g.add(glow)
       })
-      scene.add(g); disp.push(g); return g
+      g.userData.rings = rings; scene.add(g); disp.push(g); return g
     }
     /* dock */
     function dock(zc) {
@@ -300,6 +326,7 @@ export default function Journey3D() {
       for (const a of zGate.userData.arches || []) a.rotation.z = t * 0.15
       for (const s of zRiver.userData.streams || []) { s.off = (s.off + s.sp * 0.016) % 1; s.pulse.position.copy(s.curve.getPointAt(s.off)) }
       for (const r of zDock.userData.rings || []) r.rotation.z = t * 0.3
+      for (const r of zMono.userData.rings || []) { r.rotation.z = t * 0.4; r.rotation.y = Math.sin(t * 0.3) * 0.3 }
       for (const m of interactive) { const tgt = m === hovered ? 1.12 : 1; m.scale.x += (tgt - m.scale.x) * 0.18; m.scale.y = m.scale.x }
       render()
     }
@@ -362,14 +389,15 @@ export default function Journey3D() {
       <div className="jr-overlays">
         {/* INTRO */}
         <section ref={set(0)} data-active="0" className="jr-sec">
-          <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-dot" /> Open to work · relocating across the U.S.</p>
+          <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-idx">★</span> Interactive Data &amp; AI Portfolio</p>
           <h1 className="jr-title">
             <span className="jr-line" style={{ '--i': 1 }}><i>Rithvik</i></span>
             <span className="jr-line" style={{ '--i': 1.5 }}><i>Illandula</i></span>
           </h1>
-          <p className="jr-lead" data-r style={{ '--i': 2 }}>Data · AI · Software Engineer — building reliable, measurable systems across data pipelines, ML, and the services that ship them.</p>
-          <div data-r style={{ '--i': 3 }}><HeroNarration /></div>
-          <p className="jr-scrollcue" data-r style={{ '--i': 4 }}>scroll to enter the data world · move to look around ↓</p>
+          <p className="jr-role" data-r style={{ '--i': 2 }}><RoleCycler /></p>
+          <p className="jr-lead" data-r style={{ '--i': 3 }}>Building reliable, measurable systems across data pipelines, machine learning, and the services that ship them.</p>
+          <div data-r style={{ '--i': 4 }}><HeroNarration /></div>
+          <p className="jr-scrollcue" data-r style={{ '--i': 5 }}>scroll to enter the data world · move to look around ↓</p>
         </section>
 
         {/* ABOUT */}
@@ -425,7 +453,8 @@ export default function Journey3D() {
         <section ref={set(5)} data-active="0" className="jr-sec">
           <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-idx">05</span> Contact</p>
           <h2 className="jr-h2"><span className="jr-line" style={{ '--i': 1 }}><i>Let&apos;s build something.</i></span></h2>
-          <p className="jr-lead" data-r style={{ '--i': 2 }}>{profile.email}</p>
+          <p className="jr-avail" data-r style={{ '--i': 2 }}><span className="jr-dot" /> Open to work · open to relocation across the U.S.</p>
+          <p className="jr-lead" data-r style={{ '--i': 2.4 }}>{profile.email}</p>
           <div className="jr-cta" data-r style={{ '--i': 3 }}>
             <a href={`mailto:${profile.email}`} className="jr-btn jr-mag">Email me</a>
             <button className="jr-btn ghost jr-mag" onClick={() => window.dispatchEvent(new CustomEvent('start-audio-tour'))}>▶ Audio résumé</button>
@@ -472,6 +501,8 @@ export default function Journey3D() {
           background: linear-gradient(180deg, #fff6ec, #ffd9a8 55%, #ff944d 130%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         .jr-h2 { font-size: clamp(1.8rem, 4.5vw, 3.4rem); font-weight: 800; line-height: 1.04; letter-spacing: -0.01em; margin-bottom: 1rem; }
         .jr-lead { font-size: clamp(1rem, 1.6vw, 1.2rem); line-height: 1.6; color: rgba(244,239,233,0.8); max-width: 32rem; }
+        .jr-role { font-size: clamp(1.2rem, 2.8vw, 1.9rem); font-weight: 700; color: #ffb061; letter-spacing: -0.01em; margin: 0.4rem 0 1rem; min-height: 1.4em; }
+        .jr-avail { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; letter-spacing: 0.06em; color: rgba(244,239,233,0.75); margin-bottom: 0.8rem; }
         .jr-hint { font-size: 0.8rem; color: #ffb061; margin-bottom: 1rem; }
         .jr-scrollcue { margin-top: 2rem; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(244,239,233,0.5); }
         .jr-chips { display: flex; flex-wrap: wrap; gap: 0.55rem; max-width: 34rem; }
