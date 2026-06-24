@@ -39,6 +39,13 @@ export default function AiAgent() {
     return () => { window.removeEventListener('start-audio-tour', hide); window.removeEventListener('audio-tour-closed', show) }
   }, []) // eslint-disable-line
 
+  // open + ask when a 3D project monitor is clicked in the journey
+  useEffect(() => {
+    function onAsk(e) { setHidden(false); setOpen(true); setTimeout(() => submit(e.detail), 240) }
+    window.addEventListener('journey-ask', onAsk)
+    return () => window.removeEventListener('journey-ask', onAsk)
+  }, []) // eslint-disable-line
+
   // focus the input on open + Esc to close; return focus to the launcher on close
   useEffect(() => {
     if (open) {
