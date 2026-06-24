@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
+import Lenis from 'lenis'
 import profile from '@/data/profile.json'
 import HeroNarration from '@/components/agent/HeroNarration'
 import ProjectShowcase from '@/components/journey/ProjectShowcase'
@@ -192,11 +193,21 @@ export default function Journey3D() {
     let prog = 0, target = 0
 
     function onScroll() {
+      if (lenis) return                      // lenis drives target when active
       const max = scroller.scrollHeight - scroller.clientHeight
       target = max > 0 ? scroller.scrollTop / max : 0
       updateOverlays(); if (reduced) render()
     }
     scroller.addEventListener('scroll', onScroll, { passive: true })
+
+    // buttery smooth scroll → drives the camera + overlays
+    let lenis = null
+    if (!reduced) {
+      try {
+        lenis = new Lenis({ wrapper: scroller, content: scroller.firstElementChild, lerp: 0.085, smoothWheel: true })
+        lenis.on('scroll', (e) => { target = (typeof e.progress === 'number' ? e.progress : 0); updateOverlays() })
+      } catch { lenis = null }
+    }
 
     function updateOverlays() {
       const n = overlayRefs.current.length
@@ -218,6 +229,12 @@ export default function Journey3D() {
       mouse.ty = ((e.clientY - r.top) / r.height) * 2 - 1
       ndc.set(mouse.tx, -mouse.ty)
       if (curRef.current) { curRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`; curRingRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)` }
+      // magnetic buttons
+      document.querySelectorAll('.jr-mag').forEach((b) => {
+        const r = b.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2
+        const dx = e.clientX - cx, dy = e.clientY - cy, dist = Math.hypot(dx, dy)
+        b.style.transform = dist < 90 ? `translate(${dx * 0.3}px, ${dy * 0.4}px)` : ''
+      })
     }
     function raycast() {
       ray.setFromCamera(ndc, camera)
@@ -249,7 +266,11 @@ export default function Journey3D() {
       const zi = Math.round(target * (ZONES.length - 1))
       gotoFrac(clamp01((zi + dir) / (ZONES.length - 1)))
     }
-    function gotoFrac(f) { scroller.scrollTo({ top: f * (scroller.scrollHeight - scroller.clientHeight), behavior: 'smooth' }) }
+    function gotoFrac(f) {
+      const top = f * (scroller.scrollHeight - scroller.clientHeight)
+      if (lenis) lenis.scrollTo(top, { duration: 1.4 })
+      else scroller.scrollTo({ top, behavior: 'smooth' })
+    }
     window.addEventListener('keydown', onKey)
     window.__journeyGoto = gotoFrac
 
@@ -267,8 +288,9 @@ export default function Journey3D() {
     function render() { renderer.render(scene, camera) }
 
     let raf = 0
-    function frame() {
+    function frame(now) {
       raf = requestAnimationFrame(frame)
+      if (lenis) lenis.raf(now || performance.now())
       prog += (target - prog) * 0.06
       mouse.x += (mouse.tx - mouse.x) * 0.06
       mouse.y += (mouse.ty - mouse.y) * 0.06
@@ -289,6 +311,7 @@ export default function Journey3D() {
 
     return () => {
       cancelAnimationFrame(raf)
+      if (lenis) lenis.destroy()
       scroller.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onResize)
       window.removeEventListener('pointermove', onPointerMove)
@@ -320,6 +343,7 @@ export default function Journey3D() {
   return (
     <>
       <div ref={mountRef} className="jr-canvas" />
+      <div className="jr-grade" aria-hidden="true" />
 
       {/* custom cursor */}
       <div ref={curRef} className="jr-cur" />
@@ -339,7 +363,10 @@ export default function Journey3D() {
         {/* INTRO */}
         <section ref={set(0)} data-active="0" className="jr-sec">
           <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-dot" /> Open to work · relocating across the U.S.</p>
-          <h1 className="jr-title" data-r style={{ '--i': 1 }}>Rithvik<br />Illandula</h1>
+          <h1 className="jr-title">
+            <span className="jr-line" style={{ '--i': 1 }}><i>Rithvik</i></span>
+            <span className="jr-line" style={{ '--i': 1.5 }}><i>Illandula</i></span>
+          </h1>
           <p className="jr-lead" data-r style={{ '--i': 2 }}>Data · AI · Software Engineer — building reliable, measurable systems across data pipelines, ML, and the services that ship them.</p>
           <div data-r style={{ '--i': 3 }}><HeroNarration /></div>
           <p className="jr-scrollcue" data-r style={{ '--i': 4 }}>scroll to enter the data world · move to look around ↓</p>
@@ -348,7 +375,10 @@ export default function Journey3D() {
         {/* ABOUT */}
         <section ref={set(1)} data-active="0" className="jr-sec">
           <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-idx">01</span> About</p>
-          <h2 className="jr-h2" data-r style={{ '--i': 1 }}>I turn messy, multi-source<br />data into decisions.</h2>
+          <h2 className="jr-h2">
+            <span className="jr-line" style={{ '--i': 1 }}><i>I turn messy, multi-source</i></span>
+            <span className="jr-line" style={{ '--i': 1.4 }}><i>data into decisions.</i></span>
+          </h2>
           <p className="jr-lead" data-r style={{ '--i': 2 }}>4+ years · three CS degrees. I work the whole stack — SQL &amp; pipelines underneath, ML &amp; LLM systems on top.</p>
           <div className="jr-tl">
             {EXP.map(([c, role, yr], i) => (
@@ -363,7 +393,7 @@ export default function Journey3D() {
         {/* SKILLS */}
         <section ref={set(2)} data-active="0" className="jr-sec">
           <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-idx">02</span> Skills</p>
-          <h2 className="jr-h2" data-r style={{ '--i': 1 }}>The stack I build with.</h2>
+          <h2 className="jr-h2"><span className="jr-line" style={{ '--i': 1 }}><i>The stack I build with.</i></span></h2>
           <div className="jr-skills">
             {SKILLGROUPS.map((g, i) => (
               <div key={g.label} className="jr-skill-group" data-r style={{ '--i': 2 + i }}>
@@ -383,7 +413,7 @@ export default function Journey3D() {
         {/* IMPACT */}
         <section ref={set(4)} data-active="0" className="jr-sec">
           <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-idx">04</span> Impact</p>
-          <h2 className="jr-h2" data-r style={{ '--i': 1 }}>Measured, not claimed.</h2>
+          <h2 className="jr-h2"><span className="jr-line" style={{ '--i': 1 }}><i>Measured, not claimed.</i></span></h2>
           <div className="jr-stats">
             {[['1M+', 'records modeled'], ['80%', 'less manual review'], ['71%', 'faster pipeline'], ['25+', 'datasets validated']].map(([v, l], i) => (
               <div key={l} data-r style={{ '--i': 2 + i }}><span>{v}</span>{l}</div>
@@ -394,11 +424,11 @@ export default function Journey3D() {
         {/* CONTACT */}
         <section ref={set(5)} data-active="0" className="jr-sec">
           <p className="jr-kicker" data-r style={{ '--i': 0 }}><span className="jr-idx">05</span> Contact</p>
-          <h2 className="jr-h2" data-r style={{ '--i': 1 }}>Let&apos;s build something.</h2>
+          <h2 className="jr-h2"><span className="jr-line" style={{ '--i': 1 }}><i>Let&apos;s build something.</i></span></h2>
           <p className="jr-lead" data-r style={{ '--i': 2 }}>{profile.email}</p>
           <div className="jr-cta" data-r style={{ '--i': 3 }}>
-            <a href={`mailto:${profile.email}`} className="jr-btn">Email me</a>
-            <button className="jr-btn ghost" onClick={() => window.dispatchEvent(new CustomEvent('start-audio-tour'))}>▶ Audio résumé</button>
+            <a href={`mailto:${profile.email}`} className="jr-btn jr-mag">Email me</a>
+            <button className="jr-btn ghost jr-mag" onClick={() => window.dispatchEvent(new CustomEvent('start-audio-tour'))}>▶ Audio résumé</button>
           </div>
         </section>
       </div>
@@ -481,6 +511,18 @@ export default function Journey3D() {
         .jr-skill-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.13em; color: #ffb061; font-weight: 700; margin-bottom: 0.45rem; }
         .jr-skill-bar { width: 16px; height: 2px; background: #ff7a2f; }
         .jr-skill-items { font-size: 0.92rem; color: rgba(244,239,233,0.82); line-height: 1.55; }
+
+        /* line-mask title reveal (Scout/editorial signature) */
+        .jr-line { display: block; overflow: hidden; padding-bottom: 0.06em; }
+        .jr-line i { display: block; font-style: normal; transform: translateY(112%);
+          transition: transform .95s cubic-bezier(.16,1,.3,1); transition-delay: calc(var(--i,0) * .09s); }
+        .jr-sec[data-active="1"] .jr-line i { transform: none; }
+
+        /* filmic grade: vignette + grain */
+        .jr-grade { position: fixed; inset: 0; z-index: 1; pointer-events: none;
+          background: radial-gradient(120% 100% at 50% 32%, transparent 52%, rgba(4,3,8,0.6) 100%); }
+        .jr-grade::after { content: ''; position: absolute; inset: 0; opacity: 0.05; mix-blend-mode: overlay;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
         @media (max-width: 640px) { .jr-sec { padding: 0 7vw; } .jr-stats { grid-template-columns: 1fr 1fr; } .jr-skills { grid-template-columns: 1fr; gap: 1.1rem; } .jr-tl { gap: 1.1rem; } }
         @media (prefers-reduced-motion: reduce) { .jr-sec [data-r] { transition: none; opacity: 1; transform: none; } }

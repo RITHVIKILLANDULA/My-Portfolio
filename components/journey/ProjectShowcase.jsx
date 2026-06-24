@@ -56,17 +56,17 @@ export default function ProjectShowcase() {
             <p className="ps-desc">{p.desc}</p>
             <div className="ps-tech">{p.tech.map(t => <span key={t}>{t}</span>)}</div>
             <div className="ps-actions">
-              <button className="ps-btn" onClick={() => window.dispatchEvent(new CustomEvent('journey-ask', { detail: `Tell me about the ${p.title} project` }))}>Ask my AI ✦</button>
-              <a className="ps-btn ghost" href={p.link} target="_blank" rel="noopener noreferrer">Visit <FiArrowUpRight /></a>
+              <button className="ps-btn jr-mag" onClick={() => window.dispatchEvent(new CustomEvent('journey-ask', { detail: `Tell me about the ${p.title} project` }))}>Ask my AI ✦</button>
+              <a className="ps-btn ghost jr-mag" href={p.link} target="_blank" rel="noopener noreferrer">Visit <FiArrowUpRight /></a>
             </div>
           </div>
         </article>
       </div>
 
       <div className="ps-nav">
-        <button className="ps-arrow" onClick={() => go(-1)} aria-label="Previous project"><FiArrowLeft /></button>
+        <button className="ps-arrow jr-mag" onClick={() => go(-1)} aria-label="Previous project"><FiArrowLeft /></button>
         <div className="ps-dots">{PROJECTS.map((_, i) => <button key={i} className={`ps-dot ${i === idx ? 'on' : ''}`} onClick={() => jump(i)} aria-label={`Project ${i + 1}`} />)}</div>
-        <button className="ps-arrow" onClick={() => go(1)} aria-label="Next project"><FiArrowRight /></button>
+        <button className="ps-arrow jr-mag" onClick={() => go(1)} aria-label="Next project"><FiArrowRight /></button>
       </div>
 
       <style jsx>{`
