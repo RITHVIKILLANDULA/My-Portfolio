@@ -11,6 +11,7 @@ import RoleCycler from '@/components/visual/RoleCycler'
 const AMBER  = new THREE.Color('#ff7a2f')
 const AMBER2 = new THREE.Color('#ffb061')
 const INDIGO = new THREE.Color('#7c78f0')
+const CYAN   = new THREE.Color('#34e3ff')   // Tron data accent
 
 const ZONES = ['Intro', 'About', 'Skills', 'Work', 'Impact', 'Contact']
 
@@ -62,20 +63,31 @@ export default function Journey3D() {
     const interactive = []   // raycast targets (project monitors)
 
     /* floor */
-    const floor = new THREE.GridHelper(600, 300, 0x6a4424, 0x241a33)
-    floor.position.y = GROUND; floor.material.transparent = true; floor.material.opacity = 0.55
+    const floor = new THREE.GridHelper(600, 300, 0x2f7a8c, 0x1a2b3e)
+    floor.position.y = GROUND; floor.material.transparent = true; floor.material.opacity = 0.6
     scene.add(floor); disp.push(floor.geometry, floor.material)
-    const floor2 = new THREE.GridHelper(160, 160, 0x3a2a18, 0x1a1426)
-    floor2.position.y = GROUND + 0.02; floor2.material.transparent = true; floor2.material.opacity = 0.4
+    const floor2 = new THREE.GridHelper(160, 160, 0x2a5566, 0x132034)
+    floor2.position.y = GROUND + 0.02; floor2.material.transparent = true; floor2.material.opacity = 0.5
     scene.add(floor2); disp.push(floor2.geometry, floor2.material)
     // circuit-board traces + via nodes on the floor (data, not pavement)
     const cvia = []; for (let i = 0; i < 64; i++) cvia.push(new THREE.Vector3((Math.random() - 0.5) * 120, GROUND + 0.05, -Math.random() * 240 + 20))
     const cvp = new Float32Array(cvia.length * 3); cvia.forEach((v, i) => cvp.set([v.x, v.y, v.z], i * 3))
     const cvg = new THREE.BufferGeometry(); cvg.setAttribute('position', new THREE.BufferAttribute(cvp, 3))
     scene.add(new THREE.Points(cvg, new THREE.PointsMaterial({ size: 0.45, map: sprite, color: AMBER2, transparent: true, opacity: 0.7, depthWrite: false, blending: THREE.AdditiveBlending }))); disp.push(cvg)
-    const tr = []; for (let i = 0; i + 1 < cvia.length; i += 2) { const a = cvia[i], b = cvia[i + 1]; tr.push(a.x, a.y, a.z, b.x, a.y, a.z, b.x, a.y, a.z, b.x, b.y, b.z) }
+    const tr = [], segs = []
+    for (let i = 0; i + 1 < cvia.length; i += 2) {
+      const a = cvia[i], b = cvia[i + 1], corner = new THREE.Vector3(b.x, a.y, a.z)
+      tr.push(a.x, a.y, a.z, corner.x, corner.y, corner.z, corner.x, corner.y, corner.z, b.x, b.y, b.z)
+      segs.push([a.clone(), corner], [corner.clone(), b.clone()])
+    }
     const trg = new THREE.BufferGeometry(); trg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(tr), 3))
-    scene.add(new THREE.LineSegments(trg, new THREE.LineBasicMaterial({ color: 0xff7a2f, transparent: true, opacity: 0.13 }))); disp.push(trg)
+    scene.add(new THREE.LineSegments(trg, new THREE.LineBasicMaterial({ color: CYAN, transparent: true, opacity: 0.2 }))); disp.push(trg)
+    // Tron light-trails racing along the circuit
+    const trails = []
+    for (let i = 0; i < 18; i++) {
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprite, color: CYAN, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }))
+      sp.scale.setScalar(0.75); scene.add(sp); trails.push({ sp, seg: (Math.random() * segs.length) | 0, t: Math.random(), v: 0.005 + Math.random() * 0.012 })
+    }
     function horizonGlow(x, z, color, s) {
       const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprite, color, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }))
       sp.position.set(x, GROUND + 6, z); sp.scale.set(s, s * 0.5, 1); scene.add(sp)
@@ -196,7 +208,44 @@ export default function Journey3D() {
       g.userData.rings = rings; scene.add(g); disp.push(g); return g
     }
 
+    /* matrix data-rain columns (background, all zones) */
+    function matrixRain() {
+      const g = new THREE.Group()
+      const cv = document.createElement('canvas'); cv.width = 128; cv.height = 512; const cx = cv.getContext('2d')
+      cx.font = '18px monospace'
+      for (let c = 0; c < 6; c++) for (let r = 0; r < 26; r++) { cx.fillStyle = `rgba(52,227,255,${Math.random() * 0.8 + 0.1})`; cx.fillText(Math.random() < 0.5 ? '0' : '1', c * 22 + 4, r * 20 + 16) }
+      const base = new THREE.CanvasTexture(cv)
+      const spots = [[-28, GROUND + 9, -70], [30, GROUND + 11, -120], [-32, GROUND + 8, -160], [27, GROUND + 10, -34], [-24, GROUND + 9, -210]]
+      spots.forEach((p) => {
+        const tex = base.clone(); tex.needsUpdate = true; tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(1, 3)
+        const m = new THREE.Mesh(new THREE.PlaneGeometry(10, 22), new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.2, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }))
+        m.position.set(p[0], p[1], p[2]); m.userData.tex = tex; g.add(m); disp.push(m.geometry, m.material)
+      })
+      g.userData.cols = g.children
+      scene.add(g); disp.push(g); return g
+    }
+    /* floating holographic UI panels (charts/grids) */
+    function holoPanels() {
+      const g = new THREE.Group()
+      const spots = [[-9, GROUND + 6, -88], [10, GROUND + 8, -132], [-7, GROUND + 7, -56], [9, GROUND + 5.5, -200], [-10, GROUND + 9, -176]]
+      spots.forEach((p, i) => {
+        const cv = document.createElement('canvas'); cv.width = 256; cv.height = 160; const cx = cv.getContext('2d')
+        cx.strokeStyle = 'rgba(52,227,255,0.85)'; cx.lineWidth = 3; cx.strokeRect(4, 4, 248, 152)
+        cx.strokeStyle = 'rgba(255,255,255,0.1)'; cx.lineWidth = 1
+        for (let x = 24; x < 248; x += 26) { cx.beginPath(); cx.moveTo(x, 8); cx.lineTo(x, 152); cx.stroke() }
+        for (let y = 26; y < 152; y += 26) { cx.beginPath(); cx.moveTo(8, y); cx.lineTo(248, y); cx.stroke() }
+        cx.strokeStyle = i % 2 ? '#7c78f0' : '#ffb061'; cx.lineWidth = 2.5; cx.beginPath()
+        for (let s = 0; s <= 10; s++) cx.lineTo(20 + s * 22, 120 - Math.sin(s + i) * 30 - s * 3); cx.stroke()
+        const m = new THREE.Mesh(new THREE.PlaneGeometry(3.7, 2.3), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false }))
+        m.position.set(p[0], p[1], p[2]); m.rotation.y = p[0] < 0 ? 0.42 : -0.42; m.userData.baseY = p[1]; m.userData.ph = i * 1.3
+        g.add(m); disp.push(m.geometry, m.material)
+      })
+      g.userData.panels = g.children
+      scene.add(g); disp.push(g); return g
+    }
+
     const zGate = gateway(0), zRiver = rivers(-44), zCity = city(-78), zMon = monitors(-150), zMono = monoliths(-186), zDock = dock(-220)
+    const zRain = matrixRain(), zHolo = holoPanels()
 
     /* camera path */
     const WAY = [
@@ -317,12 +366,17 @@ export default function Journey3D() {
     function frame(now) {
       raf = requestAnimationFrame(frame)
       if (lenis) lenis.raf(now || performance.now())
-      prog += (target - prog) * 0.06
+      const t = clock.getElapsedTime()
+      prog += (target - prog) * 0.045
       mouse.x += (mouse.tx - mouse.x) * 0.06
       mouse.y += (mouse.ty - mouse.y) * 0.06
       setCam(prog)
+      camera.position.y += Math.sin(t * 0.6) * 0.18
+      camera.rotateZ(Math.sin(t * 0.35) * 0.004)
       if (!coarse) raycast()
-      const t = clock.getElapsedTime()
+      for (const tr of trails) { tr.t += tr.v; if (tr.t >= 1) { tr.t = 0; tr.seg = (Math.random() * segs.length) | 0 } const sg = segs[tr.seg]; if (sg) tr.sp.position.lerpVectors(sg[0], sg[1], tr.t) }
+      for (const c of zRain.userData.cols || []) c.userData.tex.offset.y -= 0.012
+      for (const m of zHolo.userData.panels || []) m.position.y = m.userData.baseY + Math.sin(t * 0.8 + m.userData.ph) * 0.3
       for (const a of zGate.userData.arches || []) a.rotation.z = t * 0.15
       for (const s of zRiver.userData.streams || []) { s.off = (s.off + s.sp * 0.016) % 1; s.pulse.position.copy(s.curve.getPointAt(s.off)) }
       for (const r of zDock.userData.rings || []) r.rotation.z = t * 0.3
@@ -551,7 +605,12 @@ export default function Journey3D() {
 
         /* filmic grade: vignette + grain */
         .jr-grade { position: fixed; inset: 0; z-index: 1; pointer-events: none;
-          background: radial-gradient(120% 100% at 50% 32%, transparent 52%, rgba(4,3,8,0.6) 100%); }
+          background:
+            repeating-linear-gradient(0deg, rgba(52,227,255,0.022) 0 1px, transparent 1px 3px),
+            radial-gradient(120% 100% at 50% 32%, transparent 50%, rgba(4,3,8,0.62) 100%);
+          animation: jrFlicker 6s steps(50) infinite; }
+        @keyframes jrFlicker { 0%,100% { opacity: 1; } 48% { opacity: 0.97; } 50% { opacity: 0.93; } 52% { opacity: 0.99; } }
+        @media (prefers-reduced-motion: reduce) { .jr-grade { animation: none; } }
         .jr-grade::after { content: ''; position: absolute; inset: 0; opacity: 0.05; mix-blend-mode: overlay;
           background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
