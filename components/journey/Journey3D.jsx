@@ -8,10 +8,10 @@ import HeroNarration from '@/components/agent/HeroNarration'
 import ProjectShowcase from '@/components/journey/ProjectShowcase'
 import RoleCycler from '@/components/visual/RoleCycler'
 
-const AMBER  = new THREE.Color('#ff7a2f')
-const AMBER2 = new THREE.Color('#ffb061')
-const INDIGO = new THREE.Color('#7c78f0')
-const CYAN   = new THREE.Color('#34e3ff')   // Tron data accent
+const AMBER  = new THREE.Color('#6366f1')
+const AMBER2 = new THREE.Color('#818cf8')
+const INDIGO = new THREE.Color('#4a4a72')
+const CYAN   = new THREE.Color('#6366f1')   // Tron data accent
 
 const ZONES = ['Intro', 'About', 'Skills', 'Work', 'Impact', 'Contact']
 
@@ -51,11 +51,12 @@ export default function Journey3D() {
     const coarse = window.matchMedia('(pointer: coarse)').matches
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' })
+    renderer.outputColorSpace = THREE.SRGBColorSpace
     renderer.setPixelRatio(dpr); renderer.setSize(W(), H())
     mount.appendChild(renderer.domElement)
 
     const scene = new THREE.Scene()
-    scene.fog = new THREE.Fog(0x070d1a, 18, 150)
+    scene.fog = new THREE.Fog(0x09090b, 18, 150)
     const camera = new THREE.PerspectiveCamera(64, W() / H(), 0.1, 600)
     const sprite = glowTexture()
     const disp = []
@@ -63,10 +64,10 @@ export default function Journey3D() {
     const interactive = []   // raycast targets (project monitors)
 
     /* floor */
-    const floor = new THREE.GridHelper(600, 300, 0x2f7a8c, 0x1a2b3e)
+    const floor = new THREE.GridHelper(600, 300, 0x3b3b5c, 0x1a1a2e)
     floor.position.y = GROUND; floor.material.transparent = true; floor.material.opacity = 0.6
     scene.add(floor); disp.push(floor.geometry, floor.material)
-    const floor2 = new THREE.GridHelper(160, 160, 0x2a5566, 0x132034)
+    const floor2 = new THREE.GridHelper(160, 160, 0x2a2a44, 0x141422)
     floor2.position.y = GROUND + 0.02; floor2.material.transparent = true; floor2.material.opacity = 0.5
     scene.add(floor2); disp.push(floor2.geometry, floor2.material)
     // circuit-board traces + via nodes on the floor (data, not pavement)
@@ -95,10 +96,10 @@ export default function Journey3D() {
     }
     horizonGlow(-20, -120, AMBER, 120); horizonGlow(30, -200, INDIGO, 140)
 
-    scene.add(new THREE.AmbientLight(0x3a4a6a, 1.2))
-    const key = new THREE.PointLight(0xff7a2f, 1.9, 160); key.position.set(8, 16, -90); scene.add(key)
-    const fill = new THREE.PointLight(0x7c78f0, 1.1, 160); fill.position.set(-18, 12, -150); scene.add(fill)
-    const cool = new THREE.PointLight(0x34e3ff, 1.6, 170); cool.position.set(2, 9, -60); scene.add(cool)
+    scene.add(new THREE.AmbientLight(0x2a2a3e, 1.2))
+    const key = new THREE.PointLight(0x6366f1, 1.9, 160); key.position.set(8, 16, -90); scene.add(key)
+    const fill = new THREE.PointLight(0x4a4a72, 1.1, 160); fill.position.set(-18, 12, -150); scene.add(fill)
+    const cool = new THREE.PointLight(0x6366f1, 1.6, 170); cool.position.set(2, 9, -60); scene.add(cool)
 
     /* gateway */
     function gateway(zc) {
@@ -115,7 +116,7 @@ export default function Journey3D() {
       g.add(new THREE.Points(ng, new THREE.PointsMaterial({ size: 0.35, map: sprite, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }))); disp.push(ng)
       for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) if (nodes[i].distanceTo(nodes[j]) < 3.2) lpos.push(nodes[i].x, nodes[i].y, nodes[i].z, nodes[j].x, nodes[j].y, nodes[j].z)
       const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(lpos), 3))
-      g.add(new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: 0x7c78f0, transparent: true, opacity: 0.22 }))); disp.push(lg)
+      g.add(new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: 0x4a4a72, transparent: true, opacity: 0.22 }))); disp.push(lg)
       g.userData.arches = [arch, arch2]; scene.add(g); disp.push(g); return g
     }
     /* rivers */
@@ -139,7 +140,7 @@ export default function Journey3D() {
       const g = new THREE.Group(); g.position.z = zc
       // LOW server-rack blades both sides — reads as a compute cluster, not buildings
       const bg = new THREE.BoxGeometry(3.4, 0.16, 1.9)
-      const bm = new THREE.MeshStandardMaterial({ color: 0x101019, emissive: 0x14122a, emissiveIntensity: 0.7, metalness: 0.85, roughness: 0.28 })
+      const bm = new THREE.MeshStandardMaterial({ color: 0x131316, emissive: 0x1a1a2e, emissiveIntensity: 0.7, metalness: 0.85, roughness: 0.28 })
       const racks = 13, inst = new THREE.InstancedMesh(bg, bm, racks * 2 * 9), d = new THREE.Object3D(), leds = []
       let k = 0
       for (let r = 0; r < racks; r++) for (const side of [-1, 1]) {
@@ -161,7 +162,7 @@ export default function Journey3D() {
       g.add(new THREE.Points(ng, new THREE.PointsMaterial({ size: 0.32, map: sprite, color: AMBER2, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }))); disp.push(ng)
       const epos = []; for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) if (nodes[i].distanceTo(nodes[j]) < 5.5) epos.push(nodes[i].x, nodes[i].y, nodes[i].z, nodes[j].x, nodes[j].y, nodes[j].z)
       const eg = new THREE.BufferGeometry(); eg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(epos), 3))
-      g.add(new THREE.LineSegments(eg, new THREE.LineBasicMaterial({ color: 0x7c78f0, transparent: true, opacity: 0.26 }))); disp.push(eg)
+      g.add(new THREE.LineSegments(eg, new THREE.LineBasicMaterial({ color: 0x4a4a72, transparent: true, opacity: 0.26 }))); disp.push(eg)
       scene.add(g); disp.push(g); return g
     }
     /* monitors — INTERACTIVE (hover + click → ask AI) */
@@ -173,11 +174,11 @@ export default function Journey3D() {
         const side = i % 2 ? 1 : -1, px = side * (5 + (i % 3)), py = GROUND + 5 + (i % 2) * 3, pz = -6 - i * 7
         const cv = document.createElement('canvas'); cv.width = 512; cv.height = 320
         const cx = cv.getContext('2d')
-        cx.fillStyle = '#0c0a14'; cx.fillRect(0, 0, 512, 320)
-        cx.strokeStyle = 'rgba(255,122,47,0.7)'; cx.lineWidth = 5; cx.strokeRect(7, 7, 498, 306)
-        cx.fillStyle = '#ffb061'; cx.font = 'bold 28px Inter, sans-serif'; cx.fillText('PROJECT · CLICK TO ASK', 28, 56)
+        cx.fillStyle = '#0c0c10'; cx.fillRect(0, 0, 512, 320)
+        cx.strokeStyle = 'rgba(99,102,241,0.7)'; cx.lineWidth = 5; cx.strokeRect(7, 7, 498, 306)
+        cx.fillStyle = '#818cf8'; cx.font = 'bold 28px Inter, sans-serif'; cx.fillText('PROJECT · CLICK TO ASK', 28, 56)
         cx.fillStyle = '#fff'; cx.font = 'bold 42px Inter, sans-serif'; wrap(cx, String(label), 28, 122, 456, 48)
-        cx.strokeStyle = '#ff7a2f'; cx.lineWidth = 3; cx.beginPath()
+        cx.strokeStyle = '#6366f1'; cx.lineWidth = 3; cx.beginPath()
         for (let s = 0; s <= 10; s++) cx.lineTo(28 + s * 45, 272 - Math.sin(s + i) * 30 - s * 3); cx.stroke()
         const tex = new THREE.CanvasTexture(cv)
         const pl = new THREE.Mesh(new THREE.PlaneGeometry(6.6, 4.1), new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide }))
@@ -195,8 +196,8 @@ export default function Journey3D() {
         const ring = new THREE.Mesh(new THREE.TorusGeometry(1.7, 0.035, 12, 50), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.75 }))
         ring.position.set(x, y, z); g.add(ring); rings.push(ring); disp.push(ring.geometry, ring.material)
         const cv = document.createElement('canvas'); cv.width = 256; cv.height = 160; const cx = cv.getContext('2d')
-        cx.textAlign = 'center'; cx.fillStyle = i % 2 ? '#ffb061' : '#ff944d'; cx.font = 'bold 74px Inter, sans-serif'; cx.fillText(s[0], 128, 78)
-        cx.fillStyle = 'rgba(244,239,233,0.72)'; cx.font = '600 24px Inter, sans-serif'; cx.fillText(s[1], 128, 120)
+        cx.textAlign = 'center'; cx.fillStyle = i % 2 ? '#818cf8' : '#818cf8'; cx.font = 'bold 74px Inter, sans-serif'; cx.fillText(s[0], 128, 78)
+        cx.fillStyle = 'rgba(237,237,237,0.72)'; cx.font = '600 24px Inter, sans-serif'; cx.fillText(s[1], 128, 120)
         const pl = new THREE.Mesh(new THREE.PlaneGeometry(2.7, 1.7), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, side: THREE.DoubleSide }))
         pl.position.set(x, y, z); g.add(pl); disp.push(pl.geometry, pl.material)
         const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprite, color: col, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending, depthWrite: false })); glow.position.set(x, y, z); glow.scale.setScalar(3.6); g.add(glow)
@@ -216,7 +217,7 @@ export default function Journey3D() {
       const g = new THREE.Group()
       const cv = document.createElement('canvas'); cv.width = 128; cv.height = 512; const cx = cv.getContext('2d')
       cx.font = '18px monospace'
-      for (let c = 0; c < 6; c++) for (let r = 0; r < 26; r++) { cx.fillStyle = `rgba(52,227,255,${Math.random() * 0.8 + 0.1})`; cx.fillText(Math.random() < 0.5 ? '0' : '1', c * 22 + 4, r * 20 + 16) }
+      for (let c = 0; c < 6; c++) for (let r = 0; r < 26; r++) { cx.fillStyle = `rgba(99,102,241,${Math.random() * 0.8 + 0.1})`; cx.fillText(Math.random() < 0.5 ? '0' : '1', c * 22 + 4, r * 20 + 16) }
       const base = new THREE.CanvasTexture(cv); disp.push(base)
       const spots = [[-28, GROUND + 9, -70], [30, GROUND + 11, -120], [-32, GROUND + 8, -160], [27, GROUND + 10, -34], [-24, GROUND + 9, -210]]
       spots.forEach((p) => {
@@ -233,11 +234,11 @@ export default function Journey3D() {
       const spots = [[-9, GROUND + 6, -88], [10, GROUND + 8, -132], [-7, GROUND + 7, -56], [9, GROUND + 5.5, -200], [-10, GROUND + 9, -176]]
       spots.forEach((p, i) => {
         const cv = document.createElement('canvas'); cv.width = 256; cv.height = 160; const cx = cv.getContext('2d')
-        cx.strokeStyle = 'rgba(52,227,255,0.85)'; cx.lineWidth = 3; cx.strokeRect(4, 4, 248, 152)
+        cx.strokeStyle = 'rgba(99,102,241,0.85)'; cx.lineWidth = 3; cx.strokeRect(4, 4, 248, 152)
         cx.strokeStyle = 'rgba(255,255,255,0.1)'; cx.lineWidth = 1
         for (let x = 24; x < 248; x += 26) { cx.beginPath(); cx.moveTo(x, 8); cx.lineTo(x, 152); cx.stroke() }
         for (let y = 26; y < 152; y += 26) { cx.beginPath(); cx.moveTo(8, y); cx.lineTo(248, y); cx.stroke() }
-        cx.strokeStyle = i % 2 ? '#7c78f0' : '#ffb061'; cx.lineWidth = 2.5; cx.beginPath()
+        cx.strokeStyle = i % 2 ? '#4a4a72' : '#818cf8'; cx.lineWidth = 2.5; cx.beginPath()
         for (let s = 0; s <= 10; s++) cx.lineTo(20 + s * 22, 120 - Math.sin(s + i) * 30 - s * 3); cx.stroke()
         const m = new THREE.Mesh(new THREE.PlaneGeometry(3.7, 2.3), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false }))
         m.position.set(p[0], p[1], p[2]); m.rotation.y = p[0] < 0 ? 0.42 : -0.42; m.userData.baseY = p[1]; m.userData.ph = i * 1.3
@@ -532,59 +533,59 @@ export default function Journey3D() {
 
       <style jsx>{`
         .jr-canvas { position: fixed; inset: 0; z-index: 0; background:
-          linear-gradient(180deg, #07091a 0%, #070b1c 44%, #06101f 78%, #08141f 100%); }
+          linear-gradient(180deg, #0B0B0F 0%, #09090B 50%, #070709 100%); }
         .jr-scroller { position: fixed; inset: 0; z-index: 1; overflow-y: scroll; overscroll-behavior: none; cursor: none; }
         .jr-overlays { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
         .jr-overlays a, .jr-overlays button { pointer-events: auto; }
 
         /* custom cursor */
         .jr-cur, .jr-cur-ring { position: fixed; top: 0; left: 0; z-index: 60; pointer-events: none; will-change: transform; }
-        .jr-cur { width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 9999px; background: #ff7a2f; }
+        .jr-cur { width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 9999px; background: #6366f1; }
         .jr-cur-ring { width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 9999px;
-          border: 1px solid rgba(255,176,97,0.6); transition: width .2s, height .2s, margin .2s, border-color .2s; }
-        .jr-cur-ring.hot { width: 76px; height: 76px; margin: -38px 0 0 -38px; border-color: #ff7a2f; background: rgba(255,122,47,0.08); }
+          border: 1px solid rgba(129,140,248,0.6); transition: width .2s, height .2s, margin .2s, border-color .2s; }
+        .jr-cur-ring.hot { width: 76px; height: 76px; margin: -38px 0 0 -38px; border-color: #6366f1; background: rgba(99,102,241,0.08); }
         .jr-cur-label { position: absolute; left: 50%; top: calc(100% + 6px); transform: translateX(-50%); white-space: nowrap;
-          font-size: 0.62rem; font-weight: 700; letter-spacing: 0.04em; color: #ffb061; opacity: 0; transition: opacity .2s; }
+          font-size: 0.62rem; font-weight: 700; letter-spacing: 0.04em; color: #818cf8; opacity: 0; transition: opacity .2s; }
         @media (pointer: coarse) { .jr-cur, .jr-cur-ring { display: none; } .jr-scroller { cursor: auto; } }
 
         /* waypoint rail */
         .jr-rail { position: fixed; right: 1.5rem; top: 50%; transform: translateY(-50%); z-index: 40;
           display: flex; flex-direction: column; gap: 0.9rem; }
-        .jr-rail-dot { position: relative; width: 11px; height: 11px; border-radius: 9999px; border: 1px solid rgba(255,176,97,0.5);
+        .jr-rail-dot { position: relative; width: 11px; height: 11px; border-radius: 9999px; border: 1px solid rgba(129,140,248,0.5);
           background: transparent; cursor: pointer; padding: 0; transition: all .25s; }
-        .jr-rail-dot[data-active="1"] { background: #ff7a2f; border-color: #ff7a2f; box-shadow: 0 0 12px rgba(255,122,47,0.8); transform: scale(1.25); }
+        .jr-rail-dot[data-active="1"] { background: #6366f1; border-color: #6366f1; box-shadow: 0 0 12px rgba(99,102,241,0.8); transform: scale(1.25); }
         .jr-rail-label { position: absolute; right: calc(100% + 0.7rem); top: 50%; transform: translateY(-50%); white-space: nowrap;
-          font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(244,239,233,0.55); opacity: 0; transition: opacity .2s; }
-        .jr-rail-dot:hover .jr-rail-label, .jr-rail-dot[data-active="1"] .jr-rail-label { opacity: 1; color: #ffb061; }
+          font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(237,237,237,0.55); opacity: 0; transition: opacity .2s; }
+        .jr-rail-dot:hover .jr-rail-label, .jr-rail-dot[data-active="1"] .jr-rail-label { opacity: 1; color: #818cf8; }
         @media (max-width: 640px) { .jr-rail { right: 0.7rem; gap: 0.7rem; } .jr-rail-label { display: none; } }
 
         .jr-sec { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center;
-          padding: 0 8vw; max-width: 760px; color: #f4efe9; opacity: 0; will-change: opacity, transform; }
+          padding: 0 8vw; max-width: 760px; color: #ededed; opacity: 0; will-change: opacity, transform; }
         .jr-kicker { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; letter-spacing: 0.18em;
-          text-transform: uppercase; color: #ffb061; font-weight: 700; margin-bottom: 1.2rem; }
+          text-transform: uppercase; color: #818cf8; font-weight: 700; margin-bottom: 1.2rem; }
         .jr-dot { width: 7px; height: 7px; border-radius: 9999px; background: #36d399; box-shadow: 0 0 8px #36d399; }
-        .jr-title { font-size: clamp(3rem, 9vw, 7rem); font-weight: 800; line-height: 0.92; letter-spacing: -0.02em;
-          background: linear-gradient(180deg, #fff6ec, #ffd9a8 55%, #ff944d 130%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .jr-title { font-size: clamp(3rem, 9vw, 7rem); font-weight: 640; line-height: 0.9; letter-spacing: -0.03em;
+          color: #EDEDED; text-shadow: 0 2px 40px rgba(0,0,0,0.6); }
         .jr-h2 { font-size: clamp(1.8rem, 4.5vw, 3.4rem); font-weight: 800; line-height: 1.04; letter-spacing: -0.01em; margin-bottom: 1rem; }
-        .jr-lead { font-size: clamp(1rem, 1.6vw, 1.2rem); line-height: 1.6; color: rgba(244,239,233,0.8); max-width: 32rem; }
-        .jr-role { font-size: clamp(1.2rem, 2.8vw, 1.9rem); font-weight: 700; color: #ffb061; letter-spacing: -0.01em; margin: 0.4rem 0 1rem; min-height: 1.4em; }
-        .jr-avail { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; letter-spacing: 0.06em; color: rgba(244,239,233,0.75); margin-bottom: 0.8rem; }
-        .jr-hint { font-size: 0.8rem; color: #ffb061; margin-bottom: 1rem; }
-        .jr-scrollcue { margin-top: 2rem; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(244,239,233,0.5); }
+        .jr-lead { font-size: clamp(1rem, 1.6vw, 1.2rem); line-height: 1.6; color: rgba(237,237,237,0.8); max-width: 32rem; }
+        .jr-role { font-size: clamp(1.2rem, 2.8vw, 1.9rem); font-weight: 700; color: #818cf8; letter-spacing: -0.01em; margin: 0.4rem 0 1rem; min-height: 1.4em; }
+        .jr-avail { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; letter-spacing: 0.06em; color: rgba(237,237,237,0.75); margin-bottom: 0.8rem; }
+        .jr-hint { font-size: 0.8rem; color: #818cf8; margin-bottom: 1rem; }
+        .jr-scrollcue { margin-top: 2rem; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(237,237,237,0.5); }
         .jr-chips { display: flex; flex-wrap: wrap; gap: 0.55rem; max-width: 34rem; }
-        .jr-chip { font-size: 0.82rem; padding: 0.45rem 0.9rem; border-radius: 9999px; color: #f4efe9; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,122,47,0.32); transition: all .2s; }
-        .jr-chip:hover { border-color: #ff7a2f; color: #ffb061; transform: translateY(-2px); }
+        .jr-chip { font-size: 0.82rem; padding: 0.45rem 0.9rem; border-radius: 9999px; color: #ededed; background: rgba(255,255,255,0.05); border: 1px solid rgba(99,102,241,0.32); transition: all .2s; }
+        .jr-chip:hover { border-color: #6366f1; color: #818cf8; transform: translateY(-2px); }
         .jr-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.7rem; font-size: 1.05rem; }
-        .jr-list li { padding-left: 1.1rem; position: relative; color: rgba(244,239,233,0.85); }
-        .jr-list li::before { content: '▹'; position: absolute; left: 0; color: #ff7a2f; }
+        .jr-list li { padding-left: 1.1rem; position: relative; color: rgba(237,237,237,0.85); }
+        .jr-list li::before { content: '▹'; position: absolute; left: 0; color: #6366f1; }
         .jr-list b { color: #fff; }
         .jr-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem 2.6rem; max-width: 28rem; }
-        .jr-stats div { display: flex; flex-direction: column; font-size: 0.8rem; color: rgba(244,239,233,0.6); }
+        .jr-stats div { display: flex; flex-direction: column; font-size: 0.8rem; color: rgba(237,237,237,0.6); }
         .jr-stats span { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; color: #fff; line-height: 1; }
         .jr-cta { display: flex; gap: 0.8rem; margin-top: 1.6rem; flex-wrap: wrap; }
-        .jr-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.7rem 1.4rem; border-radius: 9999px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: 0; text-decoration: none; background: linear-gradient(180deg, #ff7a2f, #e85f1a); color: #160b03; transition: transform .2s; }
+        .jr-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.7rem 1.4rem; border-radius: 9999px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: 0; text-decoration: none; background: linear-gradient(180deg, #6366f1, #4f46e5); color: #ffffff; transition: transform .2s; }
         .jr-btn:hover { transform: translateY(-2px); }
-        .jr-btn.ghost { background: transparent; border: 1px solid rgba(255,122,47,0.5); color: #ffb061; }
+        .jr-btn.ghost { background: transparent; border: 1px solid rgba(99,102,241,0.5); color: #818cf8; }
 
         /* staged reveal (Scout-style) */
         .jr-sec [data-r] { opacity: 0; transform: translateY(26px);
@@ -592,22 +593,22 @@ export default function Journey3D() {
         .jr-sec[data-active="1"] [data-r] { opacity: 1; transform: none; }
 
         /* numbered section index */
-        .jr-idx { font-family: ui-monospace, "SFMono-Regular", monospace; color: #ff7a2f; margin-right: 0.7rem; position: relative; padding-right: 1.7rem; }
-        .jr-idx::after { content: ''; position: absolute; right: 0; top: 50%; width: 1.1rem; height: 1px; background: rgba(255,122,47,0.55); }
+        .jr-idx { font-family: ui-monospace, "SFMono-Regular", monospace; color: #6366f1; margin-right: 0.7rem; position: relative; padding-right: 1.7rem; }
+        .jr-idx::after { content: ''; position: absolute; right: 0; top: 50%; width: 1.1rem; height: 1px; background: rgba(99,102,241,0.55); }
 
         /* about timeline */
         .jr-tl { display: flex; gap: 1.8rem; margin-top: 1.8rem; flex-wrap: wrap; }
         .jr-tl-node { display: flex; flex-direction: column; gap: 0.15rem; position: relative; padding-left: 1.1rem; }
-        .jr-tl-dot { position: absolute; left: 0; top: 0.5rem; width: 8px; height: 8px; border-radius: 9999px; background: #ff7a2f; box-shadow: 0 0 9px rgba(255,122,47,0.9); }
+        .jr-tl-dot { position: absolute; left: 0; top: 0.5rem; width: 8px; height: 8px; border-radius: 9999px; background: #6366f1; box-shadow: 0 0 9px rgba(99,102,241,0.9); }
         .jr-tl-node b { color: #fff; font-size: 1.05rem; font-weight: 800; }
-        .jr-tl-node span { color: rgba(244,239,233,0.7); font-size: 0.8rem; }
-        .jr-tl-node em { color: #ffb061; font-size: 0.72rem; font-style: normal; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+        .jr-tl-node span { color: rgba(237,237,237,0.7); font-size: 0.8rem; }
+        .jr-tl-node em { color: #818cf8; font-size: 0.72rem; font-style: normal; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
 
         /* skills groups */
         .jr-skills { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2.6rem; max-width: 42rem; margin-top: 1.5rem; }
-        .jr-skill-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.13em; color: #ffb061; font-weight: 700; margin-bottom: 0.45rem; }
-        .jr-skill-bar { width: 16px; height: 2px; background: #ff7a2f; }
-        .jr-skill-items { font-size: 0.92rem; color: rgba(244,239,233,0.82); line-height: 1.55; }
+        .jr-skill-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.13em; color: #818cf8; font-weight: 700; margin-bottom: 0.45rem; }
+        .jr-skill-bar { width: 16px; height: 2px; background: #6366f1; }
+        .jr-skill-items { font-size: 0.92rem; color: rgba(237,237,237,0.82); line-height: 1.55; }
 
         /* line-mask title reveal (Scout/editorial signature) */
         .jr-line { display: block; overflow: hidden; padding-bottom: 0.06em; }
@@ -618,7 +619,7 @@ export default function Journey3D() {
         /* filmic grade: vignette + grain */
         .jr-grade { position: fixed; inset: 0; z-index: 1; pointer-events: none;
           background:
-            repeating-linear-gradient(0deg, rgba(52,227,255,0.022) 0 1px, transparent 1px 3px),
+            repeating-linear-gradient(0deg, rgba(99,102,241,0.022) 0 1px, transparent 1px 3px),
             radial-gradient(120% 100% at 50% 32%, transparent 50%, rgba(4,3,8,0.62) 100%);
           animation: jrFlicker 6s steps(50) infinite; }
         @keyframes jrFlicker { 0%,100% { opacity: 1; } 48% { opacity: 0.97; } 50% { opacity: 0.93; } 52% { opacity: 0.99; } }

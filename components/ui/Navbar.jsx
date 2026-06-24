@@ -128,8 +128,8 @@ export default function Navbar() {
             className="rounded-full text-xs font-semibold px-4 h-8"
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-              background: 'linear-gradient(180deg,#ff7a2f,#e85f1a)', color: '#160b03',
-              boxShadow: '0 6px 18px rgba(232,95,26,0.35)', cursor: 'pointer', border: 0,
+              background: 'linear-gradient(180deg,#6366f1,#4f46e5)', color: '#ffffff',
+              boxShadow: '0 6px 18px rgba(99,102,241,0.35)', cursor: 'pointer', border: 0,
             }}
           >
             <FiHeadphones size={13} /> Résumé
@@ -166,7 +166,7 @@ export default function Navbar() {
           <button
             className={styles.mobileNavLink}
             onClick={() => { playResumeTour(); setMenuOpen(false) }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#ffb061' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#818cf8' }}
           >
             <FiHeadphones size={15} /> Résumé (audio tour)
           </button>

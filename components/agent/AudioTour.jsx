@@ -153,10 +153,10 @@ export default function AudioTour() {
 
       <style jsx>{`
         .tour-wrap { position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; padding: 1.5rem 1rem; overflow-y: auto; }
-        .tour-scrim { position: absolute; inset: 0; background: rgba(4,3,5,0.62); backdrop-filter: blur(4px); animation: tour-in 0.3s ease both; }
+        .tour-scrim { position: absolute; inset: 0; background: rgba(0,0,0,0.62); backdrop-filter: blur(4px); animation: tour-in 0.3s ease both; }
         .tour-card {
-          position: relative; width: min(720px, 100%); color: #f4efe9; margin: auto;
-          background: rgba(12,10,13,0.96); border: 1px solid rgba(255,122,47,0.3);
+          position: relative; width: min(720px, 100%); color: #ededed; margin: auto;
+          background: rgba(12,12,16,0.96); border: 1px solid rgba(99,102,241,0.3);
           border-radius: 1.2rem; padding: 1.2rem 1.3rem 1rem; outline: none;
           box-shadow: 0 30px 90px rgba(0,0,0,0.65); animation: tour-rise 0.35s cubic-bezier(0.2,0.8,0.2,1) both;
         }
@@ -165,13 +165,13 @@ export default function AudioTour() {
 
         .tour-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.9rem; }
         .tour-id { display: flex; align-items: center; gap: 0.7rem; }
-        .tour-kicker { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.14em; color: #ffb061; font-weight: 700; }
+        .tour-kicker { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.14em; color: #818cf8; font-weight: 700; }
         .tour-title { font-size: 1.05rem; font-weight: 700; }
-        .tour-x { background: transparent; border: 0; color: rgba(244,239,233,0.6); cursor: pointer; padding: 4px; }
+        .tour-x { background: transparent; border: 0; color: rgba(237,237,237,0.6); cursor: pointer; padding: 4px; }
         .tour-x:hover { color: #fff; }
-        .tour-x:focus-visible { outline: 2px solid #ff7a2f; outline-offset: 2px; border-radius: 4px; }
+        .tour-x:focus-visible { outline: 2px solid #6366f1; outline-offset: 2px; border-radius: 4px; }
         .tour-eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 22px; }
-        .tour-eq i { width: 3px; height: 6px; background: #ff7a2f; border-radius: 2px; }
+        .tour-eq i { width: 3px; height: 6px; background: #6366f1; border-radius: 2px; }
         .tour-eq.on i { animation: tour-eq 0.9s ease-in-out infinite; }
         .tour-eq.on i:nth-child(2) { animation-delay: 0.2s; }
         .tour-eq.on i:nth-child(3) { animation-delay: 0.4s; }
@@ -181,29 +181,29 @@ export default function AudioTour() {
         .tour-caption { min-height: 5rem; max-height: 22vh; overflow-y: auto; margin: 0.9rem 0; }
         .tour-caption p { font-size: 1.02rem; line-height: 1.65; margin: 0; }
         .tour-caption .lit { color: #fff; }
-        .tour-caption .rest { color: rgba(244,239,233,0.4); }
-        .tour-caption .transcript { color: rgba(244,239,233,0.88); }
-        .tour-note { font-size: 0.8rem; color: rgba(244,239,233,0.6); }
+        .tour-caption .rest { color: rgba(237,237,237,0.4); }
+        .tour-caption .transcript { color: rgba(237,237,237,0.88); }
+        .tour-note { font-size: 0.8rem; color: rgba(237,237,237,0.6); }
 
         .tour-dots { display: flex; gap: 0.4rem; justify-content: center; margin-bottom: 0.85rem; }
         .tour-dot { width: 26px; height: 4px; border-radius: 2px; border: 0; background: rgba(255,255,255,0.14); cursor: pointer; transition: background 0.2s; padding: 0; }
-        .tour-dot.done { background: rgba(255,122,47,0.55); }
-        .tour-dot.active { background: #ff7a2f; }
-        .tour-dot:focus-visible { outline: 2px solid #ff7a2f; outline-offset: 3px; }
+        .tour-dot.done { background: rgba(99,102,241,0.55); }
+        .tour-dot.active { background: #6366f1; }
+        .tour-dot:focus-visible { outline: 2px solid #6366f1; outline-offset: 3px; }
 
         .tour-controls { display: flex; align-items: center; justify-content: center; gap: 1.1rem; margin-bottom: 0.7rem; }
-        .tour-controls button { display: grid; place-items: center; background: transparent; border: 0; color: rgba(244,239,233,0.75); cursor: pointer; }
+        .tour-controls button { display: grid; place-items: center; background: transparent; border: 0; color: rgba(237,237,237,0.75); cursor: pointer; }
         .tour-controls button:disabled { opacity: 0.3; cursor: default; }
         .tour-controls button:hover:not(:disabled) { color: #fff; }
-        .tour-controls button:focus-visible { outline: 2px solid #ff7a2f; outline-offset: 3px; border-radius: 6px; }
+        .tour-controls button:focus-visible { outline: 2px solid #6366f1; outline-offset: 3px; border-radius: 6px; }
         .tour-play { width: 52px; height: 52px; border-radius: 9999px !important;
-          background: linear-gradient(180deg, #ff7a2f, #e85f1a) !important; color: #160b03 !important;
+          background: linear-gradient(180deg, #6366f1, #4f46e5) !important; color: #ffffff !important;
           box-shadow: 0 10px 26px rgba(232,95,26,0.45); }
 
         .tour-foot { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.7rem; }
-        .tour-step { font-size: 0.7rem; color: rgba(244,239,233,0.45); font-variant-numeric: tabular-nums; }
-        .tour-pdf { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.72rem; color: rgba(244,239,233,0.6); text-decoration: none; }
-        .tour-pdf:hover { color: #ffb061; }
+        .tour-step { font-size: 0.7rem; color: rgba(237,237,237,0.45); font-variant-numeric: tabular-nums; }
+        .tour-pdf { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.72rem; color: rgba(237,237,237,0.6); text-decoration: none; }
+        .tour-pdf:hover { color: #818cf8; }
 
         @media (max-width: 520px) {
           .tour-caption p { font-size: 0.92rem; }

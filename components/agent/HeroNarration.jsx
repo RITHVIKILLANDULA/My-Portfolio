@@ -80,13 +80,13 @@ export default function HeroNarration() {
         .hn { margin-top: 1.1rem; max-width: 30rem; }
         .hn-btn {
           display: inline-flex; align-items: center; gap: 0.55rem;
-          background: rgba(255,122,47,0.10); border: 1px solid rgba(255,122,47,0.4);
-          color: #ffb061; border-radius: 9999px; padding: 0.45rem 0.95rem;
+          background: rgba(99,102,241,0.10); border: 1px solid rgba(99,102,241,0.4);
+          color: #818cf8; border-radius: 9999px; padding: 0.45rem 0.95rem;
           font-size: 0.74rem; font-weight: 600; letter-spacing: 0.01em; cursor: pointer;
           transition: all 0.2s; backdrop-filter: blur(6px);
         }
-        .hn-btn:hover { background: rgba(255,122,47,0.18); border-color: rgba(255,122,47,0.7); color: #ffd9a8; }
-        .hn-btn:focus-visible { outline: 2px solid #ff7a2f; outline-offset: 3px; }
+        .hn-btn:hover { background: rgba(99,102,241,0.18); border-color: rgba(99,102,241,0.7); color: #a5b0fb; }
+        .hn-btn:focus-visible { outline: 2px solid #6366f1; outline-offset: 3px; }
         .hn-label { white-space: nowrap; }
         .hn-eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 13px; }
         .hn-eq i { width: 2.5px; height: 4px; background: currentColor; border-radius: 2px; opacity: 0.85; }
@@ -97,8 +97,8 @@ export default function HeroNarration() {
         @keyframes hn-eq { 0%,100% { height: 3px; } 50% { height: 12px; } }
 
         .hn-caption { margin-top: 0.8rem; font-size: 0.92rem; line-height: 1.6; }
-        .hn-caption .lit { color: #f4efe9; }
-        .hn-caption .rest { color: rgba(244,239,233,0.4); }
+        .hn-caption .lit { color: #ededed; }
+        .hn-caption .rest { color: rgba(237,237,237,0.4); }
 
         @media (max-width: 767px) { .hn { display: none; } }
         @media (prefers-reduced-motion: reduce) {
