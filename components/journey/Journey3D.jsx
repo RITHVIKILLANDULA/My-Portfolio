@@ -55,7 +55,7 @@ export default function Journey3D() {
     mount.appendChild(renderer.domElement)
 
     const scene = new THREE.Scene()
-    scene.fog = new THREE.Fog(0x06060c, 18, 150)
+    scene.fog = new THREE.Fog(0x070d1a, 18, 150)
     const camera = new THREE.PerspectiveCamera(64, W() / H(), 0.1, 600)
     const sprite = glowTexture()
     const disp = []
@@ -81,12 +81,13 @@ export default function Journey3D() {
       segs.push([a.clone(), corner], [corner.clone(), b.clone()])
     }
     const trg = new THREE.BufferGeometry(); trg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(tr), 3))
-    scene.add(new THREE.LineSegments(trg, new THREE.LineBasicMaterial({ color: CYAN, transparent: true, opacity: 0.2 }))); disp.push(trg)
+    scene.add(new THREE.LineSegments(trg, new THREE.LineBasicMaterial({ color: CYAN, transparent: true, opacity: 0.45 }))); disp.push(trg)
     // Tron light-trails racing along the circuit
     const trails = []
-    for (let i = 0; i < 18; i++) {
-      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprite, color: CYAN, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }))
-      sp.scale.setScalar(0.75); scene.add(sp); trails.push({ sp, seg: (Math.random() * segs.length) | 0, t: Math.random(), v: 0.005 + Math.random() * 0.012 })
+    for (let i = 0; i < 34; i++) {
+      const tm = new THREE.SpriteMaterial({ map: sprite, color: CYAN, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }); disp.push(tm)
+      const sp = new THREE.Sprite(tm); sp.scale.set(1.5, 0.9, 1); scene.add(sp)
+      trails.push({ sp, seg: (Math.random() * segs.length) | 0, t: Math.random(), v: 0.012 + Math.random() * 0.022 })
     }
     function horizonGlow(x, z, color, s) {
       const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprite, color, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }))
@@ -94,9 +95,10 @@ export default function Journey3D() {
     }
     horizonGlow(-20, -120, AMBER, 120); horizonGlow(30, -200, INDIGO, 140)
 
-    scene.add(new THREE.AmbientLight(0x505074, 1.3))
-    const key = new THREE.PointLight(0xff7a2f, 2.2, 160); key.position.set(8, 16, -90); scene.add(key)
-    const fill = new THREE.PointLight(0x7c78f0, 1.6, 160); fill.position.set(-18, 12, -150); scene.add(fill)
+    scene.add(new THREE.AmbientLight(0x3a4a6a, 1.2))
+    const key = new THREE.PointLight(0xff7a2f, 1.9, 160); key.position.set(8, 16, -90); scene.add(key)
+    const fill = new THREE.PointLight(0x7c78f0, 1.1, 160); fill.position.set(-18, 12, -150); scene.add(fill)
+    const cool = new THREE.PointLight(0x34e3ff, 1.6, 170); cool.position.set(2, 9, -60); scene.add(cool)
 
     /* gateway */
     function gateway(zc) {
@@ -124,9 +126,10 @@ export default function Journey3D() {
         for (let i = 0; i <= 40; i++) { const t = i / 40; pts.push(new THREE.Vector3(bx + Math.sin(t * 5 + s) * 3, GROUND + 0.4 + Math.abs(Math.sin(t * 3 + s)) * 3, -22 + t * 44)) }
         const curve = new THREE.CatmullRomCurve3(pts)
         const tube = new THREE.TubeGeometry(curve, 60, 0.035, 6, false)
-        const m = new THREE.MeshBasicMaterial({ color: s % 2 ? INDIGO : AMBER, transparent: true, opacity: 0.3 })
+        const m = new THREE.MeshBasicMaterial({ color: s % 3 === 0 ? CYAN : (s % 2 ? INDIGO : AMBER), transparent: true, opacity: 0.32 })
         g.add(new THREE.Mesh(tube, m)); disp.push(tube, m)
-        const pulse = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprite, color: s % 2 ? AMBER2 : INDIGO, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }))
+        const pm = new THREE.SpriteMaterial({ map: sprite, color: s % 3 === 0 ? CYAN : (s % 2 ? AMBER2 : INDIGO), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }); disp.push(pm)
+        const pulse = new THREE.Sprite(pm)
         pulse.scale.setScalar(0.95); g.add(pulse); streams.push({ curve, pulse, off: Math.random(), sp: 0.05 + Math.random() * 0.09 })
       }
       g.userData.streams = streams; scene.add(g); disp.push(g); return g
@@ -148,7 +151,7 @@ export default function Journey3D() {
       }
       inst.count = k; g.add(inst); disp.push(bg, bm)
       const lp = new Float32Array(leds.length * 3), lc = new Float32Array(leds.length * 3)
-      leds.forEach((p, i) => { lp.set(p, i * 3); const c = Math.random() < 0.5 ? AMBER2 : INDIGO; lc.set([c.r, c.g, c.b], i * 3) })
+      leds.forEach((p, i) => { lp.set(p, i * 3); const r = Math.random(); const c = r < 0.45 ? CYAN : r < 0.72 ? INDIGO : AMBER2; lc.set([c.r, c.g, c.b], i * 3) })
       const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.BufferAttribute(lp, 3)); lg.setAttribute('color', new THREE.BufferAttribute(lc, 3))
       g.add(new THREE.Points(lg, new THREE.PointsMaterial({ size: 0.17, map: sprite, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }))); disp.push(lg)
       // neural lattice floating above the racks
@@ -214,7 +217,7 @@ export default function Journey3D() {
       const cv = document.createElement('canvas'); cv.width = 128; cv.height = 512; const cx = cv.getContext('2d')
       cx.font = '18px monospace'
       for (let c = 0; c < 6; c++) for (let r = 0; r < 26; r++) { cx.fillStyle = `rgba(52,227,255,${Math.random() * 0.8 + 0.1})`; cx.fillText(Math.random() < 0.5 ? '0' : '1', c * 22 + 4, r * 20 + 16) }
-      const base = new THREE.CanvasTexture(cv)
+      const base = new THREE.CanvasTexture(cv); disp.push(base)
       const spots = [[-28, GROUND + 9, -70], [30, GROUND + 11, -120], [-32, GROUND + 8, -160], [27, GROUND + 10, -34], [-24, GROUND + 9, -210]]
       spots.forEach((p) => {
         const tex = base.clone(); tex.needsUpdate = true; tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(1, 3)
@@ -350,12 +353,14 @@ export default function Journey3D() {
     window.__journeyGoto = gotoFrac
 
     const clock = new THREE.Clock()
-    const _look = new THREE.Vector3()
+    const _look = new THREE.Vector3(), _cp = new THREE.Vector3(), _riv = new THREE.Vector3()
+    let rcCount = 0
     function setCam(p) {
-      camera.position.copy(path.getPointAt(clamp01(p)))
+      const c = clamp01(p)
+      path.getPointAt(c, _cp); camera.position.copy(_cp)
       camera.position.x += mouse.x * 1.6
       camera.position.y += -mouse.y * 0.9
-      _look.copy(lookCurve.getPointAt(clamp01(p)))
+      lookCurve.getPointAt(c, _look)
       _look.x += mouse.x * 4
       _look.y += -mouse.y * 3
       camera.lookAt(_look)
@@ -373,12 +378,12 @@ export default function Journey3D() {
       setCam(prog)
       camera.position.y += Math.sin(t * 0.6) * 0.18
       camera.rotateZ(Math.sin(t * 0.35) * 0.004)
-      if (!coarse) raycast()
+      if (!coarse && (rcCount++ & 3) === 0) raycast()
       for (const tr of trails) { tr.t += tr.v; if (tr.t >= 1) { tr.t = 0; tr.seg = (Math.random() * segs.length) | 0 } const sg = segs[tr.seg]; if (sg) tr.sp.position.lerpVectors(sg[0], sg[1], tr.t) }
       for (const c of zRain.userData.cols || []) c.userData.tex.offset.y -= 0.012
       for (const m of zHolo.userData.panels || []) m.position.y = m.userData.baseY + Math.sin(t * 0.8 + m.userData.ph) * 0.3
       for (const a of zGate.userData.arches || []) a.rotation.z = t * 0.15
-      for (const s of zRiver.userData.streams || []) { s.off = (s.off + s.sp * 0.016) % 1; s.pulse.position.copy(s.curve.getPointAt(s.off)) }
+      for (const s of zRiver.userData.streams || []) { s.off = (s.off + s.sp * 0.016) % 1; s.curve.getPointAt(s.off, _riv); s.pulse.position.copy(_riv) }
       for (const r of zDock.userData.rings || []) r.rotation.z = t * 0.3
       for (const r of zMono.userData.rings || []) { r.rotation.z = t * 0.4; r.rotation.y = Math.sin(t * 0.3) * 0.3 }
       for (const m of interactive) { const tgt = m === hovered ? 1.12 : 1; m.scale.x += (tgt - m.scale.x) * 0.18; m.scale.y = m.scale.x }
@@ -399,6 +404,13 @@ export default function Journey3D() {
       window.removeEventListener('keydown', onKey)
       renderer.domElement.removeEventListener('click', onClick)
       scroller.removeEventListener('click', onClick)
+      scene.traverse((o) => {
+        if (o.geometry && o.geometry.dispose) o.geometry.dispose()
+        const m = o.material
+        if (Array.isArray(m)) m.forEach((x) => { x && x.map && x.map.dispose && x.map.dispose(); x && x.dispose && x.dispose() })
+        else if (m) { m.map && m.map.dispose && m.map.dispose(); m.dispose && m.dispose() }
+      })
+      try { sprite.dispose() } catch {}
       disp.forEach(o => { try { o.dispose && o.dispose() } catch {} })
       renderer.dispose()
       if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement)
@@ -520,7 +532,7 @@ export default function Journey3D() {
 
       <style jsx>{`
         .jr-canvas { position: fixed; inset: 0; z-index: 0; background:
-          linear-gradient(180deg, #0a0812 0%, #0b0810 42%, #14100c 78%, #1c130a 100%); }
+          linear-gradient(180deg, #07091a 0%, #070b1c 44%, #06101f 78%, #08141f 100%); }
         .jr-scroller { position: fixed; inset: 0; z-index: 1; overflow-y: scroll; overscroll-behavior: none; cursor: none; }
         .jr-overlays { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
         .jr-overlays a, .jr-overlays button { pointer-events: auto; }
