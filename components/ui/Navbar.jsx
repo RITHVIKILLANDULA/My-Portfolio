@@ -20,12 +20,13 @@ function playResumeTour() {
 // idx matches snap position in page.js (0=video,1=hero,2=about,3-4=projects,5=work-exp,6=publications,7=footer)
 // fractions along the 3D scroll-journey (0 = intro … 1 = contact)
 const NAV_ITEMS = [
-  { label: 'Home',    frac: 0 },
-  { label: 'About',   frac: 0.2 },
-  { label: 'Skills',  frac: 0.4 },
-  { label: 'Work',    frac: 0.6 },
-  { label: 'Impact',  frac: 0.8 },
-  { label: 'Contact', frac: 1 },
+  { label: 'Home',       frac: 0 },
+  { label: 'About',      frac: 1 / 6 },
+  { label: 'Experience', frac: 2 / 6 },
+  { label: 'Skills',     frac: 3 / 6 },
+  { label: 'Work',       frac: 4 / 6 },
+  { label: 'Impact',     frac: 5 / 6 },
+  { label: 'Contact',    frac: 1 },
 ]
 
 function gotoFrac(frac) {

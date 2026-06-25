@@ -8,13 +8,13 @@ const A = '#6366f1', I = '#4a4a72'
 const PROJECTS = [
   { title: 'Telco Customer Churn', type: 'Machine Learning', metric: '500K+', metricLabel: 'records',
     desc: 'Churn models with Logistic Regression, XGBoost, and Random Forest over 500,000+ customer records — surfacing behavioral drivers and shipping a web app for churn-risk insights.',
-    tech: ['Python', 'XGBoost', 'Random Forest', 'scikit-learn'], link: 'https://github.com/RITHVIKILLANDULA', accent: A },
+    tech: ['Python', 'XGBoost', 'Random Forest', 'scikit-learn'], link: 'https://github.com/RITHVIKILLANDULA', accent: A, star: 1 },
   { title: 'Citi Bike Demand', type: 'Forecasting', metric: '1M+', metricLabel: 'trips',
     desc: 'End-to-end ML pipeline forecasting hourly demand with LightGBM over a million-plus trips — 20+ MLflow experiments, a 12–15% MAE improvement, and Streamlit dashboards.',
     tech: ['LightGBM', 'Pandas', 'MLflow', 'Streamlit'], link: 'https://github.com/RITHVIKILLANDULA', accent: I },
   { title: 'PDF-Insight RAG', type: 'GenAI · LLM', metric: 'RAG', metricLabel: 'assistant',
     desc: 'Retrieval-augmented Q&A assistant: upload PDFs and ask — text embedded with OpenAI embeddings, stored in FAISS, answered by Gemini-Pro, orchestrated end to end with LangChain.',
-    tech: ['LangChain', 'FAISS', 'OpenAI', 'Gemini'], link: 'https://github.com/RITHVIKILLANDULA', accent: A },
+    tech: ['LangChain', 'FAISS', 'OpenAI', 'Gemini'], link: 'https://github.com/RITHVIKILLANDULA', accent: A, star: 1 },
   { title: 'Data Quality Pipeline', type: 'Data Engineering', metric: '6+', metricLabel: 'checks',
     desc: 'Profiling rules, statistical thresholds, and anomaly detection flag missing values, duplicates, volume spikes, and abnormal time-series patterns before they ever reach reporting.',
     tech: ['Python', 'SQL', 'Anomaly Detection'], link: 'https://github.com/RITHVIKILLANDULA', accent: I },
@@ -45,7 +45,7 @@ export default function ProjectShowcase() {
       <div className="ps-stage">
         <article className="ps-card" key={idx} style={{ '--accent': p.accent, '--enter': dir > 0 ? '70px' : '-70px' }}>
           <div className="ps-visual">
-            <span className="ps-type" style={{ color: p.accent, borderColor: p.accent }}>{p.type}</span>
+            <span className="ps-type" style={{ color: p.accent, borderColor: p.accent }}>{p.star ? '★ ' : ''}{p.type}</span>
             <p className="ps-metric">{p.metric}<small>{p.metricLabel}</small></p>
             <div className="ps-bars">{[0, 1, 2, 3].map(b => <i key={b} style={{ animationDelay: `${0.25 + b * 0.09}s`, background: b % 2 ? I : p.accent }} />)}</div>
             <span className="ps-watermark" aria-hidden>{String(idx + 1).padStart(2, '0')}</span>
