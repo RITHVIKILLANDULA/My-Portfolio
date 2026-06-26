@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { FaGithub, FaLinkedinIn, FaEnvelope } from 'react-icons/fa'
 import { FiArrowUpRight, FiDownload, FiHeadphones } from 'react-icons/fi'
 import profile from '@/data/profile.json'
+import CommandPalette from '@/components/CommandPalette'
 
 const RESUME = '/Rithvik_Illandula_Resume.pdf'
 const GH = 'https://github.com/RITHVIKILLANDULA'
@@ -53,22 +54,40 @@ const SKILLGROUPS = [
 const PROJECTS = [
   { t: 'Customer Churn Prediction', tag: 'Machine Learning', star: 1, link: GH,
     d: 'Churn models (Logistic Regression, XGBoost, Random Forest) over 500K+ customer records — surfaced behavioral drivers and shipped a web app exposing churn-risk insights.',
-    tech: ['Python', 'XGBoost', 'Random Forest', 'scikit-learn'] },
+    tech: ['Python', 'XGBoost', 'Random Forest', 'scikit-learn'],
+    cs: { problem: 'Telcos bleed revenue to silent churn — the business needed to know who will leave and why, early enough to act.',
+      build: ['Engineered features over 500K+ customer records (tenure, usage, billing, support history).', 'Trained and compared Logistic Regression, Random Forest, and XGBoost; tuned for recall on the churn class.', 'Surfaced the top behavioral drivers and shipped a web app exposing per-customer churn risk for retention teams.'],
+      metrics: [['500K+', 'records'], ['3', 'models compared'], ['web app', 'shipped']] } },
   { t: 'PDF-Insight — RAG Assistant', tag: 'GenAI · LLM', star: 1, link: GH,
     d: 'Retrieval-augmented Q&A: PDFs vectorized with OpenAI embeddings into FAISS, answered by Gemini-Pro, orchestrated end-to-end with LangChain.',
-    tech: ['LangChain', 'FAISS', 'OpenAI', 'Gemini'] },
+    tech: ['LangChain', 'FAISS', 'OpenAI', 'Gemini'],
+    cs: { problem: 'Hunting one answer across long PDFs is slow — needed grounded Q&A over arbitrary documents.',
+      build: ['Chunk + embed PDF text with OpenAI embeddings; index in FAISS for similarity search.', 'Retrieve top-k context and answer with Gemini-Pro, orchestrated end-to-end with LangChain.', 'Ground answers in the retrieved source so responses stay faithful (the same pattern that powers the agent on this site).'],
+      metrics: [['RAG', 'pipeline'], ['FAISS', 'vector store'], ['LangChain', 'orchestration']] } },
   { t: 'Citi Bike Demand Forecasting', tag: 'Forecasting', star: 0, link: GH,
     d: 'End-to-end pipeline forecasting hourly demand with LightGBM over 1M+ trips — 20+ MLflow experiments, 12–15% MAE improvement, Streamlit dashboards.',
-    tech: ['LightGBM', 'MLflow', 'Pandas', 'Streamlit'] },
+    tech: ['LightGBM', 'MLflow', 'Pandas', 'Streamlit'],
+    cs: { problem: 'Bike-share ops need accurate hourly demand forecasts to rebalance stations before they run dry.',
+      build: ['Built an end-to-end pipeline over 1M+ historical trips with engineered temporal and weather features.', 'Trained LightGBM and ran 20+ MLflow experiments to tune and track every run.', 'Served forecasts and insights through Streamlit dashboards.'],
+      metrics: [['1M+', 'trips'], ['12–15%', 'MAE gain'], ['20+', 'MLflow runs']] } },
   { t: 'Data Quality & Anomaly Pipeline', tag: 'Data Engineering', star: 0, link: GH,
     d: 'Profiling rules, statistical thresholds, and anomaly detection flag missing values, duplicates, volume spikes, and abnormal time-series before they reach reporting.',
-    tech: ['Python', 'SQL', 'Anomaly Detection'] },
+    tech: ['Python', 'SQL', 'Anomaly Detection'],
+    cs: { problem: 'Bad data silently corrupts dashboards — it had to be caught before it reached the reporting layer.',
+      build: ['Profiling rules + statistical thresholds over every incoming dataset.', 'Anomaly detection for missing values, duplicates, volume spikes, and abnormal time-series.', 'Flag and quarantine bad batches upstream of reporting.'],
+      metrics: [['pre-report', 'gating'], ['anomaly', 'detection']] } },
   { t: 'BigQuery ML Customer Analytics', tag: 'Cloud · MLOps', star: 0, link: GH,
     d: 'GCP analytics pipeline profiling customer behavior with BigQuery ML and Vertex AI, orchestrated with Airflow and PySpark.',
-    tech: ['BigQuery ML', 'Vertex AI', 'Airflow', 'PySpark'] },
+    tech: ['BigQuery ML', 'Vertex AI', 'Airflow', 'PySpark'],
+    cs: { problem: 'Customer analytics needed to scale without exporting data out of the warehouse.',
+      build: ['In-warehouse modeling with BigQuery ML; richer models with Vertex AI.', 'Profiled behavior and prepared reporting-ready insights.', 'Orchestrated the pipeline with Airflow and PySpark.'],
+      metrics: [['GCP', 'native'], ['BigQuery ML', '+ Vertex AI']] } },
   { t: 'GenAI & NLP Toolkit', tag: 'NLP', star: 0, link: GH,
     d: 'Summarization & sentiment with Hugging Face Transformers, a Fake-News classifier (NLTK · TF-IDF), and WeatherWise — OpenWeather + OpenAI for human-like forecasts.',
-    tech: ['Transformers', 'NLTK', 'TF-IDF', 'OpenAI'] },
+    tech: ['Transformers', 'NLTK', 'TF-IDF', 'OpenAI'],
+    cs: { problem: 'A practical toolkit of NLP / GenAI utilities, end to end.',
+      build: ['Summarization and sentiment with Hugging Face Transformers.', 'Fake-News classifier with NLTK + TF-IDF.', 'WeatherWise — human-like forecasts from the OpenWeather + OpenAI APIs.'],
+      metrics: [['3', 'tools'], ['Transformers', '+ classic ML']] } },
 ]
 
 const IMPACT = [
@@ -79,6 +98,15 @@ const IMPACT = [
 const NAV = [['About', 'about'], ['Experience', 'experience'], ['Projects', 'projects'], ['Skills', 'skills'], ['Contact', 'contact']]
 
 export default function PortfolioSite() {
+  const [active, setActive] = useState(null)
+
+  useEffect(() => {
+    if (!active) return
+    const onKey = (e) => { if (e.key === 'Escape') setActive(null) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [active])
+
   useEffect(() => {
     const io = new IntersectionObserver((es) => {
       es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) } })
@@ -97,7 +125,8 @@ export default function PortfolioSite() {
         <nav className="nav-links">
           {NAV.map(([l, id]) => <a key={id} href={`#${id}`} onClick={jump(id)}>{l}</a>)}
         </nav>
-        <div className="nav-cta">
+        <div className="nav-cta" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <CommandPalette />
           <a href={RESUME} target="_blank" rel="noopener noreferrer" className="btn sm"><FiDownload size={13} /> Résumé</a>
         </div>
       </header>
@@ -178,15 +207,15 @@ export default function PortfolioSite() {
         <h2 className="sec-h reveal">Selected work.</h2>
         <div className="proj-grid">
           {PROJECTS.map((p) => (
-            <a key={p.t} href={p.link} target="_blank" rel="noopener noreferrer" className={`proj-card reveal ${p.star ? 'star' : ''}`}>
+            <button key={p.t} type="button" data-mag onClick={() => setActive(p)} className={`proj-card reveal ${p.star ? 'star' : ''}`}>
               <div className="proj-top">
                 <span className="proj-tag">{p.star ? '★ ' : ''}{p.tag}</span>
-                <FiArrowUpRight className="proj-arrow" />
+                <span className="proj-open">Case study →</span>
               </div>
               <h3>{p.t}</h3>
               <p>{p.d}</p>
               <div className="tags">{p.tech.map((t) => <span key={t}>{t}</span>)}</div>
-            </a>
+            </button>
           ))}
         </div>
       </section>
@@ -222,6 +251,26 @@ export default function PortfolioSite() {
         </div>
         <footer className="foot">© {new Date().getFullYear()} Rithvik Illandula · Built with Next.js</footer>
       </section>
+
+      {/* PROJECT CASE-STUDY MODAL */}
+      {active && (
+        <div className="cs-wrap" role="dialog" aria-modal="true" aria-label={active.t} onClick={() => setActive(null)}>
+          <div className="cs-card" onClick={(e) => e.stopPropagation()}>
+            <button className="cs-x" onClick={() => setActive(null)} aria-label="Close case study">✕</button>
+            <span className="cs-tag">{active.star ? '★ ' : ''}{active.tag}</span>
+            <h3 className="cs-title">{active.t}</h3>
+            <p className="cs-problem">{active.cs.problem}</p>
+            <p className="cs-h">What I built</p>
+            <ul className="cs-build">{active.cs.build.map((b, i) => <li key={i}>{b}</li>)}</ul>
+            <div className="cs-metrics">{active.cs.metrics.map(([v, l]) => <div key={l}><b>{v}</b><span>{l}</span></div>)}</div>
+            <div className="tags cs-tags">{active.tech.map((t) => <span key={t}>{t}</span>)}</div>
+            <div className="cs-cta">
+              <a href={active.link} target="_blank" rel="noopener noreferrer" data-mag className="btn ghost"><FiArrowUpRight size={14} /> GitHub</a>
+              <button type="button" data-mag className="btn" onClick={() => { const t = active.t; setActive(null); window.dispatchEvent(new CustomEvent('journey-ask', { detail: `Tell me more about the ${t} project` })) }}>Ask the AI about this ✦</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style jsx>{`
         .site { background: #09090B; color: #EDEDED; font-feature-settings: 'ss01'; }
@@ -323,6 +372,30 @@ export default function PortfolioSite() {
         .contact { text-align: left; padding-bottom: 5rem; }
         .big { font-size: clamp(2.2rem, 6vw, 4rem); font-weight: 650; letter-spacing: -0.03em; color: #fff; margin: 0.6rem 0 1rem; }
         .foot { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid #18181B; font-size: 0.78rem; color: #52525B; }
+
+        .proj-card { text-align: left; }
+        .proj-open { font-size: 0.7rem; color: #71717A; font-weight: 600; }
+        .proj-card:hover .proj-open { color: #818CF8; }
+
+        .cs-wrap { position: fixed; inset: 0; z-index: 110; display: grid; place-items: center; padding: 1.5rem; }
+        .cs-wrap::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.66); backdrop-filter: blur(4px); }
+        .cs-card { position: relative; width: min(640px, 100%); max-height: 86vh; overflow-y: auto; background: #131316; border: 1px solid #27272A;
+          border-radius: 16px; padding: 2rem; box-shadow: 0 30px 90px rgba(0,0,0,0.6); animation: csr .3s cubic-bezier(.16,1,.3,1) both; }
+        @keyframes csr { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
+        .cs-x { position: absolute; top: 1rem; right: 1rem; background: transparent; border: 0; color: #71717A; font-size: 1rem; cursor: pointer; }
+        .cs-x:hover { color: #EDEDED; }
+        .cs-tag { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #818CF8; font-weight: 700; }
+        .cs-title { font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 650; color: #fff; margin: 0.5rem 0 0.9rem; letter-spacing: -0.02em; }
+        .cs-problem { color: #A1A1AA; line-height: 1.6; font-size: 0.98rem; }
+        .cs-h { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #71717A; font-weight: 700; margin: 1.4rem 0 0.7rem; }
+        .cs-build { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.55rem; }
+        .cs-build li { color: #A1A1AA; font-size: 0.9rem; line-height: 1.55; padding-left: 1rem; position: relative; }
+        .cs-build li::before { content: '—'; position: absolute; left: 0; color: #6366F1; }
+        .cs-metrics { display: flex; flex-wrap: wrap; gap: 1.8rem; margin: 1.4rem 0; padding: 1.1rem 0; border-top: 1px solid #1F1F23; border-bottom: 1px solid #1F1F23; }
+        .cs-metrics b { font-size: 1.3rem; font-weight: 700; color: #fff; display: block; line-height: 1; }
+        .cs-metrics span { font-size: 0.72rem; color: #71717A; }
+        .cs-tags { margin-bottom: 1.4rem; }
+        .cs-cta { display: flex; gap: 0.7rem; flex-wrap: wrap; }
 
         .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
         .reveal.in { opacity: 1; transform: none; }
