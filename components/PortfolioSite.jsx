@@ -6,7 +6,7 @@ import { FaGithub, FaLinkedinIn, FaEnvelope } from 'react-icons/fa'
 import { FiArrowUpRight, FiDownload, FiHeadphones } from 'react-icons/fi'
 import profile from '@/data/profile.json'
 
-const RESUME = '/My-Portfolio/Rithvik_Illandula_Resume.pdf'
+const RESUME = '/Rithvik_Illandula_Resume.pdf'
 const GH = 'https://github.com/RITHVIKILLANDULA'
 const LI = 'https://www.linkedin.com/in/rithvik-illandula'
 
@@ -108,6 +108,18 @@ export default function PortfolioSite() {
         <h1 className="reveal">Rithvik<br />Illandula</h1>
         <p className="role reveal">Data Engineer&nbsp;·&nbsp;AI / ML Engineer&nbsp;·&nbsp;Software Engineer</p>
         <p className="lead reveal">{profile.bio.split('Three CS degrees')[0].trim()}</p>
+
+        <form className="ask reveal" onSubmit={(e) => { e.preventDefault(); const v = e.currentTarget.q.value.trim(); if (v) { window.dispatchEvent(new CustomEvent('journey-ask', { detail: v })); e.currentTarget.reset() } }}>
+          <span className="ask-spark">✦</span>
+          <input name="q" placeholder="Ask my AI anything about my work…" aria-label="Ask the AI assistant about Rithvik" autoComplete="off" />
+          <button type="submit">Ask</button>
+        </form>
+        <div className="ask-chips reveal">
+          {["What's the hardest system he shipped?", 'Does he know RAG & LLMs?', "What's his biggest measurable impact?"].map((c) => (
+            <button key={c} onClick={() => window.dispatchEvent(new CustomEvent('journey-ask', { detail: c }))}>{c}</button>
+          ))}
+        </div>
+
         <div className="hero-cta reveal">
           <a href={`mailto:${profile.email}`} className="btn">Email me</a>
           <a href={RESUME} target="_blank" rel="noopener noreferrer" className="btn ghost"><FiDownload size={14} /> Download résumé</a>
@@ -128,7 +140,7 @@ export default function PortfolioSite() {
         <p className="sec-idx reveal">01 — About</p>
         <div className="about-grid">
           <div className="about-photo reveal">
-            <Image src="/My-Portfolio/assets/portrait.png" alt="Rithvik Illandula" width={420} height={520} className="photo" />
+            <Image src="/assets/portrait.png" alt="Rithvik Illandula" width={420} height={520} className="photo" />
           </div>
           <div className="about-body">
             <h2 className="reveal">I build across the whole stack of data &amp; AI.</h2>
@@ -238,6 +250,17 @@ export default function PortfolioSite() {
         .hero h1 { font-size: clamp(3rem, 9vw, 6.5rem); font-weight: 640; line-height: 0.92; letter-spacing: -0.035em; color: #fff; }
         .role { font-size: clamp(1.05rem, 2.4vw, 1.5rem); color: #818CF8; font-weight: 600; margin-top: 1.1rem; letter-spacing: -0.01em; }
         .lead { font-size: clamp(1rem, 1.5vw, 1.18rem); color: #A1A1AA; line-height: 1.65; max-width: 60ch; margin-top: 1.2rem; }
+        .ask { display: flex; align-items: center; gap: 0.6rem; max-width: 540px; margin-top: 1.9rem;
+          background: #131316; border: 1px solid #27272A; border-radius: 12px; padding: 0.5rem 0.55rem 0.5rem 0.95rem; transition: border-color .2s, box-shadow .2s; }
+        .ask:focus-within { border-color: #6366F1; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+        .ask-spark { color: #818CF8; }
+        .ask input { flex: 1; background: transparent; border: 0; outline: none; color: #EDEDED; font-size: 0.95rem; }
+        .ask input::placeholder { color: #71717A; }
+        .ask button { background: #6366F1; color: #fff; border: 0; border-radius: 8px; padding: 0.5rem 1.1rem; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: background .2s; }
+        .ask button:hover { background: #4F46E5; }
+        .ask-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.85rem; }
+        .ask-chips button { background: transparent; border: 1px solid #27272A; color: #A1A1AA; border-radius: 9999px; padding: 0.35rem 0.85rem; font-size: 0.78rem; cursor: pointer; transition: all .2s; }
+        .ask-chips button:hover { border-color: #6366F1; color: #A5B0FB; }
         .hero-cta { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.8rem; }
         .hero-stats { display: flex; gap: 2.8rem; margin-top: 2.4rem; }
         .hero-stats b { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 700; color: #fff; display: block; line-height: 1; }

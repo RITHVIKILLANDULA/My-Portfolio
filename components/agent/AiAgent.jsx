@@ -74,21 +74,61 @@ export default function AiAgent() {
   // stop any speech when the panel closes
   useEffect(() => { if (!open) voice.stopSpeak() }, [open]) // eslint-disable-line
 
+  async function keywordFallback(query) {
+    try {
+      const { results } = await ask(query, 3)
+      const top = results[0]
+      const answer = top ? top.text : "I don't have that on file — you can email Rithvik at rithvik.illandula@gmail.com."
+      setMsgs((m) => [...m, { role: 'agent', text: answer, source: top?.source }])
+      if (voiceOn) voice.speak(answer)
+    } catch {
+      setMsgs((m) => [...m, { role: 'agent', text: 'Something went wrong — email rithvik.illandula@gmail.com.' }])
+    }
+  }
+
   async function submit(text) {
     const query = (text ?? q).trim()
     if (!query || thinking) return
     setNudge(false)
     setQ('')
+    const history = [
+      ...msgs.filter((m) => m.role === 'user' || m.role === 'agent').slice(-6)
+        .map((m) => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text })),
+      { role: 'user', content: query },
+    ]
     setMsgs((m) => [...m, { role: 'user', text: query }])
     setThinking(true)
     try {
-      const { results } = await ask(query, 3)
-      const top = results[0]
-      const answer = top ? top.text : "I don't have that on file, but you can email Rithvik at rithvik.illandula@gmail.com."
-      setMsgs((m) => [...m, { role: 'agent', text: answer, source: top?.source }])
-      if (voiceOn) voice.speak(answer)
+      const res = await fetch('/api/chat', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ messages: history }),
+      })
+      const ct = res.headers.get('content-type') || ''
+
+      if (ct.includes('text/event-stream') && res.body) {
+        // real streaming LLM agent
+        setThinking(false)
+        setMsgs((m) => [...m, { role: 'agent', text: '', streaming: true }])
+        const reader = res.body.getReader(); const dec = new TextDecoder()
+        let acc = '', buf = ''
+        for (;;) {
+          const { done, value } = await reader.read(); if (done) break
+          buf += dec.decode(value, { stream: true })
+          const lines = buf.split('\n'); buf = lines.pop()
+          for (const line of lines) {
+            const s = line.trim(); if (!s.startsWith('data:')) continue
+            const data = s.slice(5).trim(); if (!data || data === '[DONE]') continue
+            try { const d = JSON.parse(data).choices?.[0]?.delta?.content; if (d) { acc += d; setMsgs((m) => { const c = [...m]; c[c.length - 1] = { role: 'agent', text: acc, streaming: true }; return c }) } } catch {}
+          }
+        }
+        setMsgs((m) => { const c = [...m]; c[c.length - 1] = { role: 'agent', text: acc || '…' }; return c })
+        if (voiceOn && acc) voice.speak(acc)
+        return
+      }
+      // offline (no API key) → in-browser keyword fallback
+      await keywordFallback(query)
     } catch {
-      setMsgs((m) => [...m, { role: 'agent', text: 'Something went wrong — try again, or email rithvik.illandula@gmail.com.' }])
+      await keywordFallback(query)
     } finally {
       setThinking(false)
     }

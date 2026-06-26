@@ -138,7 +138,7 @@ export default function PublicationsFooterSection() {
       const camera = new THREE.OrthographicCamera(-W / 2, W / 2, H / 2, -H / 2, 0.1, 100)
       camera.position.z = 10
 
-      videoEl.src       = '/My-Portfolio/assets/footer-video.mp4'
+      videoEl.src       = '/assets/footer-video.mp4'
       videoEl.muted     = true
       videoEl.playsInline = true
       videoEl.loop      = true

@@ -5,7 +5,7 @@ import { FiX, FiPlay, FiPause, FiSkipForward, FiSkipBack, FiDownload } from 'rea
 import useVoice from '@/lib/useVoice'
 import TourStage from '@/components/agent/TourStage'
 
-const RESUME_PDF = '/My-Portfolio/Rithvik_Illandula_Resume.pdf'
+const RESUME_PDF = '/Rithvik_Illandula_Resume.pdf'
 
 // First-person audio résumé — warm, truthful, ~30s per stop.
 const TOUR = [

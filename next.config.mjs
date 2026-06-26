@@ -1,12 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
-  basePath: "/My-Portfolio",
-  assetPrefix: "/My-Portfolio/",
+  // Vercel-native (SSR + edge API routes). No static export / basePath.
   images: {
     unoptimized: true,
   },
-  trailingSlash: true,
 };
 
 export default nextConfig;

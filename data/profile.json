@@ -104,7 +104,7 @@
       "subtitle": "ML on 500k+ records",
       "type": "Machine Learning",
       "link": "https://github.com/RITHVIKILLANDULA",
-      "image": "/My-Portfolio/assets/project-artgenio1.png",
+      "image": "/assets/project-artgenio1.png",
       "tech": ["Python", "scikit-learn", "XGBoost", "Random Forest", "ML"],
       "desc": "Churn prediction models using Logistic Regression, XGBoost, and Random Forest over 500,000+ customer records, surfacing the behavioral drivers of churn and shipping a web app to expose churn-risk insights."
     },
@@ -114,7 +114,7 @@
       "subtitle": "LangChain + FAISS Q&A",
       "type": "GenAI / LLM",
       "link": "https://github.com/RITHVIKILLANDULA",
-      "image": "/My-Portfolio/assets/project-easyfolio1.png",
+      "image": "/assets/project-easyfolio1.png",
       "tech": ["Python", "LangChain", "FAISS", "Gemini-Pro", "RAG"],
       "desc": "A retrieval-augmented Q&A app: PDFs are vectorized with OpenAI embeddings and stored in FAISS, and Gemini-Pro generates context-aware answers, orchestrated end-to-end with LangChain."
     }
