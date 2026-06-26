@@ -63,43 +63,60 @@ export default function Journey3D() {
     const GROUND = -4
     const interactive = []   // raycast targets (project monitors)
 
-    /* floor */
-    const floor = new THREE.GridHelper(600, 300, 0x3b3b5c, 0x1a1a2e)
-    floor.position.y = GROUND; floor.material.transparent = true; floor.material.opacity = 0.6
-    scene.add(floor); disp.push(floor.geometry, floor.material)
-    const floor2 = new THREE.GridHelper(160, 160, 0x2a2a44, 0x141422)
-    floor2.position.y = GROUND + 0.02; floor2.material.transparent = true; floor2.material.opacity = 0.5
-    scene.add(floor2); disp.push(floor2.geometry, floor2.material)
-    // circuit-board traces + via nodes on the floor (data, not pavement)
-    const cvia = []; for (let i = 0; i < 64; i++) cvia.push(new THREE.Vector3((Math.random() - 0.5) * 120, GROUND + 0.05, -Math.random() * 240 + 20))
-    const cvp = new Float32Array(cvia.length * 3); cvia.forEach((v, i) => cvp.set([v.x, v.y, v.z], i * 3))
-    const cvg = new THREE.BufferGeometry(); cvg.setAttribute('position', new THREE.BufferAttribute(cvp, 3))
-    scene.add(new THREE.Points(cvg, new THREE.PointsMaterial({ size: 0.45, map: sprite, color: AMBER2, transparent: true, opacity: 0.7, depthWrite: false, blending: THREE.AdditiveBlending }))); disp.push(cvg)
-    const tr = [], segs = []
-    for (let i = 0; i + 1 < cvia.length; i += 2) {
-      const a = cvia[i], b = cvia[i + 1], corner = new THREE.Vector3(b.x, a.y, a.z)
-      tr.push(a.x, a.y, a.z, corner.x, corner.y, corner.z, corner.x, corner.y, corner.z, b.x, b.y, b.z)
-      segs.push([a.clone(), corner], [corner.clone(), b.clone()])
+    /* ── one elegant signature: an undulating indigo DATA-WAVE the camera glides over ── */
+    const WX = 150, WZ = 280, WGAP = 1.8
+    const wpos = new Float32Array(WX * WZ * 3)
+    let wp = 0
+    for (let ix = 0; ix < WX; ix++) for (let iz = 0; iz < WZ; iz++) {
+      wpos[wp++] = (ix - WX / 2) * WGAP
+      wpos[wp++] = GROUND
+      wpos[wp++] = 24 - iz * WGAP
     }
-    const trg = new THREE.BufferGeometry(); trg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(tr), 3))
-    scene.add(new THREE.LineSegments(trg, new THREE.LineBasicMaterial({ color: CYAN, transparent: true, opacity: 0.45 }))); disp.push(trg)
-    // Tron light-trails racing along the circuit
-    const trails = []
-    for (let i = 0; i < 34; i++) {
-      const tm = new THREE.SpriteMaterial({ map: sprite, color: CYAN, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }); disp.push(tm)
-      const sp = new THREE.Sprite(tm); sp.scale.set(1.5, 0.9, 1); scene.add(sp)
-      trails.push({ sp, seg: (Math.random() * segs.length) | 0, t: Math.random(), v: 0.012 + Math.random() * 0.022 })
-    }
-    function horizonGlow(x, z, color, s) {
-      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprite, color, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }))
-      sp.position.set(x, GROUND + 6, z); sp.scale.set(s, s * 0.5, 1); scene.add(sp)
-    }
-    horizonGlow(-20, -120, AMBER, 120); horizonGlow(30, -200, INDIGO, 140)
+    const wgeo = new THREE.BufferGeometry(); wgeo.setAttribute('position', new THREE.BufferAttribute(wpos, 3))
+    const wmat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      uniforms: {
+        uTime: { value: 0 },
+        uA: { value: new THREE.Color('#5b60e0') }, uB: { value: new THREE.Color('#a5b0fb') },
+        uFog: { value: new THREE.Color('#09090b') }, uNear: { value: 12 }, uFar: { value: 185 },
+      },
+      vertexShader: `
+        uniform float uTime; varying float vH; varying float vF;
+        void main(){
+          vec3 p = position;
+          float h = sin(p.x*0.10 + uTime*0.5)*1.5 + cos(p.z*0.07 + uTime*0.38)*1.5 + sin((p.x+p.z)*0.045 - uTime*0.28)*0.8;
+          p.y += h;
+          vH = h;
+          vec4 mv = modelViewMatrix * vec4(p, 1.0);
+          vF = -mv.z;
+          gl_Position = projectionMatrix * mv;
+          gl_PointSize = 2.4 * (330.0 / max(1.0, -mv.z));
+        }`,
+      fragmentShader: `
+        varying float vH; varying float vF;
+        uniform vec3 uA, uB, uFog; uniform float uNear, uFar;
+        void main(){
+          vec2 c = gl_PointCoord - 0.5; float d = dot(c, c); if (d > 0.25) discard;
+          float a = smoothstep(0.25, 0.02, d);
+          vec3 col = mix(uA, uB, clamp(vH*0.4 + 0.5, 0.0, 1.0));
+          float f = clamp((vF - uNear) / (uFar - uNear), 0.0, 1.0);
+          col = mix(col, uFog, f);
+          gl_FragColor = vec4(col, a * (1.0 - f) * 0.85);
+        }`,
+    })
+    const wave = new THREE.Points(wgeo, wmat); scene.add(wave); disp.push(wgeo, wmat)
 
-    scene.add(new THREE.AmbientLight(0x2a2a3e, 1.2))
-    const key = new THREE.PointLight(0x6366f1, 1.9, 160); key.position.set(8, 16, -90); scene.add(key)
-    const fill = new THREE.PointLight(0x4a4a72, 1.1, 160); fill.position.set(-18, 12, -150); scene.add(fill)
-    const cool = new THREE.PointLight(0x6366f1, 1.6, 170); cool.position.set(2, 9, -60); scene.add(cool)
+    // soft horizon glow + sparse upper drift (premium, minimal)
+    const hgm = new THREE.SpriteMaterial({ map: sprite, color: new THREE.Color('#6366f1'), transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })
+    const hg = new THREE.Sprite(hgm); hg.position.set(0, GROUND + 16, -150); hg.scale.set(240, 100, 1); scene.add(hg); disp.push(hgm)
+    const dcount = 260, dpos = new Float32Array(dcount * 3)
+    for (let i = 0; i < dcount; i++) { dpos[i * 3] = (Math.random() - 0.5) * 190; dpos[i * 3 + 1] = GROUND + 6 + Math.random() * 42; dpos[i * 3 + 2] = 26 - Math.random() * 270 }
+    const dgeo = new THREE.BufferGeometry(); dgeo.setAttribute('position', new THREE.BufferAttribute(dpos, 3))
+    const dmat = new THREE.PointsMaterial({ size: 0.5, map: sprite, color: new THREE.Color('#a5b0fb'), transparent: true, opacity: 0.45, depthWrite: false, blending: THREE.AdditiveBlending })
+    const drift = new THREE.Points(dgeo, dmat); scene.add(drift); disp.push(dgeo, dmat)
+
+    scene.add(new THREE.AmbientLight(0x2a2a3e, 1.0))
+    const trails = [], segs = []   // (legacy refs kept empty)
 
     /* gateway */
     function gateway(zc) {
@@ -248,8 +265,7 @@ export default function Journey3D() {
       scene.add(g); disp.push(g); return g
     }
 
-    const zGate = gateway(0), zRiver = rivers(-44), zCity = city(-78), zMon = monitors(-150), zMono = monoliths(-186), zDock = dock(-220)
-    const zRain = matrixRain(), zHolo = holoPanels()
+    // (zone builders removed — the data-wave is the whole scene now)
 
     /* camera path */
     const WAY = [
@@ -379,17 +395,10 @@ export default function Journey3D() {
       mouse.x += (mouse.tx - mouse.x) * 0.06
       mouse.y += (mouse.ty - mouse.y) * 0.06
       setCam(prog)
-      camera.position.y += Math.sin(t * 0.6) * 0.18
-      camera.rotateZ(Math.sin(t * 0.35) * 0.004)
-      if (!coarse && (rcCount++ & 3) === 0) raycast()
-      for (const tr of trails) { tr.t += tr.v; if (tr.t >= 1) { tr.t = 0; tr.seg = (Math.random() * segs.length) | 0 } const sg = segs[tr.seg]; if (sg) tr.sp.position.lerpVectors(sg[0], sg[1], tr.t) }
-      for (const c of zRain.userData.cols || []) c.userData.tex.offset.y -= 0.012
-      for (const m of zHolo.userData.panels || []) m.position.y = m.userData.baseY + Math.sin(t * 0.8 + m.userData.ph) * 0.3
-      for (const a of zGate.userData.arches || []) a.rotation.z = t * 0.15
-      for (const s of zRiver.userData.streams || []) { s.off = (s.off + s.sp * 0.016) % 1; s.curve.getPointAt(s.off, _riv); s.pulse.position.copy(_riv) }
-      for (const r of zDock.userData.rings || []) r.rotation.z = t * 0.3
-      for (const r of zMono.userData.rings || []) { r.rotation.z = t * 0.4; r.rotation.y = Math.sin(t * 0.3) * 0.3 }
-      for (const m of interactive) { const tgt = m === hovered ? 1.12 : 1; m.scale.x += (tgt - m.scale.x) * 0.18; m.scale.y = m.scale.x }
+      camera.position.y += Math.sin(t * 0.6) * 0.16
+      camera.rotateZ(Math.sin(t * 0.35) * 0.0035)
+      wmat.uniforms.uTime.value = t
+      drift.rotation.y = t * 0.01
       render()
     }
     setCam(0); updateOverlays(); render()
