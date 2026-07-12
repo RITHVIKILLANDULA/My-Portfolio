@@ -46,32 +46,32 @@ export const CORPUS = [
   {
     source: 'Project · Telco Churn Prediction',
     tags: ['project', 'projects', 'churn', 'telco', 'classification', 'xgboost', 'random forest', 'retention', 'customer', 'prediction', 'ml'],
-    text: 'Telco Customer Churn Prediction: Rithvik built churn models with Logistic Regression, XGBoost, and Random Forest over 500,000+ customer records to surface the behavioral drivers of churn, and shipped a web app exposing churn-risk insights for targeted retention.',
+    text: 'Customer Churn Prediction: Rithvik built a Telco churn scorer in pure Python, implementing logistic regression from scratch with standardized features and batch gradient descent over 4,000 synthetic customers. It reaches about 0.825 test AUC, ranks customers by churn risk with a 2.75x top-decile lift, and explains the drivers through the model coefficients. It has a live dashboard.',
   },
   {
     source: 'Project · Citi Bike Demand',
     tags: ['project', 'projects', 'citi bike', 'bike', 'demand', 'forecast', 'forecasting', 'lightgbm', 'streamlit', 'time series', 'mlflow'],
-    text: 'Citi Bike Trip Demand Prediction: an end-to-end ML pipeline forecasting hourly demand with Python, Pandas, and LightGBM over 1M+ historical trips, with 20+ MLflow experiments, a 12 to 15 percent MAE improvement, and Streamlit dashboards.',
+    text: 'Citi Bike Demand Forecasting: Rithvik forecasts hourly bike-share demand with ridge regression written from scratch, using standardized features and closed-form normal equations. Over 120 days and 1.24M trips it reaches R-squared 0.941 on a 14-day backtest and beats a seasonal-naive baseline by about 10 percent on MAE.',
   },
   {
     source: 'Project · PDF-Insight RAG Assistant',
     tags: ['project', 'projects', 'pdf', 'rag', 'assistant', 'langchain', 'faiss', 'gemini', 'document', 'question answering', 'chatbot', 'llm'],
-    text: 'PDF-Insight is a RAG question-answering assistant: users upload multiple PDFs and ask questions; the text is embedded with OpenAI embeddings, stored in FAISS, and answered by Gemini-Pro, orchestrated end to end with LangChain.',
+    text: 'PDF-Insight is a retrieval-augmented Q&A engine. Rithvik built a TF-IDF and cosine-similarity index from scratch over a document corpus, retrieves the most relevant passage for a question, and answers with a cited sentence. It shows how classic RAG retrieval works end to end without an embeddings API.',
   },
   {
     source: 'Project · Data Quality Pipeline',
     tags: ['project', 'projects', 'quality', 'anomaly', 'profiling', 'validation', 'data quality', 'monitoring'],
-    text: 'Data Quality and Anomaly Detection Pipeline: profiling rules, statistical thresholds, and anomaly detection flag missing values, duplicates, volume spikes, and abnormal time-series patterns before they ever reach reporting.',
+    text: 'Data Quality and Anomaly Pipeline: a pre-reporting gate Rithvik built that scores five daily feeds on completeness, uniqueness, validity, freshness, and z-score volume anomalies, then grades each break by severity. In a deterministic run it profiled 641,000 rows and flagged 22 anomalies, all in the Python standard library.',
   },
   {
     source: 'Project · BigQuery ML Analytics',
     tags: ['project', 'projects', 'bigquery', 'bigquery ml', 'gcp', 'vertex', 'analytics', 'pipeline'],
-    text: 'BigQuery ML Customer Analytics Pipeline: a GCP analytics pipeline that profiles customer behavioral data and prepares reporting-ready insights using BigQuery ML and Vertex AI, orchestrated with Airflow and PySpark.',
+    text: 'BigQuery ML Customer Analytics: Rithvik reproduced a cloud customer-analytics pipeline offline on SQLite, with RFM segmentation, k-means clustering written from scratch, monthly cohorts and retention, and CLV. He also ships the cloud-native artifacts, a CREATE MODEL BigQuery ML SQL script and an Airflow DAG, so the same logic maps onto the warehouse.',
   },
   {
     source: 'Projects · GenAI & NLP',
     tags: ['project', 'projects', 'nlp', 'huggingface', 'transformers', 'summarization', 'sentiment', 'fake news', 'weather', 'genai', 'text'],
-    text: 'Rithvik also built an NLP Toolkit with Hugging Face Transformers for summarization and sentiment analysis, a Fake News classifier using NLTK and TF-IDF, and WeatherWise, which combines the OpenWeatherMap API with the OpenAI API for human-like forecasts.',
+    text: 'GenAI and NLP Toolkit: Rithvik built a set of classic NLP tools from scratch, including a TextRank extractive summarizer, a lexicon-based sentiment scorer, and a clickbait and fake-headline classifier using TF-IDF features with logistic regression that reaches about 93 percent accuracy and 0.96 ROC-AUC.',
   },
   {
     source: 'Project · Financial Reconciliation Framework (Foundry)',
