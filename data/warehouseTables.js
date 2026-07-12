@@ -30,7 +30,7 @@ export function buildTables(visitEvents) {
     'career.projects': {
       columns: ['name', 'domain', 'stack', 'starred'],
       rows: PROJECTS.map((p) => ({ name: p.t, domain: p.tag, stack: p.tech.join(' · '), starred: p.star ? 'yes' : 'no' })),
-      note: '9 shipped projects',
+      note: '13 shipped projects',
     },
     'career.skills': {
       columns: ['skill', 'category', 'core'],

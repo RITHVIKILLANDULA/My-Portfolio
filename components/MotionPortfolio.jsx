@@ -6,7 +6,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa'
 import profile from '@/data/profile.json'
-import { RESUME, GH, LI, EMAIL, EXP, SKILLGROUPS, PROJECTS, IMPACT, NAV } from '@/data/portfolio-content'
+import { RESUME, GH, LI, EMAIL, EXP, SKILLGROUPS, PROJECTS, CATEGORIES, IMPACT, NAV } from '@/data/portfolio-content'
 import CommandPalette from '@/components/CommandPalette'
 import ThreadSpine from '@/components/pipeline/DagRail'
 import Warehouse from '@/components/pipeline/Warehouse'
@@ -91,6 +91,7 @@ function CountUp({ value }) {
 
 export default function MotionPortfolio() {
   const [active, setActive] = useState(null)
+  const [cat, setCat] = useState('agentic')
   const rootRef = useRef(null)
   const modalRef = useRef(null)
 
@@ -311,9 +312,22 @@ export default function MotionPortfolio() {
           <p className="micro rise">03 — SELECTED WORKS ({PROJECTS.length})</p>
           <h2 className="sec-title rise">Built, measured, <em>shipped</em></h2>
         </div>
+        <div className="cats rise" role="tablist" aria-label="Project categories">
+          {CATEGORIES.map((c) => {
+            const n = PROJECTS.filter((p) => p.cat === c.key).length
+            return (
+              <button key={c.key} type="button" role="tab" aria-selected={cat === c.key}
+                className={`catpill ${cat === c.key ? 'on' : ''}`}
+                onClick={() => { setCat(c.key); track('project_filter', c.key) }}>
+                {c.label}<span className="catn">{n}</span>
+              </button>
+            )
+          })}
+        </div>
+        <p className="cat-blurb rise">{CATEGORIES.find((c) => c.key === cat)?.blurb}</p>
         <div className="works">
-          {PROJECTS.map((p, i) => (
-            <button key={p.t} type="button" className="work rise" style={{ transitionDelay: `${i * 70}ms` }} onClick={() => { track('case_study_open', p.t); setActive(p) }} aria-label={`Open case study: ${p.t}`}>
+          {PROJECTS.filter((p) => p.cat === cat).map((p, i) => (
+            <button key={p.t} type="button" className="work" onClick={() => { track('case_study_open', p.t); setActive(p) }} aria-label={`Open case study: ${p.t}`}>
               <span className="work-n">{String(i + 1).padStart(2, '0')}</span>
               <span className="work-t">{p.t}</span>
               <span className="work-tag"><em>{p.tag}</em></span>
@@ -377,7 +391,7 @@ export default function MotionPortfolio() {
         <div className="cs-wrap" role="dialog" aria-modal="true" aria-label={active.t} onClick={() => setActive(null)}>
           <div className="cs-card" ref={modalRef} data-lenis-prevent onClick={(e) => e.stopPropagation()}>
             <button className="cs-x" onClick={() => setActive(null)} aria-label="Close case study">✕</button>
-            <p className="micro">CASE {String(PROJECTS.indexOf(active) + 1).padStart(2, '0')} — {active.tag.toUpperCase()}</p>
+            <p className="micro">CASE STUDY — {active.tag.toUpperCase()}</p>
             <h3 className="cs-title">{active.t}</h3>
             <p className="cs-problem"><em>{active.cs.problem}</em></p>
             <p className="micro gray cs-h">WHAT WAS BUILT</p>
@@ -506,6 +520,19 @@ export default function MotionPortfolio() {
         .work-arrow { font-size: 1.3rem; justify-self: end; transition: transform .25s; }
         .works :global(.work:hover) .work-arrow { transform: translateX(6px); }
         @media (max-width: 680px) { .works :global(.work) { grid-template-columns: 40px 1fr 30px; } .work-tag { display: none; } }
+
+        /* classification pills */
+        .cats { display: flex; flex-wrap: wrap; gap: 0.55rem; margin: 1.7rem 0 0.2rem; }
+        .cats :global(.catpill) { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--sans);
+          font-size: 0.72rem; font-weight: 640; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink);
+          background: transparent; border: 1px solid var(--ink); border-radius: 999px; padding: 0.5rem 0.95rem;
+          cursor: pointer; transition: background .2s, color .2s, transform .2s; }
+        .cats :global(.catpill:hover) { transform: translateY(-1px); }
+        .cats :global(.catpill.on) { background: var(--ink); color: var(--paper); }
+        .catn { font-family: var(--mono); font-size: 0.62rem; opacity: 0.65; }
+        .cats :global(.catpill.on) .catn { color: var(--paper); opacity: 0.8; }
+        .cat-blurb { font-family: var(--serif); font-style: italic; font-size: clamp(1.05rem, 2vw, 1.3rem);
+          color: var(--graphite); margin: 0.7rem 0 0.2rem; max-width: 64ch; }
 
         /* capabilities */
         .caps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border-bottom: 1px solid var(--rule); }

@@ -74,6 +74,26 @@ export const CORPUS = [
     text: 'GenAI and NLP Toolkit: Rithvik built a set of classic NLP tools from scratch, including a TextRank extractive summarizer, a lexicon-based sentiment scorer, and a clickbait and fake-headline classifier using TF-IDF features with logistic regression that reaches about 93 percent accuracy and 0.96 ROC-AUC.',
   },
   {
+    source: 'Project · Agentic Data Analyst',
+    tags: ['project', 'projects', 'agent', 'agentic', 'agentic ai', 'tool use', 'tool-use', 'plan', 'reflect', 'sql agent', 'guardrails', 'llm', 'orchestration'],
+    text: 'Agentic Data Analyst: Rithvik built an agent that answers analytical questions over a SQLite warehouse through a plan, act, observe, reflect loop. A deterministic planner maps each question to an intent, a guarded sql_tool runs a parameterized SELECT, and a self-check can fire a refined retry. Every query passes a read-only guardrail (SELECT-only, table allowlist, single statement, enforced LIMIT); across 11 questions it reaches 90.9 percent task success and blocks 6 of 7 adversarial SQL probes. It shows the agent architecture and tool boundary rather than hiding them behind a model.',
+  },
+  {
+    source: 'Project · Hybrid RAG with Reranking',
+    tags: ['project', 'projects', 'rag', 'retrieval', 'bm25', 'tf-idf', 'reranking', 'rerank', 'hybrid', 'ndcg', 'mrr', 'recall', 'evaluation', 'search'],
+    text: 'Hybrid RAG with Reranking: Rithvik implemented three retrievers from scratch, BM25, TF-IDF cosine, and a reciprocal-rank-fusion hybrid, plus a reranker that re-scores the top candidates by IDF-weighted term coverage and proximity. He benchmarked them on a 15-document corpus and a 53-query labeled eval set with recall@k, MRR, and nDCG@5. The hybrid plus reranker is the best strategy at 0.872 nDCG@5, and the writeup is honest that this is lexical and statistical retrieval, not neural embeddings.',
+  },
+  {
+    source: 'Project · Gradient Boosting Fraud Detection',
+    tags: ['project', 'projects', 'fraud', 'gradient boosting', 'boosting', 'gbm', 'decision trees', 'imbalanced', 'auprc', 'precision recall', 'ml', 'from scratch', 'shap'],
+    text: 'Gradient Boosting Fraud Detection: Rithvik implemented gradient-boosted decision trees from scratch in pure Python to rank rare fraudulent transactions. Because fraud is about 4 percent of transactions, he judges the model on precision-recall rather than accuracy, and computes AUPRC, ROC-AUC of 0.905, precision@k, split-gain feature importance, partial dependence, and SHAP-style per-transaction attributions.',
+  },
+  {
+    source: 'Project · LLM Evaluation and Guardrails Harness',
+    tags: ['project', 'projects', 'llm', 'eval', 'evaluation', 'guardrails', 'llmops', 'faithfulness', 'safety', 'pii', 'injection', 'toxicity', 'regression', 'ai engineering'],
+    text: 'LLM Evaluation and Guardrails Harness: Rithvik built an offline harness that scores LLM outputs on five dimensions (faithfulness, relevance, completeness, format, and safety) with deterministic heuristics and no API calls. It enforces PII, prompt-injection, and toxicity guardrails, aggregates a scorecard per model version, and detects regressions; across a 40-case fixture set the overall pass rate improves from 36 to 85 percent between simulated versions.',
+  },
+  {
     source: 'Project · Financial Reconciliation Framework (Foundry)',
     tags: ['project', 'projects', 'finance', 'reconciliation', 'reconcile', 'audit', 'audit trail', 'lineage', 'gl', 'general ledger', 'bank', 'sub-ledger', 'ar', 'close', 'exception', 'dbt', 'controller', 'sql'],
     text: 'Foundry is a Python and SQL financial reconciliation framework Rithvik built. It takes three disagreeing extracts (general ledger, bank statement, and AR sub-ledger), pivots them onto one business key, and classifies every break with a documented rule cascade: duplicate payments, timing differences, missing entries, bank fees, FX rounding, and material amount mismatches. It tracks source-to-report lineage, writes an append-only audit log, and ships an HTML dashboard sorted by financial impact. The same logic runs two ways, a standard-library Python engine and warehouse SQL and dbt models, and the tests prove both catch 100 percent of the seeded breaks. The point is to expose reconciliation gaps before the close cycle locks.',
