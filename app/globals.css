@@ -50,20 +50,36 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-archivo);
+  --font-mono: var(--font-plex);
+}
+
+/* ─── Cinematic monochrome tokens (cappen-language) ──────── */
+:root {
+  --paper:   #FCFCFC;  /* near-white ground */
+  --stock:   #F1F1EF;  /* one step deeper — zebra, hover fills */
+  --ink:     #111214;  /* near-black — text + dark bands */
+  --char:    #2B2B2B;  /* charcoal — secondary dark surface */
+  --graphite:#8A8A8A;  /* captions, secondary */
+  --rule:    #E4E4E2;  /* hairlines */
+  --signal:  #111214;  /* monochrome: the "accent" is ink itself */
+  --signal-soft: #BDBDBD; /* light gray details inside dark bands */
+  --live:    #E4572E;  /* tiny live-dot only — never text */
+  --serif:   var(--font-serif-display), Georgia, serif;
+  --sans:    var(--font-archivo), Helvetica, Arial, sans-serif;
+  --mono:    var(--font-martian), ui-monospace, monospace;
 }
 
 /* ─── Base ──────────────────────────────────────────────── */
 html, body {
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
 }
+html { overflow-x: clip; }
 
 body {
-  background: var(--background);
-  color:      var(--foreground);
-  font-family: var(--font-geist-sans), Arial, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
 }
 
 /* ─── Hide scrollbar ─────────────────────────────────────── */

@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NetSuite AI Connector — Governance Demo</title>
+<style>
+ :root{--bg:#0b0e14;--panel:#12161f;--line:#232a37;--txt:#e6e9ef;--mut:#8b94a7;
+        --allow:#31c48d;--deny:#f05252;--accent:#6ea8fe}
+ *{box-sizing:border-box}
+ body{margin:0;background:var(--bg);color:var(--txt);
+   font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}
+ .wrap{max-width:1080px;margin:0 auto;padding:40px 24px}
+ h1{font-size:22px;margin:0 0 4px} .sub{color:var(--mut);margin:0 0 28px}
+ .roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:30px}
+ .rolecard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+ .rolecard h3{margin:0;font-size:15px;color:var(--accent)} .rt{margin:2px 0 10px;color:var(--mut);font-size:12px}
+ dl{margin:0;font-size:12px} dt{color:var(--mut);margin-top:6px;text-transform:uppercase;letter-spacing:.05em;font-size:10px}
+ dd{margin:1px 0 0}
+ table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+ th,td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;font-size:12.5px}
+ th{background:#0e121a;color:var(--mut);text-transform:uppercase;font-size:10.5px;letter-spacing:.06em}
+ .req code{color:var(--txt);display:block} .req .lbl{color:var(--mut);font-size:11px}
+ td.allow{color:var(--allow)} td.deny{color:var(--deny)}
+ .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:middle}
+ td.allow .dot{background:var(--allow)} td.deny .dot{background:var(--deny)}
+ .foot{color:var(--mut);font-size:12px;margin-top:22px}
+ .foot b{color:var(--txt)}
+</style></head><body><div class="wrap">
+ <h1>NetSuite AI Connector — governed access, four roles</h1>
+ <p class="sub">The same SuiteQL request, run as four different finance roles. Generated 2026-07-12 02:29 UTC.</p>
+ <div class="roles"><div class="rolecard"><h3>CFO</h3><p class="rt">Chief Financial Officer</p><dl><dt>subsidiaries</dt><dd>all</dd><dt>can read</dt><dd>bill, customer, gl_account, gl_transaction, invoice, item, subsidiary, vendor</dd><dt>masked</dt><dd>—</dd><dt>saved searches</dt><dd>ap_aging, ar_aging, top_customers, top_vendors, trial_balance</dd></dl></div><div class="rolecard"><h3>Controller</h3><p class="rt">Corporate Controller</p><dl><dt>subsidiaries</dt><dd>all</dd><dt>can read</dt><dd>bill, customer, gl_account, gl_transaction, invoice, item, subsidiary, vendor</dd><dt>masked</dt><dd>customer.bank_account, vendor.bank_account</dd><dt>saved searches</dt><dd>ap_aging, ar_aging, top_customers, top_vendors, trial_balance</dd></dl></div><div class="rolecard"><h3>AR</h3><p class="rt">Accounts Receivable Clerk</p><dl><dt>subsidiaries</dt><dd>[1, 2]</dd><dt>can read</dt><dd>customer, gl_account, gl_transaction, invoice, item, subsidiary</dd><dt>masked</dt><dd>customer.bank_account, customer.tax_id</dd><dt>saved searches</dt><dd>ar_aging, top_customers</dd></dl></div><div class="rolecard"><h3>AP</h3><p class="rt">Accounts Payable Clerk</p><dl><dt>subsidiaries</dt><dd>[1, 2]</dd><dt>can read</dt><dd>bill, gl_account, gl_transaction, item, subsidiary, vendor</dd><dt>masked</dt><dd>vendor.bank_account, vendor.tax_id</dd><dt>saved searches</dt><dd>ap_aging, top_vendors</dd></dl></div></div>
+ <table>
+  <thead><tr><th>Request</th><th>CFO</th><th>Controller</th><th>AR</th><th>AP</th></tr></thead>
+  <tbody><tr><td class="req"><code>SELECT name, bank_account, tax_id FROM customer LIMIT 1</code><span class="lbl">Read customer bank + tax id</span></td><td class="allow"><span class="dot"></span>bank=&#x27;ACCT-2231978967&#x27; tax=&#x27;TAX-395015207&#x27;</td><td class="allow"><span class="dot"></span>bank=None tax=&#x27;TAX-395015207&#x27;</td><td class="allow"><span class="dot"></span>bank=None tax=None</td><td class="deny"><span class="dot"></span>role &#x27;AP&#x27; has no read grant on &#x27;customer&#x27;</td></tr><tr><td class="req"><code>SELECT COUNT(*) AS n FROM bill</code><span class="lbl">Count AP bills</span></td><td class="allow"><span class="dot"></span>= 110</td><td class="allow"><span class="dot"></span>= 110</td><td class="deny"><span class="dot"></span>role &#x27;AR&#x27; has no read grant on &#x27;bill&#x27;</td><td class="allow"><span class="dot"></span>= 58</td></tr><tr><td class="req"><code>SELECT DISTINCT subsidiary_id FROM invoice ORDER BY subsidiary_id</code><span class="lbl">Distinct subsidiaries on invoices</span></td><td class="allow"><span class="dot"></span>subs [1, 2, 3]</td><td class="allow"><span class="dot"></span>subs [1, 2, 3]</td><td class="allow"><span class="dot"></span>subs [1, 2]</td><td class="deny"><span class="dot"></span>role &#x27;AP&#x27; has no read grant on &#x27;invoice&#x27;</td></tr><tr><td class="req"><code>DELETE FROM invoice WHERE id = 1</code><span class="lbl">Write attempt (DELETE)</span></td><td class="deny"><span class="dot"></span>only SELECT queries are permitted (got &#x27;DELETE&#x27;)</td><td class="deny"><span class="dot"></span>only SELECT queries are permitted (got &#x27;DELETE&#x27;)</td><td class="deny"><span class="dot"></span>only SELECT queries are permitted (got &#x27;DELETE&#x27;)</td><td class="deny"><span class="dot"></span>only SELECT queries are permitted (got &#x27;DELETE&#x27;)</td></tr><tr><td class="req"><code>SELECT 1; DROP TABLE customer</code><span class="lbl">Injection / second statement</span></td><td class="deny"><span class="dot"></span>multiple statements are not permitted</td><td class="deny"><span class="dot"></span>multiple statements are not permitted</td><td class="deny"><span class="dot"></span>multiple statements are not permitted</td><td class="deny"><span class="dot"></span>multiple statements are not permitted</td></tr><tr><td class="req"><code>SELECT COUNT(*) AS n FROM main.invoice</code><span class="lbl">Direct base-table bypass</span></td><td class="allow"><span class="dot"></span>= 140</td><td class="allow"><span class="dot"></span>= 140</td><td class="deny"><span class="dot"></span>direct access to base table &#x27;invoice&#x27; blocked; role &#x27;AR&#x27; is </td><td class="deny"><span class="dot"></span>role &#x27;AP&#x27; has no read grant on &#x27;invoice&#x27;</td></tr></tbody>
+ </table>
+ <p class="foot">Green = allowed · red = denied. Enforcement runs at the database engine
+   (a SQLite authorizer bound to the connected role), so it holds no matter what SuiteQL
+   the AI writes. Every call — allowed or denied — is written to an append-only audit log.
+   <b>The AI is a governed user of the finance data layer, not a way around the controls.</b></p>
+</div></body></html>

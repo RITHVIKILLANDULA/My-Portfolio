@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 import { FiX, FiPlay, FiPause, FiSkipForward, FiSkipBack, FiDownload } from 'react-icons/fi'
 import useVoice from '@/lib/useVoice'
 import TourStage from '@/components/agent/TourStage'
+import { asset } from '@/lib/asset'
 
-const RESUME_PDF = '/Rithvik_Illandula_Resume.pdf'
+const RESUME_PDF = asset('/Rithvik_Illandula_Resume.pdf')
 
 // First-person audio résumé — warm, truthful, ~30s per stop.
 const TOUR = [

@@ -1,13 +1,14 @@
-import { Geist, Geist_Mono, Baloo_2, Dancing_Script } from "next/font/google";
+import { Instrument_Serif, Archivo, Martian_Mono } from "next/font/google";
 import "./globals.css";
-import Cursor from "@/components/ui/Cursor";
+import "./motion.css";
+import StyledJsxRegistry from "./StyledJsxRegistry";
 
 const SITE_URL = "https://rithvikillandula.github.io/My-Portfolio";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
-const baloo = Baloo_2({ variable: "--font-baloo", subsets: ["latin"], weight: ["400", "600", "800"] });
-const dancing = Dancing_Script({ variable: "--font-dancing", subsets: ["latin"], weight: ["400", "700"] });
+// Cappen-language type system: grotesque statements / elegant serif italics / Martian Mono details
+const serif = Instrument_Serif({ variable: "--font-serif-display", subsets: ["latin"], weight: "400", style: ["normal", "italic"] });
+const archivo = Archivo({ variable: "--font-archivo", subsets: ["latin"], axes: ["wdth"] });
+const martian = Martian_Mono({ variable: "--font-martian", subsets: ["latin"], weight: ["300", "400"] });
 
 const description =
   "Data, AI, and Software Engineer with 4+ years across Deloitte, WAFU, and the University at Buffalo, and three CS degrees. I build pipelines, ML/LLM systems, and production-ready software.";
@@ -52,17 +53,17 @@ export const metadata = {
   alternates: { canonical: SITE_URL },
   icons: {
     icon: [
-      { url: "/favicons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicons/favicon.ico", sizes: "any" },
+      { url: `${SITE_URL}/favicons/favicon-32x32.png`, sizes: "32x32", type: "image/png" },
+      { url: `${SITE_URL}/favicons/favicon.ico`, sizes: "any" },
     ],
-    apple: [{ url: "/favicons/apple-touch-icon.png" }],
+    apple: [{ url: `${SITE_URL}/favicons/apple-touch-icon.png` }],
   },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${baloo.variable} ${dancing.variable} h-full antialiased`}>
-      <body suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${baloo.variable} ${dancing.variable} h-full antialiased`}>
+    <html lang="en" className={`${serif.variable} ${archivo.variable} ${martian.variable} h-full antialiased`}>
+      <body suppressHydrationWarning className={`${serif.variable} ${archivo.variable} ${martian.variable} h-full antialiased`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -80,8 +81,7 @@ export default function RootLayout({ children }) {
             }),
           }}
         />
-        <Cursor />
-        {children}
+        <StyledJsxRegistry>{children}</StyledJsxRegistry>
       </body>
     </html>
   );

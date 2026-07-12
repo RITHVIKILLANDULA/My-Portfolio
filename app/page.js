@@ -1,15 +1,15 @@
 'use client'
 
-import PortfolioSite from '@/components/PortfolioSite'
+import MotionPortfolio from '@/components/MotionPortfolio'
 import AiAgent from '@/components/agent/AiAgent'
 import AudioTour from '@/components/agent/AudioTour'
-import MagneticCursor from '@/components/MagneticCursor'
+import SmoothScroll from '@/components/SmoothScroll'
 
 export default function Home() {
   return (
     <>
-      <MagneticCursor />
-      <PortfolioSite />
+      <SmoothScroll />
+      <MotionPortfolio />
 
       {/* Audio résumé tour (opens on the Audio-tour button) */}
       <AudioTour />

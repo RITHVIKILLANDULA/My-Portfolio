@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { FiSend, FiX, FiVolume2, FiVolumeX, FiMic } from 'react-icons/fi'
 import { ask } from '@/lib/rag'
 import useVoice from '@/lib/useVoice'
+import { agentUrl } from '@/lib/agentUrl'
 
 const SUGGESTIONS = [
   'What did he do at Deloitte?',
@@ -99,7 +100,7 @@ export default function AiAgent() {
     setMsgs((m) => [...m, { role: 'user', text: query }])
     setThinking(true)
     try {
-      const res = await fetch('/api/chat', {
+      const res = await fetch(agentUrl(), {
         method: 'POST', headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ messages: history }),
       })
@@ -233,14 +234,15 @@ export default function AiAgent() {
         .ai-orb {
           position: relative; display: grid; place-items: center;
           width: 56px; height: 56px; border-radius: 9999px;
-          background: radial-gradient(circle at 35% 30%, #818cf8, #6366f1 55%, #4f46e5);
-          box-shadow: 0 10px 30px rgba(232,95,26,0.45), 0 0 0 1px rgba(129,140,248,0.5) inset;
+          background: var(--ink, #16130E);
+          box-shadow: 6px 6px 0 rgba(22,19,14,0.18);
+          border-radius: 2px;
           transition: transform 0.25s ease;
         }
         .ai-launch:hover .ai-orb { transform: scale(1.06); }
         .ai-spark {
           width: 22px; height: 22px;
-          background: #1a0f06;
+          background: var(--signal, #FF4F00);
           -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M12 2l1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6z'/%3E%3Ccircle cx='19' cy='19' r='2.2' fill='black'/%3E%3C/svg%3E") center/contain no-repeat;
           mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M12 2l1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6z'/%3E%3Ccircle cx='19' cy='19' r='2.2' fill='black'/%3E%3C/svg%3E") center/contain no-repeat;
         }

@@ -18,6 +18,26 @@ const PROVIDERS = [
 
 const CONTEXT = CORPUS.map((c) => `## ${c.source}\n${c.text}`).join('\n\n')
 
+// The canonical portfolio lives on GitHub Pages (static) and calls this Vercel
+// endpoint cross-origin — CORS restricted to his origins.
+const ALLOWED_ORIGINS = new Set([
+  'https://rithvikillandula.github.io',
+  'http://localhost:3000',
+  'http://localhost:3010',
+  'http://localhost:3020',
+  'http://localhost:4321',
+])
+function corsHeaders(req) {
+  const origin = req.headers.get('origin') || ''
+  return ALLOWED_ORIGINS.has(origin)
+    ? { 'access-control-allow-origin': origin, 'access-control-allow-methods': 'POST, OPTIONS', 'access-control-allow-headers': 'content-type', vary: 'origin' }
+    : {}
+}
+
+export async function OPTIONS(req) {
+  return new Response(null, { status: 204, headers: corsHeaders(req) })
+}
+
 const SYSTEM = `You are the portfolio agent for Rithvik Illandula, a Data / AI / Software Engineer (4+ years, Deloitte / WAFU Technologies / University at Buffalo; three CS degrees; M.S. CS at UB).
 
 Answer questions from recruiters and engineers about Rithvik. Rules:
@@ -31,8 +51,10 @@ CONTEXT:
 ${CONTEXT}`
 
 export async function POST(req) {
+  const cors = corsHeaders(req)
   let messages = []
   try { ({ messages = [] } = await req.json()) } catch {}
+  if (!Array.isArray(messages)) messages = []
   // keep it cheap + safe: last 8 turns, clamp content length
   messages = messages.slice(-8).map((m) => ({
     role: m.role === 'assistant' ? 'assistant' : 'user',
@@ -42,7 +64,7 @@ export async function POST(req) {
   const provider = PROVIDERS.find((p) => process.env[p.env])
   if (!provider) {
     return new Response(JSON.stringify({ offline: true }), {
-      status: 200, headers: { 'content-type': 'application/json' },
+      status: 200, headers: { 'content-type': 'application/json', ...cors },
     })
   }
 
@@ -60,15 +82,15 @@ export async function POST(req) {
       }),
     })
   } catch {
-    return new Response(JSON.stringify({ offline: true }), { status: 200, headers: { 'content-type': 'application/json' } })
+    return new Response(JSON.stringify({ offline: true }), { status: 200, headers: { 'content-type': 'application/json', ...cors } })
   }
 
   if (!upstream.ok || !upstream.body) {
-    return new Response(JSON.stringify({ offline: true }), { status: 200, headers: { 'content-type': 'application/json' } })
+    return new Response(JSON.stringify({ offline: true }), { status: 200, headers: { 'content-type': 'application/json', ...cors } })
   }
 
   // Pass the provider's SSE stream straight through to the client.
   return new Response(upstream.body, {
-    headers: { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-cache, no-transform' },
+    headers: { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-cache, no-transform', ...cors },
   })
 }

@@ -74,6 +74,21 @@ export const CORPUS = [
     text: 'Rithvik also built an NLP Toolkit with Hugging Face Transformers for summarization and sentiment analysis, a Fake News classifier using NLTK and TF-IDF, and WeatherWise, which combines the OpenWeatherMap API with the OpenAI API for human-like forecasts.',
   },
   {
+    source: 'Project · Financial Reconciliation Framework (Foundry)',
+    tags: ['project', 'projects', 'finance', 'reconciliation', 'reconcile', 'audit', 'audit trail', 'lineage', 'gl', 'general ledger', 'bank', 'sub-ledger', 'ar', 'close', 'exception', 'dbt', 'controller', 'sql'],
+    text: 'Foundry is a Python and SQL financial reconciliation framework Rithvik built. It takes three disagreeing extracts (general ledger, bank statement, and AR sub-ledger), pivots them onto one business key, and classifies every break with a documented rule cascade: duplicate payments, timing differences, missing entries, bank fees, FX rounding, and material amount mismatches. It tracks source-to-report lineage, writes an append-only audit log, and ships an HTML dashboard sorted by financial impact. The same logic runs two ways, a standard-library Python engine and warehouse SQL and dbt models, and the tests prove both catch 100 percent of the seeded breaks. The point is to expose reconciliation gaps before the close cycle locks.',
+  },
+  {
+    source: 'Project · Forecasting & Scenario Toolkit (Forecast)',
+    tags: ['project', 'projects', 'finance', 'fp&a', 'fpa', 'forecast', 'forecasting', 'scenario', 'what-if', 'monte carlo', 'driver', 'p&l', 'ebitda', 'excel', 'power bi', 'variance', 'actuals', 'planning', 'model'],
+    text: 'Forecast is a Python and Excel toolkit for FP&A that Rithvik built. It models a subscription P&L bottom-up from 10 named drivers, so changing any one assumption reprices the whole 12-month plan. It includes a scenario library (Base, Bull, Bear, Downside), an ad-hoc what-if command line, and a 5,000-trial Monte Carlo that produces a P10/P50/P90 band. One calculation engine feeds four surfaces: a live-formula Excel workbook, a Power BI star schema, a SQLite analytics store, and a forecast-vs-actual dashboard with variance analysis.',
+  },
+  {
+    source: 'Project · NetSuite AI Connector (governed MCP ERP bridge)',
+    tags: ['project', 'projects', 'netsuite', 'erp', 'mcp', 'ai connector', 'suiteql', 'saved search', 'governance', 'governed', 'permissions', 'role', 'audit', 'agent', 'oracle', 'security', 'rbac', 'llm'],
+    text: 'The NetSuite AI Connector is a governed MCP bridge Rithvik built, modeling the pattern behind Oracle NetSuite AI Connector Service. It lets an AI client (Claude or ChatGPT) query live ERP data through governed tools: SuiteQL, saved searches, and record lookups. The AI connects as a finance role (CFO, Controller, AR, or AP) and inherits that role permissions on every call. Enforcement runs at the database engine, a SQLite authorizer bound to the role, with table allowlists, column masking, read-only access, and row-level scope, so it holds no matter what SuiteQL the AI writes. Every call, allowed or denied, is audit-logged. The idea he wanted to prove: an agent answers from whatever data layer you give it, so a reconciled, governed finance data layer is what makes the answers trustworthy.',
+  },
+  {
     source: 'Education',
     tags: ['education', 'degree', 'degrees', 'masters', 'master', 'ms', 'university', 'study', 'studied', 'school', 'college', 'coursework', 'gpa', 'academic'],
     text: 'Rithvik is finishing an M.S. in Computer Science at the University at Buffalo (2025 to 2026), with coursework in Machine Learning, Deep Learning, Data Intensive Computing, and Analysis of Algorithms. He holds three computer science degrees in total.',

@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { FiSearch, FiCornerDownLeft } from 'react-icons/fi'
+import { asset } from '@/lib/asset'
 
 const GH = 'https://github.com/RITHVIKILLANDULA'
 const LI = 'https://www.linkedin.com/in/rithvik-illandula'
 const EMAIL = 'rithvik.illandula@gmail.com'
-const RESUME = '/Rithvik_Illandula_Resume.pdf'
+const RESUME = asset('/Rithvik_Illandula_Resume.pdf')
 
 function scrollTo(id) { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
 
@@ -90,9 +91,9 @@ export default function CommandPalette() {
       )}
 
       <style jsx>{`
-        .cmdk-trigger { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.7rem; border-radius: 8px;
-          background: #131316; border: 1px solid #27272A; color: #A1A1AA; font-size: 0.8rem; cursor: pointer; transition: all .2s; }
-        .cmdk-trigger:hover { border-color: #6366F1; color: #EDEDED; }
+        .cmdk-trigger { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.42rem 0.7rem; border-radius: 1px;
+          background: transparent; border: 1px solid var(--ink, #16130E); color: var(--ink, #16130E); font-size: 0.78rem; cursor: pointer; transition: all .18s; }
+        .cmdk-trigger:hover { border-color: var(--signal, #FF4F00); background: var(--stock, #EDE9DF); }
         .cmdk-trigger kbd { font-family: ui-monospace, monospace; font-size: 0.7rem; color: #71717A; border: 1px solid #27272A; border-radius: 4px; padding: 0 0.3rem; }
 
         .cmdk-wrap { position: fixed; inset: 0; z-index: 100; display: grid; place-items: start center; padding-top: 14vh; }
