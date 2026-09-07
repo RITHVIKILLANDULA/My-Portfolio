@@ -10,7 +10,6 @@ import { RESUME, GH, LI, EMAIL, EXP, SKILLGROUPS, PROJECTS, CATEGORIES, IMPACT, 
 import CommandPalette from '@/components/CommandPalette'
 import ThreadSpine from '@/components/pipeline/DagRail'
 import Warehouse from '@/components/pipeline/Warehouse'
-import Preloader from '@/components/Preloader'
 import { start as telemetryStart, sectionEnter, sectionExit, track, onEvent, getSessionId } from '@/lib/telemetry'
 import { asset } from '@/lib/asset'
 
@@ -219,7 +218,6 @@ export default function MotionPortfolio() {
 
   return (
     <div className="site" ref={rootRef}>
-      <Preloader />
       <ThreadSpine />
 
       {/* MASTHEAD */}
