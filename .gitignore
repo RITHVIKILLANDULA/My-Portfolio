@@ -44,3 +44,6 @@ next-env.d.ts
 .swc
 
 # internal dev planning docs
+
+# local static-export preview staging
+.preview/

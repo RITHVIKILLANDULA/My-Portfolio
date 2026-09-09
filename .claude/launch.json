@@ -1,8 +1,47 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "portfolio", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 3000 },
-    { "name": "portfolio-prod", "runtimeExecutable": "npx", "runtimeArgs": ["next", "start", "-p", "3020"], "port": 3020 },
-    { "name": "journey", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "4321"], "port": 4321, "cwd": "/tmp/serve" }
+    {
+      "name": "portfolio",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "portfolio-prod",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "next",
+        "start",
+        "-p",
+        "3020"
+      ],
+      "port": 3020
+    },
+    {
+      "name": "journey",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4321"
+      ],
+      "port": 4321,
+      "cwd": "/tmp/serve"
+    },
+    {
+      "name": "static-export",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4600"
+      ],
+      "port": 4600,
+      "cwd": ".preview"
+    }
   ]
 }

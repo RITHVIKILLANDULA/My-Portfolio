@@ -1,17 +1,16 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa'
 import profile from '@/data/profile.json'
 import { RESUME, GH, LI, EMAIL, EXP, SKILLGROUPS, PROJECTS, CATEGORIES, IMPACT, NAV } from '@/data/portfolio-content'
 import CommandPalette from '@/components/CommandPalette'
+import PosterHero from '@/components/cine/PosterHero'
 import ThreadSpine from '@/components/pipeline/DagRail'
 import Warehouse from '@/components/pipeline/Warehouse'
 import { start as telemetryStart, sectionEnter, sectionExit, track, onEvent, getSessionId } from '@/lib/telemetry'
-import { asset } from '@/lib/asset'
 
 /* ── Cinematic monochrome (cappen-language) ────────────────────────────────
    Near-white ground, charcoal bands, huge grotesque statements with serif
@@ -209,6 +208,30 @@ export default function MotionPortfolio() {
     return () => { clearTimeout(t); if (lenis) lenis.off('scroll', sync); ctx.revert() }
   }, [])
 
+  // the masthead sits over the poster: transparent + light there, solid after
+  const [onPoster, setOnPoster] = useState(true)
+  useEffect(() => {
+    const hero = document.getElementById('top')
+    if (!hero) return setOnPoster(false)
+    const io = new IntersectionObserver(([e]) => setOnPoster(e.intersectionRatio > 0.25), {
+      threshold: [0, 0.25, 1],
+    })
+    io.observe(hero)
+    return () => io.disconnect()
+  }, [])
+
+  // the poster must run to the very top edge; the sticky masthead otherwise
+  // reserves flow space above it and the page ground shows through
+  useEffect(() => {
+    const mast = rootRef.current?.querySelector('.mast')
+    if (!mast) return
+    const apply = () => rootRef.current?.style.setProperty('--mast-h', `${mast.offsetHeight}px`)
+    apply()
+    const ro = new ResizeObserver(apply)
+    ro.observe(mast)
+    return () => ro.disconnect()
+  }, [])
+
   const jump = (id) => (e) => {
     e.preventDefault()
     const el = document.getElementById(id); if (!el) return
@@ -221,7 +244,7 @@ export default function MotionPortfolio() {
       <ThreadSpine />
 
       {/* MASTHEAD */}
-      <header className="mast">
+      <header className={`mast ${onPoster ? "on-poster" : ""}`}>
         <a href="#top" className="wordmark" onClick={jump('top')}>RITHVIK ILLANDULA<span className="wm-sub">DATA & AI ENGINEER</span></a>
         <nav className="menu">
           {NAV.map(([l, id]) => <a key={id} href={`#${id}`} onClick={jump(id)}>{l}</a>)}
@@ -232,32 +255,8 @@ export default function MotionPortfolio() {
         </div>
       </header>
 
-      {/* HERO — statement */}
-      <section id="top" className="hero">
-        <div className="hero-meta">
-          <p className="micro rise">( BUFFALO, NY — WORKS ANYWHERE )</p>
-          <p className="micro rise"><i className="dot" /> AVAILABLE FOR WORK ’26</p>
-        </div>
-        <h1 className="statement">
-          <span className="st-mask"><span className="st-line st-in">DATA THINKER,</span></span>
-          <span className="st-mask"><span className="st-line st-in"><em>system</em> MAKER<em className="pd">.</em></span></span>
-        </h1>
-        <div className="hero-low">
-          <div className="hero-copy rise">
-            <p className="lead">I build the pipelines, warehouses and LLM systems that turn raw data into decisions —
-              and this site is one of them. <em>You&apos;re inside a working pipeline right now:</em> every scroll you
-              make is being ingested, and at the end you get a SQL console to query yourself.</p>
-            <div className="hero-ctas">
-              <a href="#projects" onClick={jump('projects')} className="btn-ink big">SELECTED WORKS</a>
-              <a href={`mailto:${EMAIL}`} className="btn-line">EMAIL ME</a>
-              <a href={GH} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="soc"><FaGithub /></a>
-              <a href={LI} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="soc"><FaLinkedinIn /></a>
-            </div>
-          </div>
-          <div className="rise"><Ledger /></div>
-        </div>
-        <p className="cue micro" aria-hidden="true">( KEEP SCROLLING )</p>
-      </section>
+      {/* HERO — the poster */}
+      <PosterHero onJump={jump} />
 
       {/* ABOUT — charcoal statement band */}
       <section id="about" className="band">
@@ -266,10 +265,10 @@ export default function MotionPortfolio() {
           <h2 className="band-state rise">Four years turning <em>messy, heavy, real-world data</em> into
             systems people trust — at Deloitte scale and startup speed<em className="pd">.</em></h2>
           <div className="band-grid">
-            <figure className="rise band-fig">
-              <Image src={asset('/assets/portrait.png')} alt="Rithvik Illandula" width={420} height={520} className="portrait" />
-              <figcaption className="micro gray">RITHVIK ILLANDULA — B.TECH · M.TECH · M.S. CS (UB ’26)</figcaption>
-            </figure>
+            <div className="rise band-fig">
+              <Ledger />
+              <p className="micro gray band-fig-cap">YOUR SESSION — CAPTURED IN YOUR BROWSER, NEVER SENT ANYWHERE</p>
+            </div>
             <div className="band-copy rise">
               <p>{profile.bio}</p>
               <p className="gray">Certified: Google Cloud Professional Data Engineer · Microsoft PL-300 &amp; DP-700 · Tableau Desktop.
@@ -416,7 +415,16 @@ export default function MotionPortfolio() {
 
         /* masthead */
         .mast { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between;
-          gap: 1rem; padding: 0.9rem clamp(1rem, 4vw, 3.5rem); background: rgba(252,252,252,0.92); border-bottom: 1px solid var(--rule); }
+          gap: 1rem; padding: 0.9rem clamp(1rem, 4vw, 3.5rem); background: rgba(252,252,252,0.92); border-bottom: 1px solid var(--rule);
+          transition: background .45s ease, border-color .45s ease, color .45s ease; }
+        .mast.on-poster { background: transparent; border-bottom-color: transparent; color: var(--paper); }
+        .mast.on-poster .wm-sub { color: rgba(252,252,252,0.55); }
+        .mast.on-poster .menu a { color: rgba(252,252,252,0.72); }
+        .mast.on-poster .menu a:hover { color: var(--paper); }
+        .mast.on-poster :global(.btn-ink) { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+        .mast.on-poster :global(.btn-ink:hover) { background: transparent; color: var(--paper); }
+        .mast.on-poster :global(.cmdk-trigger) { border-color: rgba(252,252,252,0.4); color: rgba(252,252,252,0.8); }
+        .mast.on-poster :global(.cmdk-trigger:hover) { border-color: var(--paper); background: rgba(252,252,252,0.08); }
         .wordmark { display: flex; flex-direction: column; font-family: var(--sans); font-stretch: 116%; font-weight: 700;
           font-size: 0.78rem; letter-spacing: 0.08em; line-height: 1.2; }
         .wm-sub { font-family: var(--mono); font-weight: 300; font-size: 0.5rem; letter-spacing: 0.24em; color: var(--graphite); }
@@ -475,7 +483,7 @@ export default function MotionPortfolio() {
         @media (max-width: 820px) { .band-grid { grid-template-columns: 1fr; } .band-fig { max-width: 260px; } }
         .band-fig { margin: 0; }
         .band-fig :global(.portrait) { width: 100%; height: auto; display: block; filter: grayscale(1) contrast(1.1); }
-        .band-fig figcaption { margin-top: 0.6rem; }
+        .band-fig figcaption, .band-fig .band-fig-cap { margin-top: 0.6rem; line-height: 1.6; }
         .band-copy p { font-family: var(--sans); font-size: 0.98rem; line-height: 1.7; max-width: 60ch; margin-bottom: 1rem; color: rgba(252,252,252,0.88); }
         .band-copy p.gray { color: var(--graphite); font-size: 0.88rem; }
         .band-stats { display: flex; flex-wrap: wrap; gap: 2rem 3rem; margin-top: 1.8rem; }

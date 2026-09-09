@@ -46,6 +46,12 @@ export default function OpeningSequence({ onSettled }) {
   const doneRef = useRef(false)
 
   useEffect(() => {
+    // NB: declared before any early return — finish() closes over these and is
+    // called on the skip paths below, which would otherwise hit the TDZ.
+    let raf = 0
+    let watchdog = 0
+    let tries = 0
+
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
     let seen = false
     try { seen = !!sessionStorage.getItem('ri_opening_seen') } catch {}
@@ -61,7 +67,7 @@ export default function OpeningSequence({ onSettled }) {
     setPhase('running')
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
-    let W = 0, H = 0, raf = 0, t0 = 0
+    let W = 0, H = 0, t0 = 0
     let points = []
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 }
 
@@ -212,8 +218,6 @@ export default function OpeningSequence({ onSettled }) {
     const startAt = performance.now()
     // the viewport can still be 0x0 on the first tick (and in headless shells),
     // and sampling a zero-width canvas throws — so wait for a real box first
-    let tries = 0
-    let watchdog = 0
     const begin = () => {
       let ok = false
       try {

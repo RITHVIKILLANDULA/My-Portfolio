@@ -54,8 +54,20 @@ export default function ThreadSpine() {
 
   useEffect(() => onEvent((row) => setTick(row)), [])
 
+  // the poster is a composed frame — the spine must not sit on top of it
+  const [overHero, setOverHero] = useState(true)
+  useEffect(() => {
+    const hero = document.getElementById('top')
+    if (!hero) return setOverHero(false)
+    const io = new IntersectionObserver(([e]) => setOverHero(e.intersectionRatio > 0.35), {
+      threshold: [0, 0.35, 1],
+    })
+    io.observe(hero)
+    return () => io.disconnect()
+  }, [])
+
   return (
-    <aside className="spine" aria-hidden="true">
+    <aside className={`spine ${overHero ? "hidden" : ""}`} aria-hidden="true">
       <div className="spine-track">
         <i className="spine-fill" style={{ transform: `scaleY(${progress})` }} />
         {STAGES.map((s, i) => (
@@ -74,8 +86,9 @@ export default function ThreadSpine() {
       )}
 
       <style jsx>{`
-        .spine { position: fixed; left: clamp(0.4rem, 1.4vw, 1.4rem); top: 96px; bottom: 24px; z-index: 40;
+        .spine { transition: opacity .5s ease; position: fixed; left: clamp(0.4rem, 1.4vw, 1.4rem); top: 96px; bottom: 24px; z-index: 40;
           width: 44px; pointer-events: none; }
+        .spine.hidden { opacity: 0; pointer-events: none; }
         @media (max-width: 1239px) { .spine { display: none; } }
         .spine-track { position: absolute; left: 20px; top: 0; bottom: 3.4rem; width: 1px; background: var(--rule); }
         .spine-fill { position: absolute; left: -1px; top: 0; width: 3px; height: 100%; background: var(--signal);
