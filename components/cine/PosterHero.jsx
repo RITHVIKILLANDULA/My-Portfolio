@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa'
 import { EMAIL, GH, LI } from '@/data/portfolio-content'
 import { asset } from '@/lib/asset'
+import PosterPlate from '@/components/cine/PosterPlate'
 
 /**
  * THE POSTER.
@@ -50,8 +51,9 @@ export default function PosterHero({ onJump }) {
         <i>•••</i> DATA, AI &amp; THE SYSTEMS THAT SHIP THEM <i>•••</i>
       </p>
 
-      {/* the wordmark — behind the figure */}
-      <h1 className="word" data-word="RITHVIK" aria-label="Rithvik Illandula">RITHVIK</h1>
+      {/* plate + wordmark, drawn: mottle, ember, worn paint, dissolve, vignette */}
+      <div className="plate" aria-hidden="true"><PosterPlate word="RITHVIK" /></div>
+      <h1 className="sr-name">Rithvik Illandula</h1>
 
       {/* the figure — in front, occluding the middle letters */}
       <div className="figure">
@@ -85,10 +87,12 @@ export default function PosterHero({ onJump }) {
       <p className="meta-l micro">BUFFALO, NY — WORKS ANYWHERE</p>
       <p className="meta-r micro"><i className="live" /> AVAILABLE ’26</p>
 
-      <span className="grain" aria-hidden="true" />
-      <span className="vig" aria-hidden="true" />
 
       <style jsx>{`
+        .plate { position: absolute; inset: 0; z-index: 1; }
+        .plate :global(.plate-canvas) { display: block; width: 100%; height: 100%; }
+        .sr-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); margin: 0; }
+
         .poster {
           --px: 0; --py: 0;
           position: relative;
@@ -114,38 +118,20 @@ export default function PosterHero({ onJump }) {
         }
         .strip i { color: var(--live); font-style: normal; letter-spacing: 0.1em; }
 
-        /* ── the wordmark ──────────────────────────────────────────────── */
-        .word {
-          position: absolute; left: 50%; top: 52%;
-          transform: translate(-50%, -50%) translate(calc(var(--px) * -14px), calc(var(--py) * -8px));
-          margin: 0; z-index: 1;
-          font-family: var(--sans); font-stretch: 125%; font-weight: 900;
-          font-size: 20.6vw; line-height: 0.78; letter-spacing: -0.035em;
-          white-space: nowrap; color: var(--live);
-        }
-        /* distressed print texture, clipped to the letterforms */
-        .word::after {
-          content: attr(data-word);
-          position: absolute; inset: 0; z-index: 1;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='0.62'/%3E%3C/svg%3E");
-          -webkit-background-clip: text; background-clip: text;
-          color: transparent; opacity: 0.42;
-          pointer-events: none;
-        }
-
-        /* ── the figure ────────────────────────────────────────────────── */
+        /* ── the figure — in front, lit by the plate behind it ─────────── */
         .figure {
           position: absolute; left: 50%; bottom: 0; z-index: 3;
           transform: translateX(-50%) translate(calc(var(--px) * 9px), calc(var(--py) * 5px));
           height: min(74svh, 700px); aspect-ratio: 600 / 707;
-          filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.7));
+          filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.7))
+                  drop-shadow(0 -2px 26px rgba(228, 87, 46, 0.28));
+          -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 9%, #000 100%);
+          mask-image: linear-gradient(to top, transparent 0%, #000 9%, #000 100%);
         }
         .figure :global(.cut) {
           width: 100%; height: 100%; object-fit: contain; object-position: bottom;
-          display: block;
+          display: block; filter: contrast(1.12) saturate(0.92) brightness(0.97);
         }
-        /* he is lit from the page, not the studio: crush the old backdrop light */
-        .figure :global(.cut) { filter: contrast(1.12) saturate(0.92) brightness(0.97); }
 
         .contact-shadow {
           position: absolute; z-index: 2; bottom: -4%; left: 50%;
@@ -203,28 +189,7 @@ export default function PosterHero({ onJump }) {
         }
         @keyframes pulse { 50% { opacity: 0.35; } }
 
-        /* ── film layer ────────────────────────────────────────────────── */
-        .grain {
-          position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: 0.06;
-          background-repeat: repeat;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)'/%3E%3C/svg%3E");
-          animation: grain 7s steps(5) infinite;
-        }
-        @keyframes grain {
-          0%, 100% { background-position: 0 0; }
-          20% { background-position: -40px 30px; }
-          40% { background-position: 30px -40px; }
-          60% { background-position: -30px -25px; }
-          80% { background-position: 40px 15px; }
-        }
-        .vig {
-          position: absolute; inset: 0; z-index: 6; pointer-events: none;
-          background: radial-gradient(120% 92% at 50% 46%, transparent 32%, rgba(0,0,0,0.62) 100%);
-        }
-
-        /* ── narrow ────────────────────────────────────────────────────── */
         @media (max-width: 900px) {
-          .word { font-size: 25vw; top: 40%; }
           .figure { height: min(62svh, 520px); }
           .arrows, .dots { display: none; }
           .chip-l { top: auto; bottom: 30%; transform: none; }
@@ -232,6 +197,19 @@ export default function PosterHero({ onJump }) {
           .strip { font-size: 0.55rem; letter-spacing: 0.24em; }
         }
         @media (prefers-reduced-motion: reduce) {
+          .arrows i, .live { animation: none; }
+        }
+
+
+          20% { background-position: -40px 30px; }
+          40% { background-position: 30px -40px; }
+          60% { background-position: -30px -25px; }
+          80% { background-position: 40px 15px; }
+        }
+
+        /* ── narrow ────────────────────────────────────────────────────── */
+        @media (max-width: 900px) {
+          @media (prefers-reduced-motion: reduce) {
           .grain, .arrows i, .live { animation: none; }
         }
       `}</style>
