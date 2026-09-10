@@ -1,0 +1,631 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retrieval Explorer — live search race</title>
+<style>
+ :root{
+   --accent:#fbbf24;
+   --bg:#0c0a06; --panel:#15120a; --panel2:#100d07; --raise:#1b1710;
+   --line:#2a2416; --line2:#39311d;
+   --txt:#f4efe2; --mut:#b3a988; --dim:#7d745c;
+   --bm25:#f59e0b; --tfidf:#38bdf8; --hybrid:#c084fc; --rerank:#fbbf24;
+   --ok:#4ade80; --bad:#fb7185;
+   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+   --shadow:0 24px 60px -28px rgba(0,0,0,.85);
+ }
+ :root[data-theme="light"]{
+   --bg:#f7f3e8; --panel:#fffdf6; --panel2:#f3eede; --raise:#fbf8ee;
+   --line:#e6dcc2; --line2:#d8ccab;
+   --txt:#2a2413; --mut:#6f6650; --dim:#9a8f72;
+   --shadow:0 24px 50px -30px rgba(120,90,10,.28);
+ }
+ *{box-sizing:border-box}
+ html{scroll-behavior:smooth}
+ body{margin:0;background:
+    radial-gradient(1100px 640px at 82% -12%,rgba(251,191,36,.16),transparent 55%),
+    radial-gradient(760px 520px at -8% 108%,rgba(192,132,252,.08),transparent 52%),
+    var(--bg);
+   color:var(--txt);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif;
+   -webkit-font-smoothing:antialiased}
+ .wrap{max-width:1220px;margin:0 auto;padding:40px 22px 72px}
+ a{color:inherit}
+ /* hero */
+ .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+ .eyebrow{display:inline-flex;gap:9px;align-items:center;font-size:11px;letter-spacing:.18em;
+   text-transform:uppercase;color:var(--mut);border:1px solid var(--line2);border-radius:999px;padding:6px 13px}
+ .eyebrow .d{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+ .themetog{border:1px solid var(--line2);background:var(--panel);color:var(--mut);border-radius:999px;
+   padding:7px 13px;font:inherit;font-size:12px;cursor:pointer;transition:all .15s}
+ .themetog:hover{color:var(--txt);border-color:var(--accent)}
+ h1{font-size:clamp(30px,5.2vw,54px);margin:20px 0 8px;letter-spacing:-.03em;font-weight:800;line-height:1.02;text-wrap:balance}
+ h1 span{background:linear-gradient(96deg,var(--accent),#fcd34d 60%,#f59e0b);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+ .lede{color:var(--mut);max-width:70ch;font-size:15.5px;margin:0}
+ .lede b{color:var(--txt);font-weight:640}
+ .statline{display:flex;gap:26px;flex-wrap:wrap;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+ .stat b{display:block;font-family:var(--mono);font-size:23px;font-weight:680;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+ .stat span{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim)}
+ .stat .amb{color:var(--accent)}
+ /* search */
+ .searchcard{margin-top:30px;background:linear-gradient(180deg,var(--panel),var(--panel2));
+   border:1px solid var(--line2);border-radius:18px;box-shadow:var(--shadow);padding:22px 24px}
+ .qrow{display:flex;gap:12px;align-items:center}
+ .qbox{flex:1;position:relative;display:flex;align-items:center}
+ .qbox .mag{position:absolute;left:16px;color:var(--dim);font-size:17px;pointer-events:none}
+ #q{width:100%;background:var(--raise);border:1.5px solid var(--line2);border-radius:12px;
+   color:var(--txt);font:inherit;font-size:16px;padding:15px 16px 15px 44px;outline:none;transition:border-color .16s,box-shadow .16s}
+ #q:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(251,191,36,.14)}
+ #q::placeholder{color:var(--dim)}
+ .lbl{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;padding:6px 11px;border-radius:999px;white-space:nowrap}
+ .lbl.gold{background:rgba(74,222,128,.13);color:var(--ok);border:1px solid rgba(74,222,128,.3)}
+ .lbl.free{background:var(--raise);color:var(--dim);border:1px solid var(--line2)}
+ .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+ .chip{border:1px solid var(--line2);background:var(--raise);color:var(--mut);border-radius:999px;
+   padding:7px 13px;font:inherit;font-size:12.5px;cursor:pointer;transition:all .15s}
+ .chip:hover{color:var(--txt);border-color:var(--accent);transform:translateY(-1px)}
+ .chip.on{background:var(--accent);color:#1a1403;border-color:var(--accent);font-weight:600}
+ /* section headers */
+ .sec{margin-top:34px}
+ .sechead{display:flex;align-items:baseline;gap:12px;margin-bottom:15px}
+ .sechead h2{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:var(--txt);margin:0;font-weight:700}
+ .sechead .sub{font-size:12.5px;color:var(--dim)}
+ .sechead .n{font-family:var(--mono);color:var(--accent);font-size:12px;margin-left:auto}
+ /* race */
+ .race{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+ @media(max-width:820px){.race{grid-template-columns:1fr}}
+ .col{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:15px;padding:14px 14px 16px}
+ .colhead{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+ .dot{width:9px;height:9px;border-radius:3px;flex:none}
+ .colhead .nm{font-weight:700;font-size:13.5px;letter-spacing:-.01em}
+ .colhead .mth{font-size:10.5px;color:var(--dim);margin-left:auto;font-family:var(--mono)}
+ .colsub{font-size:11px;color:var(--dim);margin:0 0 12px;min-height:14px}
+ .rows{display:flex;flex-direction:column;gap:7px;min-height:60px}
+ .r{position:relative;background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:8px 10px 9px;overflow:hidden;transition:border-color .2s}
+ .r.gold{border-color:rgba(74,222,128,.45)}
+ .r .rk{font-family:var(--mono);font-size:10px;color:var(--dim);position:absolute;top:8px;right:9px}
+ .r .rt{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:620;padding-right:20px}
+ .r .rt .star{color:var(--ok);font-size:11px}
+ .r .tp{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);margin:1px 0 5px}
+ .r .snip{font-size:11px;color:var(--mut);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+ .bar{height:4px;border-radius:3px;margin-top:7px;background:var(--line);overflow:hidden}
+ .bar i{display:block;height:100%;border-radius:3px;transition:width .5s cubic-bezier(.22,.61,.36,1)}
+ .r .sc{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:4px;display:flex;justify-content:space-between}
+ .empty{color:var(--dim);font-size:12px;font-style:italic;padding:10px 2px}
+ /* rerank stage */
+ .rerankwrap{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line2);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+ .rerankwrap .rhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+ .rerankwrap .rhead .lg{font-size:12px;color:var(--mut)}
+ .rerankwrap .rhead .lg b{color:var(--rerank)}
+ .replay{margin-left:auto;border:1px solid var(--line2);background:var(--raise);color:var(--mut);border-radius:9px;padding:6px 12px;font:inherit;font-size:12px;cursor:pointer;transition:all .15s}
+ .replay:hover{color:var(--txt);border-color:var(--accent)}
+ .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--dim);margin-bottom:12px}
+ .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+ .rrlist{position:relative;display:flex;flex-direction:column;gap:8px}
+ .rr{display:grid;grid-template-columns:30px 1fr 210px;gap:12px;align-items:center;
+   background:var(--raise);border:1px solid var(--line);border-radius:11px;padding:10px 13px;
+   transition:transform .6s cubic-bezier(.5,0,.2,1),border-color .3s,background .3s;will-change:transform}
+ @media(max-width:640px){.rr{grid-template-columns:26px 1fr;}.rr .metcell{display:none}}
+ .rr.top{border-color:var(--rerank);background:linear-gradient(90deg,rgba(251,191,36,.09),var(--raise) 60%)}
+ .rr .pos{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--dim);text-align:center}
+ .rr.top .pos{color:var(--rerank)}
+ .rr .body .t{font-size:13px;font-weight:640;display:flex;align-items:center;gap:7px}
+ .rr .body .t .star{color:var(--ok);font-size:11px}
+ .rr .body .s{font-size:11px;color:var(--mut);line-height:1.4;margin-top:2px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+ .move{font-family:var(--mono);font-size:10px;padding:2px 6px;border-radius:6px;white-space:nowrap}
+ .move.up{background:rgba(74,222,128,.14);color:var(--ok)} .move.down{background:rgba(251,113,133,.14);color:var(--bad)}
+ .move.same{background:var(--line);color:var(--dim)}
+ .metcell{display:flex;flex-direction:column;gap:5px}
+ .metrow{display:grid;grid-template-columns:64px 1fr 34px;gap:7px;align-items:center;font-size:10px}
+ .metrow .k{color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+ .metrow .track{height:5px;border-radius:3px;background:var(--line);overflow:hidden}
+ .metrow .track i{display:block;height:100%;border-radius:3px;transition:width .5s ease}
+ .metrow .v{font-family:var(--mono);color:var(--mut);text-align:right}
+ /* winning passage */
+ .win{margin-top:14px;background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line2);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+ .win .wtop{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+ .win .wtag{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim)}
+ .win .wtitle{font-size:16px;font-weight:720;letter-spacing:-.01em}
+ .win .wtopic{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);border:1px solid var(--line2);border-radius:6px;padding:3px 8px}
+ .verdict{margin-left:auto;font-size:12px;font-weight:640;padding:5px 12px;border-radius:999px}
+ .verdict.hit{background:rgba(74,222,128,.14);color:var(--ok)}
+ .verdict.miss{background:rgba(251,113,133,.14);color:var(--bad)}
+ .verdict.free{background:var(--raise);color:var(--dim);border:1px solid var(--line2)}
+ .passage{font-size:15px;line-height:1.7;color:var(--txt)}
+ .passage mark{background:linear-gradient(180deg,transparent 58%,rgba(251,191,36,.42) 58%);color:inherit;padding:0 1px;border-radius:2px;font-weight:600}
+ .wscore{display:flex;gap:22px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+ .wscore div b{font-family:var(--mono);font-size:16px;font-weight:680;color:var(--accent);display:block;font-variant-numeric:tabular-nums}
+ .wscore div span{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim)}
+ /* evidence + index */
+ .grid2{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;align-items:start}
+ @media(max-width:860px){.grid2{grid-template-columns:1fr}}
+ .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line2);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+ table{width:100%;border-collapse:collapse;font-size:12.5px}
+ th,td{text-align:right;padding:9px 6px;border-bottom:1px solid var(--line)}
+ th:first-child,td:first-child{text-align:left}
+ thead th{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);font-weight:600}
+ tbody td{font-family:var(--mono);color:var(--mut);font-variant-numeric:tabular-nums}
+ tbody td:first-child{font-family:inherit;color:var(--txt);font-weight:600}
+ tbody tr.best td{color:var(--txt)}
+ tbody tr.best td.hl{color:var(--accent);font-weight:700}
+ .stripe{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:7px;vertical-align:middle}
+ .idxlist{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+ .idxrow{display:grid;grid-template-columns:1fr 46px 70px;gap:8px;align-items:center;font-size:12px}
+ .idxrow .term{font-family:var(--mono);color:var(--txt)}
+ .idxrow .df{font-family:var(--mono);color:var(--mut);text-align:right;font-size:11px}
+ .idxrow .tk{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+ .idxrow .tk i{display:block;height:100%;background:var(--accent);border-radius:3px;opacity:.75}
+ .miniStats{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+ .miniStats b{font-family:var(--mono);font-size:18px;font-weight:680;display:block;font-variant-numeric:tabular-nums}
+ .miniStats span{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim)}
+ .note{font-size:11.5px;color:var(--dim);margin-top:10px;line-height:1.5}
+ .foot{margin-top:40px;color:var(--dim);font-size:12.5px;border-top:1px solid var(--line);padding-top:20px;line-height:1.6}
+ .foot b{color:var(--mut)}
+ .selfcheck{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:6px;margin-left:8px}
+ .selfcheck.pass{background:rgba(74,222,128,.13);color:var(--ok)}
+ .selfcheck.fail{background:rgba(251,113,133,.14);color:var(--bad)}
+ @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style></head><body><div class="wrap">
+ <div class="top">
+   <span class="eyebrow"><span class="d"></span>Live search · recomputed in your browser</span>
+   <button class="themetog" id="themetog">Toggle theme</button>
+ </div>
+ <h1>Retrieval <span>Explorer</span></h1>
+ <p class="lede">Type a question and watch three from-scratch retrievers race over the same index — <b>BM25</b>, <b>TF-IDF cosine</b>, and their <b>reciprocal-rank fusion</b> — then see a coverage-and-proximity reranker reorder the top-k and light up the winning passage. Every score is recomputed live in JavaScript from the exported term statistics, matching the Python engine exactly.</p>
+ <div class="statline">
+   <div class="stat"><b>15</b><span>documents</span></div>
+   <div class="stat"><b>91</b><span>chunks indexed</span></div>
+   <div class="stat"><b>717</b><span>vocabulary</span></div>
+   <div class="stat"><b>53</b><span>labeled queries</span></div>
+   <div class="stat"><b class="amb">0.873</b><span>best nDCG@5 · Hybrid+Rerank</span></div>
+ </div>
+
+ <div class="searchcard">
+   <div class="qrow">
+     <div class="qbox"><span class="mag">⌕</span>
+       <input id="q" type="text" autocomplete="off" spellcheck="false"
+         placeholder="Ask the corpus a question…"></div>
+     <span id="qlabel" class="lbl free">free query</span>
+   </div>
+   <div class="chips" id="chips"></div>
+ </div>
+
+ <div class="sec">
+   <div class="sechead"><h2>The retrieval race</h2>
+     <span class="sub">top chunks each scorer returns, before reranking</span>
+     <span class="n" id="racek"></span></div>
+   <div class="race">
+     <div class="col" id="col_bm25"><div class="colhead"><span class="dot" style="background:var(--bm25)"></span><span class="nm">BM25</span><span class="mth">Okapi · k1=1.5 b=.75</span></div><p class="colsub" id="sub_bm25"></p><div class="rows" id="rows_bm25"></div></div>
+     <div class="col" id="col_tfidf"><div class="colhead"><span class="dot" style="background:var(--tfidf)"></span><span class="nm">TF-IDF</span><span class="mth">cosine · L2 norm</span></div><p class="colsub" id="sub_tfidf"></p><div class="rows" id="rows_tfidf"></div></div>
+     <div class="col" id="col_hybrid"><div class="colhead"><span class="dot" style="background:var(--hybrid)"></span><span class="nm">Hybrid</span><span class="mth">RRF · k=60</span></div><p class="colsub" id="sub_hybrid"></p><div class="rows" id="rows_hybrid"></div></div>
+   </div>
+ </div>
+
+ <div class="sec">
+   <div class="sechead"><h2>Reranking the pool</h2>
+     <span class="sub">hybrid order in, coverage + proximity out</span>
+     <span class="n" id="rrk"></span></div>
+   <div class="rerankwrap">
+     <div class="rhead">
+       <span class="lg">Blended score = <b>0.20·</b>stage + <b>0.50·</b>coverage + <b>0.30·</b>proximity</span>
+       <button class="replay" id="replay">↻ Replay reorder</button>
+     </div>
+     <div class="legend">
+       <span><i style="background:var(--hybrid)"></i>coverage — idf-weighted share of query terms present</span>
+       <span><i style="background:var(--tfidf)"></i>proximity — how tightly matched terms cluster</span>
+     </div>
+     <div class="rrlist" id="rrlist"></div>
+   </div>
+
+   <div class="win" id="win">
+     <div class="wtop">
+       <span class="wtag">Winning passage</span>
+       <span class="wtitle" id="winTitle">—</span>
+       <span class="wtopic" id="winTopic"></span>
+       <span class="verdict free" id="winVerdict">—</span>
+     </div>
+     <div class="passage" id="winText">Search above to see the top-ranked passage with your query terms highlighted.</div>
+     <div class="wscore" id="winScore"></div>
+   </div>
+ </div>
+
+ <div class="sec grid2">
+   <div class="card">
+     <div class="sechead" style="margin-bottom:12px"><h2>Retrieval quality</h2>
+       <span class="sub">recomputed live over all 53 labeled queries<span class="selfcheck" id="metricCheck"></span></span></div>
+     <div style="overflow-x:auto">
+       <table id="metricTable">
+         <thead><tr><th>Strategy</th><th>R@1</th><th>R@3</th><th>R@5</th><th>R@10</th><th>MRR</th><th>nDCG@5</th></tr></thead>
+         <tbody id="mrows"></tbody>
+       </table>
+     </div>
+     <p class="note">Recall@k, mean reciprocal rank, and nDCG@5 with binary relevance — the same textbook definitions in <b>evaluate.py</b>, run here in JS. The reranker's lift over plain hybrid shows up in R@1 and nDCG.</p>
+   </div>
+   <div class="card">
+     <div class="sechead" style="margin-bottom:12px"><h2>Index statistics</h2>
+       <span class="sub">the lexical index driving every score</span></div>
+     <div class="miniStats">
+       <div><b id="ixN"></b><span>chunks</span></div>
+       <div><b id="ixVocab"></b><span>terms</span></div>
+       <div><b id="ixAvg"></b><span>avg length</span></div>
+     </div>
+     <p class="note" style="margin-top:0;margin-bottom:6px">Most frequent stemmed terms by document frequency</p>
+     <div class="idxlist" id="idxlist"></div>
+   </div>
+ </div>
+
+ <div class="foot">Every number here is the real engine from <b>engine.run()</b> — a 15-document corpus chunked to 91 sentence units, three retrievers and a reranker written in plain Python — exported to JSON with its full term index. The browser re-tokenizes with the same stemmer and stopword list and recomputes BM25, TF-IDF cosine, RRF, and the rerank from scratch. No server, no libraries, no fabricated numbers.</div>
+</div>
+<script>
+const DATA={"accent":"#fbbf24","chunks":[{"id":"photosynthesis::0","doc":"photosynthesis","title":"How Plants Turn Light Into Sugar","topic":"biology","text":"Photosynthesis is the process green plants use to convert light energy into chemical energy stored as sugar."},{"id":"photosynthesis::1","doc":"photosynthesis","title":"How Plants Turn Light Into Sugar","topic":"biology","text":"It happens inside chloroplasts, small organelles packed with the green pigment chlorophyll."},{"id":"photosynthesis::2","doc":"photosynthesis","title":"How Plants Turn Light Into Sugar","topic":"biology","text":"Chlorophyll absorbs mostly red and blue light and reflects green, which is why leaves look green to the human eye."},{"id":"photosynthesis::3","doc":"photosynthesis","title":"How Plants Turn Light Into Sugar","topic":"biology","text":"The absorbed light drives the splitting of water molecules into oxygen, protons, and electrons."},{"id":"photosynthesis::4","doc":"photosynthesis","title":"How Plants Turn Light Into Sugar","topic":"biology","text":"In the Calvin cycle the plant fixes carbon dioxide from the air into a three carbon sugar."},{"id":"photosynthesis::5","doc":"photosynthesis","title":"How Plants Turn Light Into Sugar","topic":"biology","text":"This carbon fixation is powered by the energy carriers ATP and NADPH that the light reactions produce."},{"id":"photosynthesis::6","doc":"photosynthesis","title":"How Plants Turn Light Into Sugar","topic":"biology","text":"The oxygen released as a by product of splitting water is the source of almost all the oxygen in the atmosphere that animals breathe."},{"id":"neural-nets::0","doc":"neural-nets","title":"A Plain Guide to Neural Networks","topic":"machine-learning","text":"A neural network is a model built from layers of simple units called neurons that each compute a weighted sum of their inputs."},{"id":"neural-nets::1","doc":"neural-nets","title":"A Plain Guide to Neural Networks","topic":"machine-learning","text":"Each connection has a weight, and training adjusts those weights so the network maps inputs to the outputs you want."},{"id":"neural-nets::2","doc":"neural-nets","title":"A Plain Guide to Neural Networks","topic":"machine-learning","text":"Backpropagation computes the gradient of a loss function with respect to every weight, then gradient descent nudges the weights to lower the loss."},{"id":"neural-nets::3","doc":"neural-nets","title":"A Plain Guide to Neural Networks","topic":"machine-learning","text":"Nonlinear activation functions such as the rectified linear unit let the network represent complicated curved decision boundaries."},{"id":"neural-nets::4","doc":"neural-nets","title":"A Plain Guide to Neural Networks","topic":"machine-learning","text":"Deep networks stack many layers, and each layer learns features built from the features found by the layer below it."},{"id":"neural-nets::5","doc":"neural-nets","title":"A Plain Guide to Neural Networks","topic":"machine-learning","text":"Overfitting happens when a network memorizes the training set, and methods like dropout and weight decay push it to generalize instead."},{"id":"roman-aqueducts::0","doc":"roman-aqueducts","title":"The Engineering of Roman Aqueducts","topic":"history","text":"Roman aqueducts carried fresh water across long distances into cities using nothing but a steady downhill gradient and gravity."},{"id":"roman-aqueducts::1","doc":"roman-aqueducts","title":"The Engineering of Roman Aqueducts","topic":"history","text":"Engineers surveyed routes so the channel dropped only a few feet per mile, a gentle slope that kept the water moving without eroding the stone."},{"id":"roman-aqueducts::2","doc":"roman-aqueducts","title":"The Engineering of Roman Aqueducts","topic":"history","text":"Where a valley blocked the path the Romans built towering arched bridges to keep the channel at the right height."},{"id":"roman-aqueducts::3","doc":"roman-aqueducts","title":"The Engineering of Roman Aqueducts","topic":"history","text":"Most of the channel actually ran underground, which protected the water supply from fouling and from enemy tampering during a siege."},{"id":"roman-aqueducts::4","doc":"roman-aqueducts","title":"The Engineering of Roman Aqueducts","topic":"history","text":"At the city end the water fed public fountains, private homes, and the large public baths that were central to Roman daily life."},{"id":"roman-aqueducts::5","doc":"roman-aqueducts","title":"The Engineering of Roman Aqueducts","topic":"history","text":"Lead and terracotta pipes distributed the flow, and overflow was used to flush the sewers beneath the streets."},{"id":"volcanoes::0","doc":"volcanoes","title":"What Makes a Volcano Erupt","topic":"geology","text":"A volcano is a vent where molten rock, ash, and gas escape from deep inside the planet to the surface."},{"id":"volcanoes::1","doc":"volcanoes","title":"What Makes a Volcano Erupt","topic":"geology","text":"Underground the molten rock is called magma, and once it erupts onto the surface it is called lava."},{"id":"volcanoes::2","doc":"volcanoes","title":"What Makes a Volcano Erupt","topic":"geology","text":"Dissolved gas in the magma is what drives an eruption, much like the pressure trapped inside a shaken bottle of soda."},{"id":"volcanoes::3","doc":"volcanoes","title":"What Makes a Volcano Erupt","topic":"geology","text":"Thick sticky magma traps gas and produces violent explosive eruptions, while runny magma lets gas escape and produces gentle lava flows."},{"id":"volcanoes::4","doc":"volcanoes","title":"What Makes a Volcano Erupt","topic":"geology","text":"Most volcanoes sit along the boundaries between tectonic plates, where crust is either pulling apart or grinding together."},{"id":"volcanoes::5","doc":"volcanoes","title":"What Makes a Volcano Erupt","topic":"geology","text":"The ring of fire around the Pacific Ocean is the most volcanically active region on Earth and hosts frequent earthquakes as well."},{"id":"coffee-brewing::0","doc":"coffee-brewing","title":"The Chemistry of Brewing Coffee","topic":"food","text":"Brewing coffee is really an extraction, pulling flavor compounds out of ground beans and into hot water."},{"id":"coffee-brewing::1","doc":"coffee-brewing","title":"The Chemistry of Brewing Coffee","topic":"food","text":"Water temperature matters, and most brewers aim for roughly ninety to ninety six degrees celsius to extract evenly."},{"id":"coffee-brewing::2","doc":"coffee-brewing","title":"The Chemistry of Brewing Coffee","topic":"food","text":"Grind size controls the surface area, so a finer grind extracts faster while a coarse grind extracts more slowly."},{"id":"coffee-brewing::3","doc":"coffee-brewing","title":"The Chemistry of Brewing Coffee","topic":"food","text":"Under extraction leaves the cup sour and thin, while over extraction pulls out bitter compounds and makes it harsh."},{"id":"coffee-brewing::4","doc":"coffee-brewing","title":"The Chemistry of Brewing Coffee","topic":"food","text":"The ratio of coffee to water sets the strength, and many people start near one gram of coffee for every sixteen grams of water."},{"id":"coffee-brewing::5","doc":"coffee-brewing","title":"The Chemistry of Brewing Coffee","topic":"food","text":"Freshly roasted beans release carbon dioxide, and letting the grounds bloom first lets that gas escape for a cleaner extraction."},{"id":"black-holes::0","doc":"black-holes","title":"Black Holes and the Event Horizon","topic":"astronomy","text":"A black hole is a region of space where gravity is so strong that not even light can escape once it crosses the boundary."},{"id":"black-holes::1","doc":"black-holes","title":"Black Holes and the Event Horizon","topic":"astronomy","text":"That boundary is called the event horizon, and it marks the point of no return for anything falling inward."},{"id":"black-holes::2","doc":"black-holes","title":"Black Holes and the Event Horizon","topic":"astronomy","text":"Most black holes form when a massive star runs out of fuel and its core collapses under its own gravity."},{"id":"black-holes::3","doc":"black-holes","title":"Black Holes and the Event Horizon","topic":"astronomy","text":"At the center the mass is crushed into a singularity, a point where the known laws of physics stop giving sensible answers."},{"id":"black-holes::4","doc":"black-holes","title":"Black Holes and the Event Horizon","topic":"astronomy","text":"Supermassive black holes millions of times heavier than the sun sit at the center of most large galaxies including our own."},{"id":"black-holes::5","doc":"black-holes","title":"Black Holes and the Event Horizon","topic":"astronomy","text":"Although light cannot escape, matter spiraling in heats up and glows brightly, which is how astronomers locate a black hole."},{"id":"immune-system::0","doc":"immune-system","title":"How the Immune System Fights Infection","topic":"medicine","text":"The immune system is the body defense network that finds and destroys germs such as bacteria and viruses."},{"id":"immune-system::1","doc":"immune-system","title":"How the Immune System Fights Infection","topic":"medicine","text":"The innate response acts first and fast, using barrier cells and inflammation to attack anything that looks foreign."},{"id":"immune-system::2","doc":"immune-system","title":"How the Immune System Fights Infection","topic":"medicine","text":"The adaptive response is slower but specific, building antibodies tailored to the exact pathogen it has met."},{"id":"immune-system::3","doc":"immune-system","title":"How the Immune System Fights Infection","topic":"medicine","text":"White blood cells are the main soldiers, and different types swallow microbes, flag them, or kill infected cells directly."},{"id":"immune-system::4","doc":"immune-system","title":"How the Immune System Fights Infection","topic":"medicine","text":"After an infection clears, memory cells linger so a second exposure to the same pathogen is met much faster."},{"id":"immune-system::5","doc":"immune-system","title":"How the Immune System Fights Infection","topic":"medicine","text":"Vaccines exploit that memory by showing the immune system a harmless piece of a pathogen so it can prepare in advance."},{"id":"blockchain::0","doc":"blockchain","title":"How a Blockchain Ledger Works","topic":"technology","text":"A blockchain is a shared ledger where transactions are grouped into blocks and chained together in order."},{"id":"blockchain::1","doc":"blockchain","title":"How a Blockchain Ledger Works","topic":"technology","text":"Each block stores a cryptographic hash of the block before it, so changing an old record would break every hash that follows."},{"id":"blockchain::2","doc":"blockchain","title":"How a Blockchain Ledger Works","topic":"technology","text":"The ledger is copied across many computers, and no single party controls it, which is what makes it decentralized."},{"id":"blockchain::3","doc":"blockchain","title":"How a Blockchain Ledger Works","topic":"technology","text":"New blocks are agreed on through a consensus rule such as proof of work, where miners spend computation to earn the right to add a block."},{"id":"blockchain::4","doc":"blockchain","title":"How a Blockchain Ledger Works","topic":"technology","text":"Because rewriting history would mean redoing all that work on a majority of machines at once, the record is very hard to tamper with."},{"id":"blockchain::5","doc":"blockchain","title":"How a Blockchain Ledger Works","topic":"technology","text":"Public keys act as addresses and private keys sign transactions, proving ownership without revealing the secret key itself."},{"id":"ocean-currents::0","doc":"ocean-currents","title":"The Global Ocean Conveyor","topic":"oceanography","text":"Ocean currents are steady large scale flows of seawater that move heat around the entire planet."},{"id":"ocean-currents::1","doc":"ocean-currents","title":"The Global Ocean Conveyor","topic":"oceanography","text":"Surface currents are pushed mainly by prevailing winds and steered into curved paths by the rotation of the Earth."},{"id":"ocean-currents::2","doc":"ocean-currents","title":"The Global Ocean Conveyor","topic":"oceanography","text":"Deep currents are driven instead by differences in water density, which depends on both temperature and salt content."},{"id":"ocean-currents::3","doc":"ocean-currents","title":"The Global Ocean Conveyor","topic":"oceanography","text":"Cold salty water near the poles sinks and flows along the sea floor, a process that helps drive the global conveyor belt."},{"id":"ocean-currents::4","doc":"ocean-currents","title":"The Global Ocean Conveyor","topic":"oceanography","text":"This circulation carries warm tropical water toward the poles and keeps regions like western Europe milder than their latitude suggests."},{"id":"ocean-currents::5","doc":"ocean-currents","title":"The Global Ocean Conveyor","topic":"oceanography","text":"Shifts in these currents can change regional climate and disrupt the nutrient flow that fisheries depend on."},{"id":"cellular-respiration::0","doc":"cellular-respiration","title":"How Cells Release Energy From Sugar","topic":"biology","text":"Cellular respiration is the process cells use to release energy from sugar, in a sense running photosynthesis in reverse."},{"id":"cellular-respiration::1","doc":"cellular-respiration","title":"How Cells Release Energy From Sugar","topic":"biology","text":"It takes in glucose and oxygen and breaks the sugar down step by step inside the mitochondria."},{"id":"cellular-respiration::2","doc":"cellular-respiration","title":"How Cells Release Energy From Sugar","topic":"biology","text":"The freed energy is captured as ATP, the same carrier molecule that powers most of the work a living cell does."},{"id":"cellular-respiration::3","doc":"cellular-respiration","title":"How Cells Release Energy From Sugar","topic":"biology","text":"Unlike photosynthesis, respiration gives off carbon dioxide and water as its waste products."},{"id":"cellular-respiration::4","doc":"cellular-respiration","title":"How Cells Release Energy From Sugar","topic":"biology","text":"Most of the ATP is made in the electron transport chain, where oxygen serves as the final acceptor of electrons."},{"id":"cellular-respiration::5","doc":"cellular-respiration","title":"How Cells Release Energy From Sugar","topic":"biology","text":"Because it needs no light, respiration runs day and night in nearly every cell of the body."},{"id":"decision-trees::0","doc":"decision-trees","title":"Decision Trees and Random Forests","topic":"machine-learning","text":"A decision tree is a model that makes a prediction by asking a sequence of yes or no questions about the input."},{"id":"decision-trees::1","doc":"decision-trees","title":"Decision Trees and Random Forests","topic":"machine-learning","text":"Each internal node splits the data on one feature, sending an example down the branch that matches its value."},{"id":"decision-trees::2","doc":"decision-trees","title":"Decision Trees and Random Forests","topic":"machine-learning","text":"Training grows the tree by picking, at every node, the split that best separates the classes, often scored by information gain."},{"id":"decision-trees::3","doc":"decision-trees","title":"Decision Trees and Random Forests","topic":"machine-learning","text":"A tree grown too deep will overfit, carving out a tiny leaf for almost every training example it saw."},{"id":"decision-trees::4","doc":"decision-trees","title":"Decision Trees and Random Forests","topic":"machine-learning","text":"Pruning trims those weak branches back so the tree generalizes to data it has never seen before."},{"id":"decision-trees::5","doc":"decision-trees","title":"Decision Trees and Random Forests","topic":"machine-learning","text":"A random forest averages many such trees, each trained on a random slice of the data, to get a steadier prediction."},{"id":"neutron-stars::0","doc":"neutron-stars","title":"Neutron Stars and Pulsars","topic":"astronomy","text":"A neutron star is the collapsed core left behind after a massive star explodes as a supernova."},{"id":"neutron-stars::1","doc":"neutron-stars","title":"Neutron Stars and Pulsars","topic":"astronomy","text":"Gravity crushes the core so hard that protons and electrons merge into neutrons packed at nuclear density."},{"id":"neutron-stars::2","doc":"neutron-stars","title":"Neutron Stars and Pulsars","topic":"astronomy","text":"A single teaspoon of that material would weigh about as much as a mountain here on Earth."},{"id":"neutron-stars::3","doc":"neutron-stars","title":"Neutron Stars and Pulsars","topic":"astronomy","text":"Many neutron stars spin quickly and beam radio waves from their magnetic poles, so we see them pulse as they rotate."},{"id":"neutron-stars::4","doc":"neutron-stars","title":"Neutron Stars and Pulsars","topic":"astronomy","text":"Those pulsing neutron stars are called pulsars, and the timing of their beats is astonishingly regular."},{"id":"neutron-stars::5","doc":"neutron-stars","title":"Neutron Stars and Pulsars","topic":"astronomy","text":"Unlike a black hole, a neutron star still has a real solid surface, because its collapse stopped short of an event horizon."},{"id":"tea-brewing::0","doc":"tea-brewing","title":"Steeping a Better Cup of Tea","topic":"food","text":"Brewing tea is a gentle extraction that pulls color, aroma, and tannins out of dried leaves and into hot water."},{"id":"tea-brewing::1","doc":"tea-brewing","title":"Steeping a Better Cup of Tea","topic":"food","text":"Green tea is best steeped below boiling, around eighty degrees celsius, or the leaves turn harsh and bitter."},{"id":"tea-brewing::2","doc":"tea-brewing","title":"Steeping a Better Cup of Tea","topic":"food","text":"Black tea by contrast is usually steeped in water just off the boil for three to five minutes."},{"id":"tea-brewing::3","doc":"tea-brewing","title":"Steeping a Better Cup of Tea","topic":"food","text":"Steeping for too long releases extra tannins, and those tannins are what make an over brewed cup taste astringent."},{"id":"tea-brewing::4","doc":"tea-brewing","title":"Steeping a Better Cup of Tea","topic":"food","text":"Caffeine in tea comes out faster than the tannins, so a short steep is livelier while a long steep is stronger and rougher."},{"id":"tea-brewing::5","doc":"tea-brewing","title":"Steeping a Better Cup of Tea","topic":"food","text":"Water quality matters as well, since very hard water can flatten the delicate aroma of a good tea."},{"id":"gothic-cathedrals::0","doc":"gothic-cathedrals","title":"The Engineering of Gothic Cathedrals","topic":"history","text":"Gothic cathedrals were medieval churches built to be tall, filled with light, and covered in carved stone tracery."},{"id":"gothic-cathedrals::1","doc":"gothic-cathedrals","title":"The Engineering of Gothic Cathedrals","topic":"history","text":"The pointed arch was the key innovation, since it carried weight downward far more efficiently than the older rounded arch."},{"id":"gothic-cathedrals::2","doc":"gothic-cathedrals","title":"The Engineering of Gothic Cathedrals","topic":"history","text":"Flying buttresses on the outside caught the outward thrust of the roof and let the walls be built thinner and taller."},{"id":"gothic-cathedrals::3","doc":"gothic-cathedrals","title":"The Engineering of Gothic Cathedrals","topic":"history","text":"With the walls freed from carrying so much load, builders filled them with enormous panels of stained glass."},{"id":"gothic-cathedrals::4","doc":"gothic-cathedrals","title":"The Engineering of Gothic Cathedrals","topic":"history","text":"The ribbed vault spread the weight of the ceiling onto slender columns instead of heavy solid walls."},{"id":"gothic-cathedrals::5","doc":"gothic-cathedrals","title":"The Engineering of Gothic Cathedrals","topic":"history","text":"Raising one could take well over a century, passing from one generation of masons to the next."},{"id":"jazz-history::0","doc":"jazz-history","title":"The Roots of American Jazz","topic":"music","text":"Jazz grew up in New Orleans in the early twentieth century, blending blues, ragtime, and brass band marching music."},{"id":"jazz-history::1","doc":"jazz-history","title":"The Roots of American Jazz","topic":"music","text":"Improvisation is at the heart of the music, with players inventing new melodies over a repeating chord progression on the spot."},{"id":"jazz-history::2","doc":"jazz-history","title":"The Roots of American Jazz","topic":"music","text":"Swing rhythm gives jazz its characteristic bounce by stretching and delaying certain beats rather than playing them evenly."},{"id":"jazz-history::3","doc":"jazz-history","title":"The Roots of American Jazz","topic":"music","text":"The big band era of the nineteen thirties filled dance halls with large ensembles led by figures like Duke Ellington and Count Basie."},{"id":"jazz-history::4","doc":"jazz-history","title":"The Roots of American Jazz","topic":"music","text":"Bebop later stripped the music back to small groups playing fast, harmonically daring lines aimed at listeners rather than dancers."},{"id":"jazz-history::5","doc":"jazz-history","title":"The Roots of American Jazz","topic":"music","text":"Call and response, borrowed from African musical tradition, lets soloists and the band trade phrases back and forth."}],"queries":[{"q":"why do leaves look green","rel":["photosynthesis::2"]},{"q":"where does the oxygen we breathe come from","rel":["photosynthesis::6"]},{"q":"how does a plant fix carbon dioxide into sugar","rel":["photosynthesis::4"]},{"q":"what pigment gives leaves their color","rel":["photosynthesis::1"]},{"q":"what does backpropagation compute","rel":["neural-nets::2"]},{"q":"how do neural networks avoid overfitting","rel":["neural-nets::5"]},{"q":"what is a nonlinear activation function used for","rel":["neural-nets::3"]},{"q":"how does training adjust the weights of a network","rel":["neural-nets::1"]},{"q":"how did roman aqueducts move water without pumps","rel":["roman-aqueducts::0"]},{"q":"why were aqueduct channels built underground","rel":["roman-aqueducts::3"]},{"q":"why did romans build arched bridges","rel":["roman-aqueducts::2"]},{"q":"what did aqueduct water supply inside the city","rel":["roman-aqueducts::4"]},{"q":"difference between magma and lava","rel":["volcanoes::1"]},{"q":"what makes a volcanic eruption explosive","rel":["volcanoes::3"]},{"q":"what drives a volcanic eruption","rel":["volcanoes::2"]},{"q":"where are most volcanoes located","rel":["volcanoes::4"]},{"q":"best water temperature for brewing coffee","rel":["coffee-brewing::1"]},{"q":"why does coffee taste bitter or sour","rel":["coffee-brewing::3"]},{"q":"how does grind size affect extraction","rel":["coffee-brewing::2"]},{"q":"what coffee to water ratio should i use","rel":["coffee-brewing::4"]},{"q":"what is the event horizon of a black hole","rel":["black-holes::1"]},{"q":"how do black holes form from stars","rel":["black-holes::2"]},{"q":"what is at the center of a black hole","rel":["black-holes::3"]},{"q":"how do astronomers locate a black hole","rel":["black-holes::5"]},{"q":"how do vaccines train the immune system","rel":["immune-system::5"]},{"q":"what is the adaptive immune response","rel":["immune-system::2"]},{"q":"what do white blood cells do","rel":["immune-system::3"]},{"q":"what is the innate immune response","rel":["immune-system::1"]},{"q":"how does a blockchain resist tampering with records","rel":["blockchain::1"]},{"q":"what is proof of work consensus","rel":["blockchain::3"]},{"q":"why is a blockchain called decentralized","rel":["blockchain::2"]},{"q":"what do private keys do in a blockchain","rel":["blockchain::5"]},{"q":"what drives deep ocean currents","rel":["ocean-currents::2"]},{"q":"how do ocean currents keep europe mild","rel":["ocean-currents::4"]},{"q":"what pushes surface ocean currents","rel":["ocean-currents::1"]},{"q":"where did jazz music originate","rel":["jazz-history::0"]},{"q":"what is improvisation in jazz","rel":["jazz-history::1"]},{"q":"what is bebop","rel":["jazz-history::4"]},{"q":"what is swing rhythm in jazz","rel":["jazz-history::2"]},{"q":"which process releases carbon dioxide as waste","rel":["cellular-respiration::3"]},{"q":"where is atp made during respiration","rel":["cellular-respiration::4"]},{"q":"what does cellular respiration break down for energy","rel":["cellular-respiration::1"]},{"q":"how does a decision tree choose where to split","rel":["decision-trees::2"]},{"q":"what is pruning in a decision tree","rel":["decision-trees::4"]},{"q":"what is a random forest","rel":["decision-trees::5"]},{"q":"what is a pulsar","rel":["neutron-stars::4"]},{"q":"how dense is a neutron star","rel":["neutron-stars::2"]},{"q":"how is a neutron star different from a black hole","rel":["neutron-stars::5"]},{"q":"what temperature should i steep green tea at","rel":["tea-brewing::1"]},{"q":"why does over steeped tea taste astringent","rel":["tea-brewing::3"]},{"q":"what is a flying buttress for","rel":["gothic-cathedrals::2"]},{"q":"why did gothic builders use pointed arches","rel":["gothic-cathedrals::1"]},{"q":"what held up the ceiling in a gothic cathedral","rel":["gothic-cathedrals::4"]}],"chips":["which process releases carbon dioxide as waste","what is pruning in a decision tree","how is a neutron star different from a black hole","best water temperature for brewing coffee","why does over steeped tea taste astringent","what drives a volcanic eruption","how do vaccines train the immune system","where did jazz music originate"],"stopwords":["a","about","again","all","an","and","any","are","as","at","be","because","been","being","between","both","but","by","can","did","difference","differences","do","does","down","each","few","for","from","further","here","how","if","in","into","is","it","its","just","many","more","most","much","no","nor","not","of","on","once","only","or","other","our","out","over","own","same","so","some","such","than","that","the","their","them","then","there","these","they","this","those","to","too","under","up","us","versus","very","was","we","were","what","when","where","which","who","whom","whose","why","will","with","you","your"],"irregular":{"driven":"drive","drives":"drive","driving":"drive","drove":"drive","found":"find","built":"build","sank":"sink","sunk":"sink","grew":"grow","grown":"grow","met":"meet","ran":"run","run":"run","rose":"rise","risen":"rise"},"config":{"k1":1.5,"b":0.75,"k_rrf":60,"pool":20,"top_k":10,"rerank_pool":10,"fs_w":0.2,"cov_w":0.5,"prox_w":0.3,"ks":[1,3,5,10],"ndcg_k":5},"index":{"N":91,"avgdl":12.0549,"vocab":717,"df":{"photosynthesi":3,"process":3,"green":4,"plant":2,"use":2,"convert":1,"light":8,"energy":4,"chemical":1,"stored":1,"sugar":4,"happen":2,"inside":4,"chloroplast":1,"small":2,"organelle":1,"packed":2,"pigment":1,"chlorophyll":2,"absorb":1,"mostly":1,"red":1,"blue":2,"reflect":1,"leave":4,"look":2,"human":1,"eye":1,"absorbed":1,"drive":4,"splitting":2,"water":16,"molecule":2,"oxygen":4,"proton":2,"electron":3,"calvin":1,"cycle":1,"fix":1,"carbon":4,"dioxide":3,"air":1,"three":2,"fixation":1,"powered":1,"carrier":2,"atp":3,"nadph":1,"reaction":1,"produce":2,"released":1,"product":2,"source":1,"almost":2,"atmosphere":1,"animal":1,"breathe":1,"neural":1,"network":6,"model":2,"build":5,"layer":2,"simple":1,"unit":2,"called":4,"neuron":1,"compute":2,"weighted":1,"sum":1,"input":3,"connection":1,"has":4,"weight":5,"training":4,"adjust":1,"map":1,"output":1,"want":1,"backpropagation":1,"gradient":2,"loss":1,"function":2,"respect":1,"every":6,"descent":1,"nudge":1,"lower":1,"nonlinear":1,"activation":1,"rectified":1,"linear":1,"let":5,"represent":1,"complicated":1,"curved":2,"decision":2,"boundary":4,"deep":4,"stack":1,"learn":1,"feature":2,"find":2,"below":2,"overfitting":1,"memoriz":1,"set":2,"method":1,"like":4,"dropout":1,"decay":1,"push":1,"generalize":1,"instead":3,"roman":3,"aqueduct":1,"carried":2,"fresh":1,"across":2,"long":3,"distance":1,"city":2,"using":2,"nothing":1,"steady":2,"downhill":1,"gravity":4,"engineer":1,"surveyed":1,"route":1,"channel":3,"dropped":1,"feet":1,"per":1,"mile":1,"gentle":3,"slope":1,"kept":1,"moving":1,"without":2,"eroding":1,"stone":2,"valley":1,"blocked":1,"path":2,"towering":1,"arched":1,"bridge":1,"keep":2,"right":2,"height":1,"actually":1,"run":3,"underground":2,"protected":1,"supply":1,"fouling":1,"enemy":1,"tampering":1,"during":1,"siege":1,"end":1,"fed":1,"public":2,"fountain":1,"private":2,"home":1,"large":4,"bath":1,"central":1,"daily":1,"life":1,"lead":1,"terracotta":1,"pipe":1,"distributed":1,"flow":5,"overflow":1,"used":1,"flush":1,"sewer":1,"beneath":1,"street":1,"volcano":1,"vent":1,"molten":2,"rock":2,"ash":1,"gas":4,"escape":5,"planet":2,"surface":5,"magma":3,"erupt":1,"onto":2,"lava":2,"dissolved":1,"eruption":2,"pressure":1,"trapped":1,"shaken":1,"bottle":1,"soda":1,"thick":1,"sticky":1,"trap":1,"violent":1,"explosive":1,"while":4,"runny":1,"volcanoe":1,"sit":2,"along":2,"tectonic":1,"plate":1,"crust":1,"either":1,"pulling":2,"apart":1,"grinding":1,"together":2,"ring":1,"fire":1,"around":3,"pacific":1,"ocean":2,"volcanically":1,"active":1,"region":3,"earth":3,"host":1,"frequent":1,"earthquake":1,"well":3,"brewing":2,"coffee":2,"really":1,"extraction":4,"flavor":1,"compound":2,"ground":2,"bean":2,"hot":2,"temperature":2,"matter":3,"brewer":1,"aim":1,"roughly":1,"ninety":1,"six":1,"degree":2,"celsiu":2,"extract":2,"evenly":2,"grind":1,"size":1,"control":2,"area":1,"finer":1,"faster":3,"coarse":1,"slowly":1,"cup":2,"sour":1,"thin":1,"pull":2,"bitter":2,"make":4,"harsh":2,"ratio":1,"strength":1,"people":1,"start":1,"near":2,"one":3,"gram":1,"sixteen":1,"freshly":1,"roasted":1,"release":2,"letting":1,"bloom":1,"first":2,"cleaner":1,"black":6,"hole":5,"space":1,"strong":1,"even":1,"cross":1,"event":2,"horizon":2,"mark":1,"point":2,"return":1,"anything":2,"falling":1,"inward":1,"form":1,"massive":2,"star":5,"fuel":1,"core":3,"collaps":1,"center":2,"mass":1,"crushed":1,"singularity":1,"known":1,"law":1,"physic":1,"stop":1,"giving":1,"sensible":1,"answer":1,"supermassive":1,"million":1,"time":1,"heavier":1,"sun":1,"galaxy":1,"including":1,"although":1,"cannot":1,"spiraling":1,"heat":2,"glow":1,"brightly":1,"astronomer":1,"locate":1,"immune":2,"system":2,"body":2,"defense":1,"destroy":1,"germ":1,"bacteria":1,"virus":1,"innate":1,"response":3,"act":2,"fast":2,"barrier":1,"cell":6,"inflammation":1,"attack":1,"foreign":1,"adaptive":1,"slower":1,"specific":1,"building":1,"antibody":1,"tailored":1,"exact":1,"pathogen":3,"meet":2,"white":1,"blood":1,"main":1,"soldier":1,"different":1,"type":1,"swallow":1,"microbe":1,"flag":1,"kill":1,"infected":1,"directly":1,"after":2,"infection":1,"clear":1,"memory":2,"linger":1,"second":1,"exposure":1,"vaccine":1,"exploit":1,"showing":1,"harmless":1,"piece":1,"prepare":1,"advance":1,"blockchain":1,"shared":1,"ledger":2,"transaction":2,"grouped":1,"block":3,"chained":1,"order":1,"store":1,"cryptographic":1,"hash":1,"before":2,"changing":1,"old":1,"record":2,"would":3,"break":2,"follow":1,"copied":1,"computer":1,"single":2,"party":1,"decentralized":1,"new":3,"agreed":1,"through":1,"consensu":1,"rule":1,"proof":1,"work":3,"miner":1,"spend":1,"computation":1,"earn":1,"add":1,"rewriting":1,"history":1,"mean":1,"redoing":1,"majority":1,"machine":1,"hard":3,"tamper":1,"key":2,"address":1,"sign":1,"proving":1,"ownership":1,"revealing":1,"secret":1,"itself":1,"current":4,"scale":1,"seawater":1,"move":1,"entire":1,"pushed":1,"mainly":1,"prevailing":1,"wind":1,"steered":1,"rotation":1,"density":2,"depend":2,"salt":1,"content":1,"cold":1,"salty":1,"pole":3,"sink":1,"sea":1,"floor":1,"help":1,"global":1,"conveyor":1,"belt":1,"circulation":1,"carry":1,"warm":1,"tropical":1,"toward":1,"western":1,"europe":1,"milder":1,"latitude":1,"suggest":1,"shift":1,"change":1,"regional":1,"climate":1,"disrupt":1,"nutrient":1,"fishery":1,"cellular":1,"respiration":3,"sense":1,"running":1,"reverse":1,"take":2,"glucose":1,"step":1,"mitochondria":1,"freed":2,"captured":1,"power":1,"living":1,"unlike":2,"give":2,"off":2,"waste":1,"made":1,"transport":1,"chain":1,"serve":1,"final":1,"acceptor":1,"need":1,"day":1,"night":1,"nearly":1,"tree":5,"prediction":2,"asking":1,"sequence":1,"yes":1,"question":1,"internal":1,"node":2,"split":2,"data":3,"sending":1,"example":2,"branch":2,"match":1,"value":1,"grow":3,"picking":1,"best":2,"separate":1,"class":1,"often":1,"scored":1,"information":1,"gain":1,"overfit":1,"carving":1,"tiny":1,"leaf":1,"saw":1,"pruning":1,"trim":1,"weak":1,"back":3,"generaliz":1,"never":1,"seen":1,"random":1,"forest":1,"average":1,"trained":1,"slice":1,"get":1,"steadier":1,"neutron":5,"collapsed":1,"left":1,"behind":1,"explode":1,"supernova":1,"crush":1,"merge":1,"nuclear":1,"teaspoon":1,"material":1,"weigh":1,"mountain":1,"spin":1,"quickly":1,"beam":1,"radio":1,"wave":1,"magnetic":1,"see":1,"pulse":1,"rotate":1,"pulsing":1,"pulsar":1,"timing":1,"beat":2,"astonishingly":1,"regular":1,"still":1,"real":1,"solid":2,"collapse":1,"stopped":1,"short":2,"tea":5,"color":1,"aroma":2,"tannin":3,"dried":1,"steeped":2,"boiling":1,"eighty":1,"turn":1,"contrast":1,"usually":1,"boil":1,"five":1,"minute":1,"steeping":1,"releas":1,"extra":1,"brewed":1,"taste":1,"astringent":1,"caffeine":1,"come":1,"steep":1,"livelier":1,"stronger":1,"rougher":1,"quality":1,"since":2,"flatten":1,"delicate":1,"good":1,"gothic":1,"cathedral":1,"medieval":1,"church":1,"tall":1,"filled":3,"covered":1,"carved":1,"tracery":1,"pointed":1,"arch":1,"innovation":1,"downward":1,"far":1,"efficiently":1,"older":1,"rounded":1,"flying":1,"buttress":1,"outside":1,"caught":1,"outward":1,"thrust":1,"roof":1,"wall":3,"thinner":1,"taller":1,"carrying":1,"load":1,"builder":1,"enormou":1,"panel":1,"stained":1,"glass":1,"ribbed":1,"vault":1,"spread":1,"ceiling":1,"slender":1,"column":1,"heavy":1,"raising":1,"could":1,"century":2,"passing":1,"generation":1,"mason":1,"next":1,"jazz":2,"orlean":1,"early":1,"twentieth":1,"blending":1,"ragtime":1,"brass":1,"band":3,"marching":1,"music":3,"improvisation":1,"heart":1,"player":1,"inventing":1,"melody":1,"repeating":1,"chord":1,"progression":1,"spot":1,"swing":1,"rhythm":1,"characteristic":1,"bounce":1,"stretching":1,"delaying":1,"certain":1,"rather":2,"playing":2,"big":1,"era":1,"nineteen":1,"thirty":1,"dance":1,"hall":1,"ensemble":1,"led":1,"figure":1,"duke":1,"ellington":1,"count":1,"basie":1,"bebop":1,"later":1,"stripped":1,"group":1,"harmonically":1,"daring":1,"line":1,"aimed":1,"listener":1,"dancer":1,"call":1,"borrowed":1,"african":1,"musical":1,"tradition":1,"soloist":1,"trade":1,"phras":1,"forth":1},"bm25_idf":{"photosynthesi":3.269026,"process":3.269026,"green":3.017711,"plant":3.605498,"use":3.605498,"convert":4.116323,"light":2.381722,"energy":3.017711,"chemical":4.116323,"stored":4.116323,"sugar":3.017711,"happen":3.605498,"inside":3.017711,"chloroplast":4.116323,"small":3.605498,"organelle":4.116323,"packed":3.605498,"pigment":4.116323,"chlorophyll":3.605498,"absorb":4.116323,"mostly":4.116323,"red":4.116323,"blue":3.605498,"reflect":4.116323,"leave":3.017711,"look":3.605498,"human":4.116323,"eye":4.116323,"absorbed":4.116323,"drive":3.017711,"splitting":3.605498,"water":1.718428,"molecule":3.605498,"oxygen":3.017711,"proton":3.605498,"electron":3.269026,"calvin":4.116323,"cycle":4.116323,"fix":4.116323,"carbon":3.017711,"dioxide":3.269026,"air":4.116323,"three":3.605498,"fixation":4.116323,"powered":4.116323,"carrier":3.605498,"atp":3.269026,"nadph":4.116323,"reaction":4.116323,"produce":3.605498,"released":4.116323,"product":3.605498,"source":4.116323,"almost":3.605498,"atmosphere":4.116323,"animal":4.116323,"breathe":4.116323,"neural":4.116323,"network":2.649986,"model":3.605498,"build":2.81704,"layer":3.605498,"simple":4.116323,"unit":3.605498,"called":3.017711,"neuron":4.116323,"compute":3.605498,"weighted":4.116323,"sum":4.116323,"input":3.269026,"connection":4.116323,"has":3.017711,"weight":2.81704,"training":3.017711,"adjust":4.116323,"map":4.116323,"output":4.116323,"want":4.116323,"backpropagation":4.116323,"gradient":3.605498,"loss":4.116323,"function":3.605498,"respect":4.116323,"every":2.649986,"descent":4.116323,"nudge":4.116323,"lower":4.116323,"nonlinear":4.116323,"activation":4.116323,"rectified":4.116323,"linear":4.116323,"let":2.81704,"represent":4.116323,"complicated":4.116323,"curved":3.605498,"decision":3.605498,"boundary":3.017711,"deep":3.017711,"stack":4.116323,"learn":4.116323,"feature":3.605498,"find":3.605498,"below":3.605498,"overfitting":4.116323,"memoriz":4.116323,"set":3.605498,"method":4.116323,"like":3.017711,"dropout":4.116323,"decay":4.116323,"push":4.116323,"generalize":4.116323,"instead":3.269026,"roman":3.269026,"aqueduct":4.116323,"carried":3.605498,"fresh":4.116323,"across":3.605498,"long":3.269026,"distance":4.116323,"city":3.605498,"using":3.605498,"nothing":4.116323,"steady":3.605498,"downhill":4.116323,"gravity":3.017711,"engineer":4.116323,"surveyed":4.116323,"route":4.116323,"channel":3.269026,"dropped":4.116323,"feet":4.116323,"per":4.116323,"mile":4.116323,"gentle":3.269026,"slope":4.116323,"kept":4.116323,"moving":4.116323,"without":3.605498,"eroding":4.116323,"stone":3.605498,"valley":4.116323,"blocked":4.116323,"path":3.605498,"towering":4.116323,"arched":4.116323,"bridge":4.116323,"keep":3.605498,"right":3.605498,"height":4.116323,"actually":4.116323,"run":3.269026,"underground":3.605498,"protected":4.116323,"supply":4.116323,"fouling":4.116323,"enemy":4.116323,"tampering":4.116323,"during":4.116323,"siege":4.116323,"end":4.116323,"fed":4.116323,"public":3.605498,"fountain":4.116323,"private":3.605498,"home":4.116323,"large":3.017711,"bath":4.116323,"central":4.116323,"daily":4.116323,"life":4.116323,"lead":4.116323,"terracotta":4.116323,"pipe":4.116323,"distributed":4.116323,"flow":2.81704,"overflow":4.116323,"used":4.116323,"flush":4.116323,"sewer":4.116323,"beneath":4.116323,"street":4.116323,"volcano":4.116323,"vent":4.116323,"molten":3.605498,"rock":3.605498,"ash":4.116323,"gas":3.017711,"escape":2.81704,"planet":3.605498,"surface":2.81704,"magma":3.269026,"erupt":4.116323,"onto":3.605498,"lava":3.605498,"dissolved":4.116323,"eruption":3.605498,"pressure":4.116323,"trapped":4.116323,"shaken":4.116323,"bottle":4.116323,"soda":4.116323,"thick":4.116323,"sticky":4.116323,"trap":4.116323,"violent":4.116323,"explosive":4.116323,"while":3.017711,"runny":4.116323,"volcanoe":4.116323,"sit":3.605498,"along":3.605498,"tectonic":4.116323,"plate":4.116323,"crust":4.116323,"either":4.116323,"pulling":3.605498,"apart":4.116323,"grinding":4.116323,"together":3.605498,"ring":4.116323,"fire":4.116323,"around":3.269026,"pacific":4.116323,"ocean":3.605498,"volcanically":4.116323,"active":4.116323,"region":3.269026,"earth":3.269026,"host":4.116323,"frequent":4.116323,"earthquake":4.116323,"well":3.269026,"brewing":3.605498,"coffee":3.605498,"really":4.116323,"extraction":3.017711,"flavor":4.116323,"compound":3.605498,"ground":3.605498,"bean":3.605498,"hot":3.605498,"temperature":3.605498,"matter":3.269026,"brewer":4.116323,"aim":4.116323,"roughly":4.116323,"ninety":4.116323,"six":4.116323,"degree":3.605498,"celsiu":3.605498,"extract":3.605498,"evenly":3.605498,"grind":4.116323,"size":4.116323,"control":3.605498,"area":4.116323,"finer":4.116323,"faster":3.269026,"coarse":4.116323,"slowly":4.116323,"cup":3.605498,"sour":4.116323,"thin":4.116323,"pull":3.605498,"bitter":3.605498,"make":3.017711,"harsh":3.605498,"ratio":4.116323,"strength":4.116323,"people":4.116323,"start":4.116323,"near":3.605498,"one":3.269026,"gram":4.116323,"sixteen":4.116323,"freshly":4.116323,"roasted":4.116323,"release":3.605498,"letting":4.116323,"bloom":4.116323,"first":3.605498,"cleaner":4.116323,"black":2.649986,"hole":2.81704,"space":4.116323,"strong":4.116323,"even":4.116323,"cross":4.116323,"event":3.605498,"horizon":3.605498,"mark":4.116323,"point":3.605498,"return":4.116323,"anything":3.605498,"falling":4.116323,"inward":4.116323,"form":4.116323,"massive":3.605498,"star":2.81704,"fuel":4.116323,"core":3.269026,"collaps":4.116323,"center":3.605498,"mass":4.116323,"crushed":4.116323,"singularity":4.116323,"known":4.116323,"law":4.116323,"physic":4.116323,"stop":4.116323,"giving":4.116323,"sensible":4.116323,"answer":4.116323,"supermassive":4.116323,"million":4.116323,"time":4.116323,"heavier":4.116323,"sun":4.116323,"galaxy":4.116323,"including":4.116323,"although":4.116323,"cannot":4.116323,"spiraling":4.116323,"heat":3.605498,"glow":4.116323,"brightly":4.116323,"astronomer":4.116323,"locate":4.116323,"immune":3.605498,"system":3.605498,"body":3.605498,"defense":4.116323,"destroy":4.116323,"germ":4.116323,"bacteria":4.116323,"virus":4.116323,"innate":4.116323,"response":3.269026,"act":3.605498,"fast":3.605498,"barrier":4.116323,"cell":2.649986,"inflammation":4.116323,"attack":4.116323,"foreign":4.116323,"adaptive":4.116323,"slower":4.116323,"specific":4.116323,"building":4.116323,"antibody":4.116323,"tailored":4.116323,"exact":4.116323,"pathogen":3.269026,"meet":3.605498,"white":4.116323,"blood":4.116323,"main":4.116323,"soldier":4.116323,"different":4.116323,"type":4.116323,"swallow":4.116323,"microbe":4.116323,"flag":4.116323,"kill":4.116323,"infected":4.116323,"directly":4.116323,"after":3.605498,"infection":4.116323,"clear":4.116323,"memory":3.605498,"linger":4.116323,"second":4.116323,"exposure":4.116323,"vaccine":4.116323,"exploit":4.116323,"showing":4.116323,"harmless":4.116323,"piece":4.116323,"prepare":4.116323,"advance":4.116323,"blockchain":4.116323,"shared":4.116323,"ledger":3.605498,"transaction":3.605498,"grouped":4.116323,"block":3.269026,"chained":4.116323,"order":4.116323,"store":4.116323,"cryptographic":4.116323,"hash":4.116323,"before":3.605498,"changing":4.116323,"old":4.116323,"record":3.605498,"would":3.269026,"break":3.605498,"follow":4.116323,"copied":4.116323,"computer":4.116323,"single":3.605498,"party":4.116323,"decentralized":4.116323,"new":3.269026,"agreed":4.116323,"through":4.116323,"consensu":4.116323,"rule":4.116323,"proof":4.116323,"work":3.269026,"miner":4.116323,"spend":4.116323,"computation":4.116323,"earn":4.116323,"add":4.116323,"rewriting":4.116323,"history":4.116323,"mean":4.116323,"redoing":4.116323,"majority":4.116323,"machine":4.116323,"hard":3.269026,"tamper":4.116323,"key":3.605498,"address":4.116323,"sign":4.116323,"proving":4.116323,"ownership":4.116323,"revealing":4.116323,"secret":4.116323,"itself":4.116323,"current":3.017711,"scale":4.116323,"seawater":4.116323,"move":4.116323,"entire":4.116323,"pushed":4.116323,"mainly":4.116323,"prevailing":4.116323,"wind":4.116323,"steered":4.116323,"rotation":4.116323,"density":3.605498,"depend":3.605498,"salt":4.116323,"content":4.116323,"cold":4.116323,"salty":4.116323,"pole":3.269026,"sink":4.116323,"sea":4.116323,"floor":4.116323,"help":4.116323,"global":4.116323,"conveyor":4.116323,"belt":4.116323,"circulation":4.116323,"carry":4.116323,"warm":4.116323,"tropical":4.116323,"toward":4.116323,"western":4.116323,"europe":4.116323,"milder":4.116323,"latitude":4.116323,"suggest":4.116323,"shift":4.116323,"change":4.116323,"regional":4.116323,"climate":4.116323,"disrupt":4.116323,"nutrient":4.116323,"fishery":4.116323,"cellular":4.116323,"respiration":3.269026,"sense":4.116323,"running":4.116323,"reverse":4.116323,"take":3.605498,"glucose":4.116323,"step":4.116323,"mitochondria":4.116323,"freed":3.605498,"captured":4.116323,"power":4.116323,"living":4.116323,"unlike":3.605498,"give":3.605498,"off":3.605498,"waste":4.116323,"made":4.116323,"transport":4.116323,"chain":4.116323,"serve":4.116323,"final":4.116323,"acceptor":4.116323,"need":4.116323,"day":4.116323,"night":4.116323,"nearly":4.116323,"tree":2.81704,"prediction":3.605498,"asking":4.116323,"sequence":4.116323,"yes":4.116323,"question":4.116323,"internal":4.116323,"node":3.605498,"split":3.605498,"data":3.269026,"sending":4.116323,"example":3.605498,"branch":3.605498,"match":4.116323,"value":4.116323,"grow":3.269026,"picking":4.116323,"best":3.605498,"separate":4.116323,"class":4.116323,"often":4.116323,"scored":4.116323,"information":4.116323,"gain":4.116323,"overfit":4.116323,"carving":4.116323,"tiny":4.116323,"leaf":4.116323,"saw":4.116323,"pruning":4.116323,"trim":4.116323,"weak":4.116323,"back":3.269026,"generaliz":4.116323,"never":4.116323,"seen":4.116323,"random":4.116323,"forest":4.116323,"average":4.116323,"trained":4.116323,"slice":4.116323,"get":4.116323,"steadier":4.116323,"neutron":2.81704,"collapsed":4.116323,"left":4.116323,"behind":4.116323,"explode":4.116323,"supernova":4.116323,"crush":4.116323,"merge":4.116323,"nuclear":4.116323,"teaspoon":4.116323,"material":4.116323,"weigh":4.116323,"mountain":4.116323,"spin":4.116323,"quickly":4.116323,"beam":4.116323,"radio":4.116323,"wave":4.116323,"magnetic":4.116323,"see":4.116323,"pulse":4.116323,"rotate":4.116323,"pulsing":4.116323,"pulsar":4.116323,"timing":4.116323,"beat":3.605498,"astonishingly":4.116323,"regular":4.116323,"still":4.116323,"real":4.116323,"solid":3.605498,"collapse":4.116323,"stopped":4.116323,"short":3.605498,"tea":2.81704,"color":4.116323,"aroma":3.605498,"tannin":3.269026,"dried":4.116323,"steeped":3.605498,"boiling":4.116323,"eighty":4.116323,"turn":4.116323,"contrast":4.116323,"usually":4.116323,"boil":4.116323,"five":4.116323,"minute":4.116323,"steeping":4.116323,"releas":4.116323,"extra":4.116323,"brewed":4.116323,"taste":4.116323,"astringent":4.116323,"caffeine":4.116323,"come":4.116323,"steep":4.116323,"livelier":4.116323,"stronger":4.116323,"rougher":4.116323,"quality":4.116323,"since":3.605498,"flatten":4.116323,"delicate":4.116323,"good":4.116323,"gothic":4.116323,"cathedral":4.116323,"medieval":4.116323,"church":4.116323,"tall":4.116323,"filled":3.269026,"covered":4.116323,"carved":4.116323,"tracery":4.116323,"pointed":4.116323,"arch":4.116323,"innovation":4.116323,"downward":4.116323,"far":4.116323,"efficiently":4.116323,"older":4.116323,"rounded":4.116323,"flying":4.116323,"buttress":4.116323,"outside":4.116323,"caught":4.116323,"outward":4.116323,"thrust":4.116323,"roof":4.116323,"wall":3.269026,"thinner":4.116323,"taller":4.116323,"carrying":4.116323,"load":4.116323,"builder":4.116323,"enormou":4.116323,"panel":4.116323,"stained":4.116323,"glass":4.116323,"ribbed":4.116323,"vault":4.116323,"spread":4.116323,"ceiling":4.116323,"slender":4.116323,"column":4.116323,"heavy":4.116323,"raising":4.116323,"could":4.116323,"century":3.605498,"passing":4.116323,"generation":4.116323,"mason":4.116323,"next":4.116323,"jazz":3.605498,"orlean":4.116323,"early":4.116323,"twentieth":4.116323,"blending":4.116323,"ragtime":4.116323,"brass":4.116323,"band":3.269026,"marching":4.116323,"music":3.269026,"improvisation":4.116323,"heart":4.116323,"player":4.116323,"inventing":4.116323,"melody":4.116323,"repeating":4.116323,"chord":4.116323,"progression":4.116323,"spot":4.116323,"swing":4.116323,"rhythm":4.116323,"characteristic":4.116323,"bounce":4.116323,"stretching":4.116323,"delaying":4.116323,"certain":4.116323,"rather":3.605498,"playing":3.605498,"big":4.116323,"era":4.116323,"nineteen":4.116323,"thirty":4.116323,"dance":4.116323,"hall":4.116323,"ensemble":4.116323,"led":4.116323,"figure":4.116323,"duke":4.116323,"ellington":4.116323,"count":4.116323,"basie":4.116323,"bebop":4.116323,"later":4.116323,"stripped":4.116323,"group":4.116323,"harmonically":4.116323,"daring":4.116323,"line":4.116323,"aimed":4.116323,"listener":4.116323,"dancer":4.116323,"call":4.116323,"borrowed":4.116323,"african":4.116323,"musical":4.116323,"tradition":4.116323,"soloist":4.116323,"trade":4.116323,"phras":4.116323,"forth":4.116323},"tfidf_idf":{"photosynthesi":4.412247,"process":4.412247,"green":4.124565,"plant":4.817712,"use":4.817712,"convert":5.51086,"light":3.431418,"energy":4.124565,"chemical":5.51086,"stored":5.51086,"sugar":4.124565,"happen":4.817712,"inside":4.124565,"chloroplast":5.51086,"small":4.817712,"organelle":5.51086,"packed":4.817712,"pigment":5.51086,"chlorophyll":4.817712,"absorb":5.51086,"mostly":5.51086,"red":5.51086,"blue":4.817712,"reflect":5.51086,"leave":4.124565,"look":4.817712,"human":5.51086,"eye":5.51086,"absorbed":5.51086,"drive":4.124565,"splitting":4.817712,"water":2.738271,"molecule":4.817712,"oxygen":4.124565,"proton":4.817712,"electron":4.412247,"calvin":5.51086,"cycle":5.51086,"fix":5.51086,"carbon":4.124565,"dioxide":4.412247,"air":5.51086,"three":4.817712,"fixation":5.51086,"powered":5.51086,"carrier":4.817712,"atp":4.412247,"nadph":5.51086,"reaction":5.51086,"produce":4.817712,"released":5.51086,"product":4.817712,"source":5.51086,"almost":4.817712,"atmosphere":5.51086,"animal":5.51086,"breathe":5.51086,"neural":5.51086,"network":3.7191,"model":4.817712,"build":3.901422,"layer":4.817712,"simple":5.51086,"unit":4.817712,"called":4.124565,"neuron":5.51086,"compute":4.817712,"weighted":5.51086,"sum":5.51086,"input":4.412247,"connection":5.51086,"has":4.124565,"weight":3.901422,"training":4.124565,"adjust":5.51086,"map":5.51086,"output":5.51086,"want":5.51086,"backpropagation":5.51086,"gradient":4.817712,"loss":5.51086,"function":4.817712,"respect":5.51086,"every":3.7191,"descent":5.51086,"nudge":5.51086,"lower":5.51086,"nonlinear":5.51086,"activation":5.51086,"rectified":5.51086,"linear":5.51086,"let":3.901422,"represent":5.51086,"complicated":5.51086,"curved":4.817712,"decision":4.817712,"boundary":4.124565,"deep":4.124565,"stack":5.51086,"learn":5.51086,"feature":4.817712,"find":4.817712,"below":4.817712,"overfitting":5.51086,"memoriz":5.51086,"set":4.817712,"method":5.51086,"like":4.124565,"dropout":5.51086,"decay":5.51086,"push":5.51086,"generalize":5.51086,"instead":4.412247,"roman":4.412247,"aqueduct":5.51086,"carried":4.817712,"fresh":5.51086,"across":4.817712,"long":4.412247,"distance":5.51086,"city":4.817712,"using":4.817712,"nothing":5.51086,"steady":4.817712,"downhill":5.51086,"gravity":4.124565,"engineer":5.51086,"surveyed":5.51086,"route":5.51086,"channel":4.412247,"dropped":5.51086,"feet":5.51086,"per":5.51086,"mile":5.51086,"gentle":4.412247,"slope":5.51086,"kept":5.51086,"moving":5.51086,"without":4.817712,"eroding":5.51086,"stone":4.817712,"valley":5.51086,"blocked":5.51086,"path":4.817712,"towering":5.51086,"arched":5.51086,"bridge":5.51086,"keep":4.817712,"right":4.817712,"height":5.51086,"actually":5.51086,"run":4.412247,"underground":4.817712,"protected":5.51086,"supply":5.51086,"fouling":5.51086,"enemy":5.51086,"tampering":5.51086,"during":5.51086,"siege":5.51086,"end":5.51086,"fed":5.51086,"public":4.817712,"fountain":5.51086,"private":4.817712,"home":5.51086,"large":4.124565,"bath":5.51086,"central":5.51086,"daily":5.51086,"life":5.51086,"lead":5.51086,"terracotta":5.51086,"pipe":5.51086,"distributed":5.51086,"flow":3.901422,"overflow":5.51086,"used":5.51086,"flush":5.51086,"sewer":5.51086,"beneath":5.51086,"street":5.51086,"volcano":5.51086,"vent":5.51086,"molten":4.817712,"rock":4.817712,"ash":5.51086,"gas":4.124565,"escape":3.901422,"planet":4.817712,"surface":3.901422,"magma":4.412247,"erupt":5.51086,"onto":4.817712,"lava":4.817712,"dissolved":5.51086,"eruption":4.817712,"pressure":5.51086,"trapped":5.51086,"shaken":5.51086,"bottle":5.51086,"soda":5.51086,"thick":5.51086,"sticky":5.51086,"trap":5.51086,"violent":5.51086,"explosive":5.51086,"while":4.124565,"runny":5.51086,"volcanoe":5.51086,"sit":4.817712,"along":4.817712,"tectonic":5.51086,"plate":5.51086,"crust":5.51086,"either":5.51086,"pulling":4.817712,"apart":5.51086,"grinding":5.51086,"together":4.817712,"ring":5.51086,"fire":5.51086,"around":4.412247,"pacific":5.51086,"ocean":4.817712,"volcanically":5.51086,"active":5.51086,"region":4.412247,"earth":4.412247,"host":5.51086,"frequent":5.51086,"earthquake":5.51086,"well":4.412247,"brewing":4.817712,"coffee":4.817712,"really":5.51086,"extraction":4.124565,"flavor":5.51086,"compound":4.817712,"ground":4.817712,"bean":4.817712,"hot":4.817712,"temperature":4.817712,"matter":4.412247,"brewer":5.51086,"aim":5.51086,"roughly":5.51086,"ninety":5.51086,"six":5.51086,"degree":4.817712,"celsiu":4.817712,"extract":4.817712,"evenly":4.817712,"grind":5.51086,"size":5.51086,"control":4.817712,"area":5.51086,"finer":5.51086,"faster":4.412247,"coarse":5.51086,"slowly":5.51086,"cup":4.817712,"sour":5.51086,"thin":5.51086,"pull":4.817712,"bitter":4.817712,"make":4.124565,"harsh":4.817712,"ratio":5.51086,"strength":5.51086,"people":5.51086,"start":5.51086,"near":4.817712,"one":4.412247,"gram":5.51086,"sixteen":5.51086,"freshly":5.51086,"roasted":5.51086,"release":4.817712,"letting":5.51086,"bloom":5.51086,"first":4.817712,"cleaner":5.51086,"black":3.7191,"hole":3.901422,"space":5.51086,"strong":5.51086,"even":5.51086,"cross":5.51086,"event":4.817712,"horizon":4.817712,"mark":5.51086,"point":4.817712,"return":5.51086,"anything":4.817712,"falling":5.51086,"inward":5.51086,"form":5.51086,"massive":4.817712,"star":3.901422,"fuel":5.51086,"core":4.412247,"collaps":5.51086,"center":4.817712,"mass":5.51086,"crushed":5.51086,"singularity":5.51086,"known":5.51086,"law":5.51086,"physic":5.51086,"stop":5.51086,"giving":5.51086,"sensible":5.51086,"answer":5.51086,"supermassive":5.51086,"million":5.51086,"time":5.51086,"heavier":5.51086,"sun":5.51086,"galaxy":5.51086,"including":5.51086,"although":5.51086,"cannot":5.51086,"spiraling":5.51086,"heat":4.817712,"glow":5.51086,"brightly":5.51086,"astronomer":5.51086,"locate":5.51086,"immune":4.817712,"system":4.817712,"body":4.817712,"defense":5.51086,"destroy":5.51086,"germ":5.51086,"bacteria":5.51086,"virus":5.51086,"innate":5.51086,"response":4.412247,"act":4.817712,"fast":4.817712,"barrier":5.51086,"cell":3.7191,"inflammation":5.51086,"attack":5.51086,"foreign":5.51086,"adaptive":5.51086,"slower":5.51086,"specific":5.51086,"building":5.51086,"antibody":5.51086,"tailored":5.51086,"exact":5.51086,"pathogen":4.412247,"meet":4.817712,"white":5.51086,"blood":5.51086,"main":5.51086,"soldier":5.51086,"different":5.51086,"type":5.51086,"swallow":5.51086,"microbe":5.51086,"flag":5.51086,"kill":5.51086,"infected":5.51086,"directly":5.51086,"after":4.817712,"infection":5.51086,"clear":5.51086,"memory":4.817712,"linger":5.51086,"second":5.51086,"exposure":5.51086,"vaccine":5.51086,"exploit":5.51086,"showing":5.51086,"harmless":5.51086,"piece":5.51086,"prepare":5.51086,"advance":5.51086,"blockchain":5.51086,"shared":5.51086,"ledger":4.817712,"transaction":4.817712,"grouped":5.51086,"block":4.412247,"chained":5.51086,"order":5.51086,"store":5.51086,"cryptographic":5.51086,"hash":5.51086,"before":4.817712,"changing":5.51086,"old":5.51086,"record":4.817712,"would":4.412247,"break":4.817712,"follow":5.51086,"copied":5.51086,"computer":5.51086,"single":4.817712,"party":5.51086,"decentralized":5.51086,"new":4.412247,"agreed":5.51086,"through":5.51086,"consensu":5.51086,"rule":5.51086,"proof":5.51086,"work":4.412247,"miner":5.51086,"spend":5.51086,"computation":5.51086,"earn":5.51086,"add":5.51086,"rewriting":5.51086,"history":5.51086,"mean":5.51086,"redoing":5.51086,"majority":5.51086,"machine":5.51086,"hard":4.412247,"tamper":5.51086,"key":4.817712,"address":5.51086,"sign":5.51086,"proving":5.51086,"ownership":5.51086,"revealing":5.51086,"secret":5.51086,"itself":5.51086,"current":4.124565,"scale":5.51086,"seawater":5.51086,"move":5.51086,"entire":5.51086,"pushed":5.51086,"mainly":5.51086,"prevailing":5.51086,"wind":5.51086,"steered":5.51086,"rotation":5.51086,"density":4.817712,"depend":4.817712,"salt":5.51086,"content":5.51086,"cold":5.51086,"salty":5.51086,"pole":4.412247,"sink":5.51086,"sea":5.51086,"floor":5.51086,"help":5.51086,"global":5.51086,"conveyor":5.51086,"belt":5.51086,"circulation":5.51086,"carry":5.51086,"warm":5.51086,"tropical":5.51086,"toward":5.51086,"western":5.51086,"europe":5.51086,"milder":5.51086,"latitude":5.51086,"suggest":5.51086,"shift":5.51086,"change":5.51086,"regional":5.51086,"climate":5.51086,"disrupt":5.51086,"nutrient":5.51086,"fishery":5.51086,"cellular":5.51086,"respiration":4.412247,"sense":5.51086,"running":5.51086,"reverse":5.51086,"take":4.817712,"glucose":5.51086,"step":5.51086,"mitochondria":5.51086,"freed":4.817712,"captured":5.51086,"power":5.51086,"living":5.51086,"unlike":4.817712,"give":4.817712,"off":4.817712,"waste":5.51086,"made":5.51086,"transport":5.51086,"chain":5.51086,"serve":5.51086,"final":5.51086,"acceptor":5.51086,"need":5.51086,"day":5.51086,"night":5.51086,"nearly":5.51086,"tree":3.901422,"prediction":4.817712,"asking":5.51086,"sequence":5.51086,"yes":5.51086,"question":5.51086,"internal":5.51086,"node":4.817712,"split":4.817712,"data":4.412247,"sending":5.51086,"example":4.817712,"branch":4.817712,"match":5.51086,"value":5.51086,"grow":4.412247,"picking":5.51086,"best":4.817712,"separate":5.51086,"class":5.51086,"often":5.51086,"scored":5.51086,"information":5.51086,"gain":5.51086,"overfit":5.51086,"carving":5.51086,"tiny":5.51086,"leaf":5.51086,"saw":5.51086,"pruning":5.51086,"trim":5.51086,"weak":5.51086,"back":4.412247,"generaliz":5.51086,"never":5.51086,"seen":5.51086,"random":5.51086,"forest":5.51086,"average":5.51086,"trained":5.51086,"slice":5.51086,"get":5.51086,"steadier":5.51086,"neutron":3.901422,"collapsed":5.51086,"left":5.51086,"behind":5.51086,"explode":5.51086,"supernova":5.51086,"crush":5.51086,"merge":5.51086,"nuclear":5.51086,"teaspoon":5.51086,"material":5.51086,"weigh":5.51086,"mountain":5.51086,"spin":5.51086,"quickly":5.51086,"beam":5.51086,"radio":5.51086,"wave":5.51086,"magnetic":5.51086,"see":5.51086,"pulse":5.51086,"rotate":5.51086,"pulsing":5.51086,"pulsar":5.51086,"timing":5.51086,"beat":4.817712,"astonishingly":5.51086,"regular":5.51086,"still":5.51086,"real":5.51086,"solid":4.817712,"collapse":5.51086,"stopped":5.51086,"short":4.817712,"tea":3.901422,"color":5.51086,"aroma":4.817712,"tannin":4.412247,"dried":5.51086,"steeped":4.817712,"boiling":5.51086,"eighty":5.51086,"turn":5.51086,"contrast":5.51086,"usually":5.51086,"boil":5.51086,"five":5.51086,"minute":5.51086,"steeping":5.51086,"releas":5.51086,"extra":5.51086,"brewed":5.51086,"taste":5.51086,"astringent":5.51086,"caffeine":5.51086,"come":5.51086,"steep":5.51086,"livelier":5.51086,"stronger":5.51086,"rougher":5.51086,"quality":5.51086,"since":4.817712,"flatten":5.51086,"delicate":5.51086,"good":5.51086,"gothic":5.51086,"cathedral":5.51086,"medieval":5.51086,"church":5.51086,"tall":5.51086,"filled":4.412247,"covered":5.51086,"carved":5.51086,"tracery":5.51086,"pointed":5.51086,"arch":5.51086,"innovation":5.51086,"downward":5.51086,"far":5.51086,"efficiently":5.51086,"older":5.51086,"rounded":5.51086,"flying":5.51086,"buttress":5.51086,"outside":5.51086,"caught":5.51086,"outward":5.51086,"thrust":5.51086,"roof":5.51086,"wall":4.412247,"thinner":5.51086,"taller":5.51086,"carrying":5.51086,"load":5.51086,"builder":5.51086,"enormou":5.51086,"panel":5.51086,"stained":5.51086,"glass":5.51086,"ribbed":5.51086,"vault":5.51086,"spread":5.51086,"ceiling":5.51086,"slender":5.51086,"column":5.51086,"heavy":5.51086,"raising":5.51086,"could":5.51086,"century":4.817712,"passing":5.51086,"generation":5.51086,"mason":5.51086,"next":5.51086,"jazz":4.817712,"orlean":5.51086,"early":5.51086,"twentieth":5.51086,"blending":5.51086,"ragtime":5.51086,"brass":5.51086,"band":4.412247,"marching":5.51086,"music":4.412247,"improvisation":5.51086,"heart":5.51086,"player":5.51086,"inventing":5.51086,"melody":5.51086,"repeating":5.51086,"chord":5.51086,"progression":5.51086,"spot":5.51086,"swing":5.51086,"rhythm":5.51086,"characteristic":5.51086,"bounce":5.51086,"stretching":5.51086,"delaying":5.51086,"certain":5.51086,"rather":4.817712,"playing":4.817712,"big":5.51086,"era":5.51086,"nineteen":5.51086,"thirty":5.51086,"dance":5.51086,"hall":5.51086,"ensemble":5.51086,"led":5.51086,"figure":5.51086,"duke":5.51086,"ellington":5.51086,"count":5.51086,"basie":5.51086,"bebop":5.51086,"later":5.51086,"stripped":5.51086,"group":5.51086,"harmonically":5.51086,"daring":5.51086,"line":5.51086,"aimed":5.51086,"listener":5.51086,"dancer":5.51086,"call":5.51086,"borrowed":5.51086,"african":5.51086,"musical":5.51086,"tradition":5.51086,"soloist":5.51086,"trade":5.51086,"phras":5.51086,"forth":5.51086},"doc_len":{"photosynthesis::0":12,"photosynthesis::1":9,"photosynthesis::2":13,"photosynthesis::3":9,"photosynthesis::4":10,"photosynthesis::5":10,"photosynthesis::6":11,"neural-nets::0":13,"neural-nets::1":11,"neural-nets::2":14,"neural-nets::3":13,"neural-nets::4":12,"neural-nets::5":14,"roman-aqueducts::0":15,"roman-aqueducts::1":16,"roman-aqueducts::2":12,"roman-aqueducts::3":12,"roman-aqueducts::4":15,"roman-aqueducts::5":11,"volcanoes::0":11,"volcanoes::1":10,"volcanoes::2":12,"volcanoes::3":19,"volcanoes::4":12,"volcanoes::5":13,"coffee-brewing::0":11,"coffee-brewing::1":13,"coffee-brewing::2":14,"coffee-brewing::3":12,"coffee-brewing::4":15,"coffee-brewing::5":15,"black-holes::0":11,"black-holes::1":10,"black-holes::2":10,"black-holes::3":12,"black-holes::4":12,"black-holes::5":13,"immune-system::0":10,"immune-system::1":13,"immune-system::2":11,"immune-system::3":14,"immune-system::4":11,"immune-system::5":11,"blockchain::0":9,"blockchain::1":14,"blockchain::2":9,"blockchain::3":15,"blockchain::4":11,"blockchain::5":15,"ocean-currents::0":12,"ocean-currents::1":11,"ocean-currents::2":10,"ocean-currents::3":16,"ocean-currents::4":15,"ocean-currents::5":10,"cellular-respiration::0":12,"cellular-respiration::1":9,"cellular-respiration::2":10,"cellular-respiration::3":10,"cellular-respiration::4":10,"cellular-respiration::5":10,"decision-trees::0":10,"decision-trees::1":11,"decision-trees::2":14,"decision-trees::3":12,"decision-trees::4":12,"decision-trees::5":11,"neutron-stars::0":11,"neutron-stars::1":11,"neutron-stars::2":7,"neutron-stars::3":12,"neutron-stars::4":9,"neutron-stars::5":15,"tea-brewing::0":12,"tea-brewing::1":14,"tea-brewing::2":11,"tea-brewing::3":11,"tea-brewing::4":13,"tea-brewing::5":12,"gothic-cathedrals::0":12,"gothic-cathedrals::1":13,"gothic-cathedrals::2":12,"gothic-cathedrals::3":10,"gothic-cathedrals::4":12,"gothic-cathedrals::5":11,"jazz-history::0":14,"jazz-history::1":11,"jazz-history::2":13,"jazz-history::3":17,"jazz-history::4":16,"jazz-history::5":13},"top_df":[["water",16],["light",8],["black",6],["cell",6],["every",6],["network",6],["build",5],["escape",5],["flow",5],["hole",5],["let",5],["neutron",5]]},"ref_metrics":{"BM25":{"recall":{"1":0.7169811320754716,"3":0.9245283018867925,"5":0.9622641509433962,"10":0.9811320754716981},"mrr":0.8261006289308177,"ndcg":0.8584131537254915,"n":53},"TF-IDF":{"recall":{"1":0.7547169811320755,"3":0.9245283018867925,"5":0.9622641509433962,"10":0.9811320754716981},"mrr":0.8449685534591196,"ndcg":0.8723403328360027,"n":53},"Hybrid":{"recall":{"1":0.7169811320754716,"3":0.9245283018867925,"5":0.9622641509433962,"10":0.9811320754716981},"mrr":0.8261006289308177,"ndcg":0.8584131537254915,"n":53},"Hybrid+Rerank":{"recall":{"1":0.7358490566037735,"3":0.9433962264150944,"5":0.9622641509433962,"10":0.9811320754716981},"mrr":0.8443396226415094,"ndcg":0.8724523413922258,"n":53}},"best_strategy":"Hybrid+Rerank","best_ndcg":0.8725,"n_docs":15,"golden":{"which process releases carbon dioxide as waste":{"bm25":["cellular-respiration::3","photosynthesis::4","coffee-brewing::5","tea-brewing::3","cellular-respiration::0","photosynthesis::0","photosynthesis::5","ocean-currents::3"],"tfidf":["cellular-respiration::3","photosynthesis::4","coffee-brewing::5","tea-brewing::3","photosynthesis::0","cellular-respiration::0","photosynthesis::5","ocean-currents::3"],"hybrid":["cellular-respiration::3","photosynthesis::4","coffee-brewing::5","tea-brewing::3","cellular-respiration::0","photosynthesis::0","photosynthesis::5","ocean-currents::3"],"rerank":["cellular-respiration::3","photosynthesis::4","coffee-brewing::5","tea-brewing::3","cellular-respiration::0","photosynthesis::0","photosynthesis::5","ocean-currents::3"]},"what is pruning in a decision tree":{"bm25":["decision-trees::0","decision-trees::4","neural-nets::3","decision-trees::5","decision-trees::3","decision-trees::2"],"tfidf":["decision-trees::4","decision-trees::0","neural-nets::3","decision-trees::3","decision-trees::5","decision-trees::2"],"hybrid":["decision-trees::0","decision-trees::4","neural-nets::3","decision-trees::3","decision-trees::5","decision-trees::2"],"rerank":["decision-trees::0","decision-trees::4","neural-nets::3","decision-trees::3","decision-trees::5","decision-trees::2"]},"how is a neutron star different from a black hole":{"bm25":["neutron-stars::5","black-holes::2","neutron-stars::0","neutron-stars::4","black-holes::0","neutron-stars::3","black-holes::4","black-holes::5","immune-system::3","neutron-stars::1"],"tfidf":["neutron-stars::5","black-holes::2","neutron-stars::0","neutron-stars::4","black-holes::0","neutron-stars::3","black-holes::4","black-holes::5","immune-system::3","neutron-stars::1"],"hybrid":["neutron-stars::5","black-holes::2","neutron-stars::0","neutron-stars::4","black-holes::0","neutron-stars::3","black-holes::4","black-holes::5","immune-system::3","neutron-stars::1"],"rerank":["neutron-stars::5","neutron-stars::0","neutron-stars::4","black-holes::2","black-holes::0","neutron-stars::3","black-holes::4","black-holes::5","immune-system::3","neutron-stars::1"]},"best water temperature for brewing coffee":{"bm25":["coffee-brewing::0","coffee-brewing::4","ocean-currents::2","tea-brewing::0","coffee-brewing::1","decision-trees::2","tea-brewing::1","tea-brewing::5","photosynthesis::3","cellular-respiration::3"],"tfidf":["coffee-brewing::0","coffee-brewing::4","ocean-currents::2","tea-brewing::0","coffee-brewing::1","tea-brewing::1","decision-trees::2","tea-brewing::5","photosynthesis::3","cellular-respiration::3"],"hybrid":["coffee-brewing::0","coffee-brewing::4","ocean-currents::2","tea-brewing::0","coffee-brewing::1","decision-trees::2","tea-brewing::1","tea-brewing::5","photosynthesis::3","cellular-respiration::3"],"rerank":["coffee-brewing::4","coffee-brewing::1","coffee-brewing::0","ocean-currents::2","tea-brewing::0","decision-trees::2","tea-brewing::1","tea-brewing::5","photosynthesis::3","cellular-respiration::3"]},"why does over steeped tea taste astringent":{"bm25":["tea-brewing::3","tea-brewing::2","tea-brewing::1","tea-brewing::0","tea-brewing::5","tea-brewing::4"],"tfidf":["tea-brewing::3","tea-brewing::2","tea-brewing::1","tea-brewing::0","tea-brewing::5","tea-brewing::4"],"hybrid":["tea-brewing::3","tea-brewing::2","tea-brewing::1","tea-brewing::0","tea-brewing::5","tea-brewing::4"],"rerank":["tea-brewing::3","tea-brewing::1","tea-brewing::2","tea-brewing::0","tea-brewing::5","tea-brewing::4"]},"what drives a volcanic eruption":{"bm25":["volcanoes::2","photosynthesis::3","ocean-currents::2","volcanoes::3","ocean-currents::3"],"tfidf":["volcanoes::2","photosynthesis::3","ocean-currents::2","volcanoes::3","ocean-currents::3"],"hybrid":["volcanoes::2","photosynthesis::3","ocean-currents::2","volcanoes::3","ocean-currents::3"],"rerank":["volcanoes::2","volcanoes::3","photosynthesis::3","ocean-currents::2","ocean-currents::3"]},"how do vaccines train the immune system":{"bm25":["immune-system::5","immune-system::0"],"tfidf":["immune-system::5","immune-system::0"],"hybrid":["immune-system::5","immune-system::0"],"rerank":["immune-system::5","immune-system::0"]},"where did jazz music originate":{"bm25":["jazz-history::0","jazz-history::2","jazz-history::1","jazz-history::4"],"tfidf":["jazz-history::0","jazz-history::2","jazz-history::1","jazz-history::4"],"hybrid":["jazz-history::0","jazz-history::2","jazz-history::1","jazz-history::4"],"rerank":["jazz-history::0","jazz-history::2","jazz-history::1","jazz-history::4"]}}};
+const CFG=DATA.config, IX=DATA.index;
+const STOP=new Set(DATA.stopwords);
+const IRR=new Map(Object.entries(DATA.irregular));
+const chunks=DATA.chunks, chunkById=new Map(chunks.map(c=>[c.id,c]));
+const queryByText=new Map(DATA.queries.map(q=>[q.q, new Set(q.rel)]));
+const STRAT_COLOR={BM25:"var(--bm25)","TF-IDF":"var(--tfidf)",Hybrid:"var(--hybrid)","Hybrid+Rerank":"var(--rerank)"};
+
+/* ---------- tokenizer: faithful port of retrieval.tokenize / _stem ---------- */
+const ALNUM=/[\p{L}\p{N}]/u;
+function stem(t){
+  if(IRR.has(t)) return IRR.get(t);
+  if(t.endsWith("ss")) return t;
+  if(t.endsWith("ies") && t.length>4) return t.slice(0,-3)+"y";
+  if(t.endsWith("es") && t.length>3){
+    const s=t.slice(0,-2);
+    if(/(?:s|x|z|ch|sh)$/.test(s)) return s;
+    return t.slice(0,-1);
+  }
+  if(t.endsWith("s") && t.length>3) return t.slice(0,-1);
+  return t;
+}
+function tokenize(text){
+  text=text.toLowerCase();
+  const raw=[]; let cur="";
+  for(const ch of text){ if(ALNUM.test(ch)){cur+=ch;} else { if(cur){raw.push(cur);cur="";} } }
+  if(cur) raw.push(cur);
+  const out=[];
+  for(const t of raw){
+    if(STOP.has(t) || t.length<2) continue;
+    if(t.endsWith("ss")){ out.push(t); continue; }
+    out.push(stem(t));
+  }
+  return out;
+}
+function counter(toks){ const m=new Map(); for(const t of toks) m.set(t,(m.get(t)||0)+1); return m; }
+
+/* ---------- build the index in JS from the chunk texts ---------- */
+const ids=chunks.map(c=>c.id);
+const docTokens=chunks.map(c=>tokenize(c.text));
+const N=chunks.length;
+const bmTf=[], docLen=[]; const df=new Map();
+docTokens.forEach(toks=>{
+  const c=counter(toks); bmTf.push(c); docLen.push(toks.length);
+  for(const t of c.keys()) df.set(t,(df.get(t)||0)+1);
+});
+const avgdl=N? docLen.reduce((a,b)=>a+b,0)/N : 0;
+const bmIdf=new Map(); for(const [t,d] of df) bmIdf.set(t, Math.log(1+(N-d+0.5)/(d+0.5)));
+const tfIdf=new Map(); for(const [t,d] of df) tfIdf.set(t, Math.log(N/d)+1);
+function tfidfVec(counts){
+  const v=new Map();
+  for(const [t,f] of counts) v.set(t,(1+Math.log(f))*(tfIdf.get(t)||0));
+  let norm=0; for(const w of v.values()) norm+=w*w; norm=Math.sqrt(norm)||1;
+  const o=new Map(); for(const [t,w] of v) o.set(t,w/norm); return o;
+}
+const tfVecs=bmTf.map(tfidfVec);
+
+/* ---------- scorers ---------- */
+function cmp(a,b){ const d=b.score-a.score; if(d) return d; return a.id<b.id?-1:(a.id>b.id?1:0); }
+function bm25Score(q,i){
+  const counts=bmTf[i], dl=docLen[i];
+  const denom=CFG.k1*(1-CFG.b+CFG.b*(avgdl?dl/avgdl:0));
+  let s=0;
+  for(const t of q){ const f=counts.get(t)||0; if(!f) continue; s+=(bmIdf.get(t)||0)*(f*(CFG.k1+1))/(f+denom); }
+  return s;
+}
+function bm25Search(query,k){
+  const q=tokenize(query);
+  const scored=ids.map((id,i)=>({id,score:bm25Score(q,i)}));
+  scored.sort(cmp);
+  return scored.slice(0,k).filter(s=>s.score>0);
+}
+function tfidfSearch(query,k){
+  const q=tokenize(query); const qv=tfidfVec(counter(q));
+  const scored=ids.map((id,i)=>{
+    const dv=tfVecs[i]; let small,big;
+    if(qv.size<dv.size){small=qv;big=dv;}else{small=dv;big=qv;}
+    let dot=0; for(const [t,w] of small) dot+=w*(big.get(t)||0);
+    return {id,score:dot};
+  });
+  scored.sort(cmp);
+  return scored.slice(0,k).filter(s=>s.score>0);
+}
+function rrf(rankings,topK){
+  const fused=new Map();
+  for(const r of rankings){ r.forEach((s,idx)=>{ fused.set(s.id,(fused.get(s.id)||0)+1/(CFG.k_rrf+idx+1)); }); }
+  const out=[...fused].map(([id,score])=>({id,score}));
+  out.sort(cmp); return out.slice(0,topK);
+}
+function hybridSearch(query,k){
+  return rrf([bm25Search(query,CFG.pool), tfidfSearch(query,CFG.pool)], k);
+}
+/* ---------- reranker: port of rerank.rerank + _proximity ---------- */
+function proximity(dTokens,qTerms){
+  const pos=[]; dTokens.forEach((t,i)=>{ if(qTerms.has(t)) pos.push([i,t]); });
+  if(pos.length===0) return 0;
+  const matched=new Set(pos.map(p=>p[1]));
+  if(matched.size===1) return 0.2;
+  let best=null; const need=matched.size; let left=0; const win=new Map(); let distinct=0;
+  for(let right=0;right<pos.length;right++){
+    const t=pos[right][1]; win.set(t,(win.get(t)||0)+1);
+    if(win.get(t)===1) distinct++;
+    while(distinct===need){
+      const span=pos[right][0]-pos[left][0]+1;
+      if(best===null||span<best) best=span;
+      const lt=pos[left][1]; win.set(lt,win.get(lt)-1);
+      if(win.get(lt)===0) distinct--;
+      left++;
+    }
+  }
+  if(best===null) return 0.2;
+  return need/best;
+}
+function rerank(query,cands){
+  const qtoks=tokenize(query);
+  let qTerms=new Set(qtoks);
+  qTerms=new Set([...qTerms].filter(t=>bmIdf.has(t)));
+  const candSets=cands.map(c=>new Set(tokenize(chunkById.get(c.id).text)));
+  const n=cands.length;
+  const poolDf=new Map();
+  for(const t of qTerms){ let cnt=0; for(const s of candSets) if(s.has(t)) cnt++; poolDf.set(t,cnt); }
+  const weight=new Map();
+  for(const t of qTerms){ const g=bmIdf.has(t)?bmIdf.get(t):1.0; const d=(poolDf.get(t)||0)||1; weight.set(t,g*(1+Math.log(n/d))); }
+  let total=0; for(const w of weight.values()) total+=w; total=total||1;
+  const out=cands.map((cand,i)=>{
+    const rank=i+1, dset=candSets[i], dtok=tokenize(chunkById.get(cand.id).text);
+    let cov=0; for(const t of qTerms) if(dset.has(t)) cov+=weight.get(t); cov/=total;
+    const prox=proximity(dtok,qTerms);
+    const stage=(n-rank+1)/n;
+    const score=CFG.fs_w*stage+CFG.cov_w*cov+CFG.prox_w*prox;
+    return {id:cand.id,score,coverage:cov,proximity:prox,firstStageRank:rank};
+  });
+  out.sort(cmp); return out;
+}
+
+/* ---------- metrics: port of evaluate.py ---------- */
+function recallAtK(ranked,rel,k){ if(!rel.size) return 0; const top=ranked.slice(0,k); let h=0; for(const r of rel) if(top.includes(r)) h++; return h/rel.size; }
+function reciprocalRank(ranked,rel){ for(let i=0;i<ranked.length;i++) if(rel.has(ranked[i])) return 1/(i+1); return 0; }
+function ndcgAtK(ranked,rel,k){
+  let dcg=0; const lim=Math.min(k,ranked.length);
+  for(let i=0;i<lim;i++) if(rel.has(ranked[i])) dcg+=1/Math.log2(i+2);
+  const ih=Math.min(rel.size,k); let idcg=0;
+  for(let i=1;i<=ih;i++) idcg+=1/Math.log2(i+1);
+  return idcg>0?dcg/idcg:0;
+}
+function rankedFor(strategy,query){
+  if(strategy==="BM25") return bm25Search(query,CFG.top_k).map(s=>s.id);
+  if(strategy==="TF-IDF") return tfidfSearch(query,CFG.top_k).map(s=>s.id);
+  if(strategy==="Hybrid") return hybridSearch(query,CFG.top_k).map(s=>s.id);
+  const cands=hybridSearch(query,CFG.rerank_pool);
+  return rerank(query,cands).map(r=>r.id);
+}
+function computeMetrics(){
+  const strats=["BM25","TF-IDF","Hybrid","Hybrid+Rerank"];
+  const res={};
+  for(const s of strats){
+    const rec={}; CFG.ks.forEach(k=>rec[k]=0); let mrr=0, ndcg=0;
+    for(const q of DATA.queries){
+      const rel=new Set(q.rel); const ranked=rankedFor(s,q.q);
+      CFG.ks.forEach(k=>rec[k]+=recallAtK(ranked,rel,k));
+      mrr+=reciprocalRank(ranked,rel); ndcg+=ndcgAtK(ranked,rel,CFG.ndcg_k);
+    }
+    const n=DATA.queries.length;
+    const recall={}; CFG.ks.forEach(k=>recall[k]=rec[k]/n);
+    res[s]={recall,mrr:mrr/n,ndcg:ndcg/n};
+  }
+  return res;
+}
+
+/* ---------- self-check against the golden Python traces ---------- */
+function selfCheck(){
+  let total=0, ok=0;
+  for(const [q,g] of Object.entries(DATA.golden)){
+    const got={bm25:bm25Search(q,CFG.top_k).map(s=>s.id),
+               tfidf:tfidfSearch(q,CFG.top_k).map(s=>s.id),
+               hybrid:hybridSearch(q,CFG.top_k).map(s=>s.id),
+               rerank:rerank(q,hybridSearch(q,CFG.rerank_pool)).map(r=>r.id)};
+    for(const key of ["bm25","tfidf","hybrid","rerank"]){
+      total++; if(JSON.stringify(got[key])===JSON.stringify(g[key])) ok++;
+      else console.warn("mismatch",q,key,"\n py:",g[key],"\n js:",got[key]);
+    }
+  }
+  return {total,ok};
+}
+
+/* ---------- rendering ---------- */
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function highlight(text,query){
+  const qstems=new Set(tokenize(query));
+  return esc(text).replace(/([A-Za-z0-9]+)/g,(m)=>{ const st=tokenize(m); if(st.length && qstems.has(st[0])) return `<mark>${m}</mark>`; return m; });
+}
+function relForQuery(query){ return queryByText.get(query.trim()) || null; }
+
+function renderRace(query){
+  const rel=relForQuery(query);
+  const specs=[["bm25",bm25Search(query,5),"BM25"],["tfidf",tfidfSearch(query,5),"TF-IDF"],["hybrid",hybridSearch(query,5),"Hybrid"]];
+  document.getElementById('racek').textContent = query.trim()? "top 5 of "+CFG.top_k : "";
+  for(const [key,list,label] of specs){
+    const host=document.getElementById('rows_'+key);
+    const sub=document.getElementById('sub_'+key);
+    if(!query.trim()){ host.innerHTML='<div class="empty">waiting for a query…</div>'; sub.textContent=''; continue; }
+    if(!list.length){ host.innerHTML='<div class="empty">no chunk scored above zero</div>'; sub.textContent='0 matches'; continue; }
+    const mx=Math.max(...list.map(s=>s.score))||1;
+    const goldRank=rel? (list.findIndex(s=>rel.has(s.id))+1)||null : null;
+    sub.textContent = rel? (goldRank? "gold answer at rank "+goldRank : "gold answer not in top 5") : list.length+" matches";
+    host.innerHTML=list.map((s,i)=>{
+      const c=chunkById.get(s.id); const isGold=rel&&rel.has(s.id);
+      const w=Math.max(4,s.score/mx*100);
+      return `<div class="r${isGold?' gold':''}"><span class="rk">#${i+1}</span>
+        <div class="rt">${isGold?'<span class="star">★</span>':''}${esc(c.title)}</div>
+        <div class="tp">${esc(c.topic)}</div>
+        <div class="snip">${esc(c.text)}</div>
+        <div class="bar"><i style="width:${w}%;background:var(--${key})"></i></div>
+        <div class="sc"><span>${esc(s.id)}</span><span>${s.score.toFixed(3)}</span></div></div>`;
+    }).join('');
+  }
+}
+
+let currentReranked=[], currentHybrid=[], currentQuery="";
+function renderRerankStatic(query){
+  currentQuery=query;
+  document.getElementById('rrk').textContent = query.trim()? CFG.rerank_pool+" candidates" : "";
+  const list=document.getElementById('rrlist');
+  if(!query.trim()){ list.innerHTML='<div class="empty">Search to send the hybrid pool through the reranker.</div>'; renderWin(null,query); return; }
+  const hy=hybridSearch(query,CFG.rerank_pool);
+  currentHybrid=hy.map(s=>s.id);
+  const rr=rerank(query,hy);
+  currentReranked=rr;
+  if(!rr.length){ list.innerHTML='<div class="empty">No candidates matched this query.</div>'; renderWin(null,query); return; }
+  // render in HYBRID order first (pre-rerank), keyed by id for the FLIP reorder
+  const rel=relForQuery(query);
+  const rrById=new Map(rr.map((r,i)=>[r.id,{...r,finalPos:i+1}]));
+  list.innerHTML=hy.map((s,i)=>{
+    const r=rrById.get(s.id); const c=chunkById.get(s.id); const isGold=rel&&rel.has(s.id);
+    const covW=Math.round(Math.min(1,r.coverage)*100), proW=Math.round(Math.min(1,r.proximity)*100);
+    return `<div class="rr" data-id="${esc(s.id)}" data-final="${r.finalPos}">
+      <div class="pos">${i+1}</div>
+      <div class="body"><div class="t">${isGold?'<span class="star">★</span>':''}${esc(c.title)} <span class="move same" data-mv>·</span></div>
+        <div class="s">${esc(c.text)}</div></div>
+      <div class="metcell">
+        <div class="metrow"><span class="k">coverage</span><span class="track"><i style="width:${covW}%;background:var(--hybrid)"></i></span><span class="v">${r.coverage.toFixed(2)}</span></div>
+        <div class="metrow"><span class="k">proximity</span><span class="track"><i style="width:${proW}%;background:var(--tfidf)"></i></span><span class="v">${r.proximity.toFixed(2)}</span></div>
+        <div class="metrow"><span class="k">score</span><span class="track"><i style="width:${Math.round(Math.min(1,r.score)*100)}%;background:var(--rerank)"></i></span><span class="v">${r.score.toFixed(3)}</span></div>
+      </div></div>`;
+  }).join('');
+  renderWin(rr[0],query,rel);
+}
+function playReorder(){
+  const list=document.getElementById('rrlist');
+  const rows=[...list.querySelectorAll('.rr')];
+  if(rows.length<2) return;
+  const first=new Map(rows.map(el=>[el,el.getBoundingClientRect().top]));
+  // sort rows into reranked (final) order and re-append
+  rows.sort((a,b)=>(+a.dataset.final)-(+b.dataset.final));
+  rows.forEach(el=>list.appendChild(el));
+  // update position numbers, move badges, top highlight
+  rows.forEach((el,i)=>{
+    const finalPos=+el.dataset.final, hybridPos=[...list.children].length;
+  });
+  rows.forEach((el)=>{
+    const finalPos=+el.dataset.final;
+    el.querySelector('.pos').textContent=finalPos;
+    el.classList.toggle('top',finalPos===1);
+  });
+  // compute move badges from starting DOM order (first map order) vs final
+  const startOrder=[...first.keys()];
+  rows.forEach(el=>{
+    const startIdx=startOrder.indexOf(el)+1, finalPos=+el.dataset.final;
+    const mv=el.querySelector('[data-mv]'); const delta=startIdx-finalPos;
+    if(delta>0){ mv.className='move up'; mv.textContent='▲ '+delta; }
+    else if(delta<0){ mv.className='move down'; mv.textContent='▼ '+(-delta); }
+    else { mv.className='move same'; mv.textContent='='; }
+  });
+  // FLIP
+  requestAnimationFrame(()=>{
+    rows.forEach(el=>{
+      const last=el.getBoundingClientRect().top;
+      const dy=first.get(el)-last;
+      el.style.transition='none'; el.style.transform=`translateY(${dy}px)`;
+    });
+    requestAnimationFrame(()=>{
+      rows.forEach(el=>{ el.style.transition='transform .6s cubic-bezier(.5,0,.2,1),border-color .3s,background .3s'; el.style.transform=''; });
+    });
+  });
+}
+function renderWin(top,query,rel){
+  const T=document.getElementById('winTitle'), TP=document.getElementById('winTopic'),
+        V=document.getElementById('winVerdict'), TX=document.getElementById('winText'),
+        SC=document.getElementById('winScore');
+  if(!top||!query.trim()){
+    T.textContent='—'; TP.textContent=''; V.className='verdict free'; V.textContent='—';
+    TX.innerHTML='Search above to see the top-ranked passage with your query terms highlighted.'; SC.innerHTML=''; return;
+  }
+  const c=chunkById.get(top.id);
+  T.textContent=c.title; TP.textContent=c.topic;
+  rel=rel||relForQuery(query);
+  if(rel){ const hit=rel.has(top.id); V.className='verdict '+(hit?'hit':'miss'); V.textContent=hit?'✓ gold answer':'✗ gold answer ranked lower'; }
+  else { V.className='verdict free'; V.textContent='free query'; }
+  TX.innerHTML=highlight(c.text,query);
+  SC.innerHTML=[["rerank score",top.score.toFixed(3)],["coverage",top.coverage.toFixed(2)],["proximity",top.proximity.toFixed(2)],["hybrid rank",'#'+top.firstStageRank]]
+    .map(([k,v])=>`<div><b>${v}</b><span>${k}</span></div>`).join('');
+}
+
+function renderMetrics(){
+  const m=computeMetrics();
+  const strats=["BM25","TF-IDF","Hybrid","Hybrid+Rerank"];
+  const bestNdcg=Math.max(...strats.map(s=>m[s].ndcg));
+  document.getElementById('mrows').innerHTML=strats.map(s=>{
+    const r=m[s], best=r.ndcg===bestNdcg;
+    return `<tr class="${best?'best':''}"><td><span class="stripe" style="background:${STRAT_COLOR[s]}"></span>${s}</td>
+      <td>${r.recall[1].toFixed(2)}</td><td>${r.recall[3].toFixed(2)}</td>
+      <td>${r.recall[5].toFixed(2)}</td><td>${r.recall[10].toFixed(2)}</td>
+      <td>${r.mrr.toFixed(3)}</td><td class="${best?'hl':''}">${r.ndcg.toFixed(3)}</td></tr>`;
+  }).join('');
+  // cross-check live JS metrics against the engine's exported ref_metrics
+  let maxDiff=0;
+  for(const s of strats){ maxDiff=Math.max(maxDiff, Math.abs(m[s].ndcg-DATA.ref_metrics[s].ndcg), Math.abs(m[s].mrr-DATA.ref_metrics[s].mrr)); }
+  const el=document.getElementById('metricCheck');
+  if(maxDiff<1e-9){ el.className='selfcheck pass'; el.textContent='matches engine'; }
+  else { el.className='selfcheck fail'; el.textContent='Δ '+maxDiff.toExponential(1); }
+}
+function renderIndex(){
+  document.getElementById('ixN').textContent=IX.N;
+  document.getElementById('ixVocab').textContent=IX.vocab;
+  document.getElementById('ixAvg').textContent=IX.avgdl.toFixed(1);
+  const mx=IX.top_df[0][1];
+  document.getElementById('idxlist').innerHTML=IX.top_df.map(([t,d])=>
+    `<div class="idxrow"><span class="term">${esc(t)}</span><span class="df">df ${d}</span><span class="tk"><i style="width:${Math.round(d/mx*100)}%"></i></span></div>`).join('');
+}
+
+/* ---------- chips + wiring ---------- */
+const chipHost=document.getElementById('chips');
+DATA.chips.forEach(q=>{
+  const b=document.createElement('button'); b.className='chip'; b.textContent=q;
+  b.addEventListener('click',()=>{ document.getElementById('q').value=q; run(q); });
+  chipHost.appendChild(b);
+});
+const qEl=document.getElementById('q');
+function markChips(query){
+  [...chipHost.children].forEach(b=>b.classList.toggle('on', b.textContent===query.trim()));
+}
+function updateQLabel(query){
+  const el=document.getElementById('qlabel'); const rel=relForQuery(query);
+  if(!query.trim()){ el.className='lbl free'; el.textContent='free query'; }
+  else if(rel){ el.className='lbl gold'; el.textContent='labeled · '+rel.size+' gold chunk'+(rel.size>1?'s':''); }
+  else { el.className='lbl free'; el.textContent='free query'; }
+}
+let reorderTimer=null;
+function run(query){
+  markChips(query); updateQLabel(query);
+  renderRace(query);
+  renderRerankStatic(query);
+  clearTimeout(reorderTimer);
+  if(query.trim() && currentReranked.length>1){ reorderTimer=setTimeout(playReorder,650); }
+}
+let deb=null;
+qEl.addEventListener('input',()=>{ clearTimeout(deb); deb=setTimeout(()=>run(qEl.value),160); });
+qEl.addEventListener('keydown',e=>{ if(e.key==='Enter'){ clearTimeout(deb); run(qEl.value); } });
+document.getElementById('replay').addEventListener('click',()=>{ renderRerankStatic(currentQuery||qEl.value); requestAnimationFrame(playReorder); });
+
+/* theme toggle */
+const root=document.documentElement;
+document.getElementById('themetog').addEventListener('click',()=>{
+  const cur=root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  root.setAttribute('data-theme', cur==='dark'?'light':'dark');
+});
+
+/* boot */
+renderMetrics(); renderIndex(); run("");
+const sc=selfCheck();
+console.log(`Retrieval Explorer self-check: ${sc.ok}/${sc.total} golden traces reproduced from JS.`);
+const first=DATA.chips[2]||DATA.chips[0];
+qEl.value=first; run(first);
+</script>
+</body></html>

@@ -1,0 +1,116 @@
+<!doctype html><html><head><meta charset="utf-8">
+<title>Foundry Reconciliation — run_20260712T022919_6e688b70</title>
+<style>
+ body{font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:#f5f7fa;color:#1f2d3d}
+ header{background:#1f2d3d;color:#fff;padding:22px 32px}
+ header h1{margin:0;font-size:20px} header .sub{opacity:.7;font-size:13px;margin-top:4px}
+ main{max-width:1180px;margin:0 auto;padding:24px 32px}
+ .cards{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+ .card{background:#fff;border:1px solid #e1e6ec;border-radius:10px;padding:16px 20px;flex:1;min-width:160px}
+ .card .n{font-size:28px;font-weight:700} .card .l{color:#7a8699;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+ .green{color:#16a085} .red{color:#c0392b} .amber{color:#e67e22}
+ section{background:#fff;border:1px solid #e1e6ec;border-radius:10px;padding:20px;margin-bottom:22px}
+ section h2{margin:0 0 14px;font-size:15px}
+ .barrow{display:flex;align-items:center;gap:10px;margin:5px 0}
+ .barlbl{width:150px;font-size:12px;text-align:right;color:#4a5568}
+ .bar{height:16px;border-radius:3px} .barval{font-size:12px;color:#4a5568}
+ table{width:100%;border-collapse:collapse;font-size:12.5px}
+ th,td{text-align:left;padding:7px 8px;border-bottom:1px solid #eef1f5}
+ th{color:#7a8699;text-transform:uppercase;font-size:10.5px;letter-spacing:.04em}
+ .tag{color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;white-space:nowrap}
+ .lineage{width:100%;height:auto} .muted{color:#7a8699;font-size:12px}
+</style></head><body>
+<header>
+ <h1>Foundry — Financial Reconciliation &amp; Audit Trail</h1>
+ <div class="sub">Period 2024-01 · Run run_20260712T022919_6e688b70 · Generated 2026-07-12 02:29 UTC</div>
+</header>
+<main>
+ <div class="cards">
+  <div class="card"><div class="l">Business keys</div><div class="n">145</div></div>
+  <div class="card"><div class="l">Matched</div><div class="n green">120</div><div class="muted">82.8% clean</div></div>
+  <div class="card"><div class="l">Exceptions</div><div class="n red">25</div></div>
+  <div class="card"><div class="l">Gross exposure</div><div class="n amber">$77,249</div></div>
+ </div>
+
+ <section>
+  <h2>Exceptions by type</h2>
+  <div class="barrow"><span class="barlbl">timing_difference</span><span class="bar" style="width:360px;background:#7f8c8d"></span><span class="barval">6</span></div>
+<div class="barrow"><span class="barlbl">fx_rounding</span><span class="bar" style="width:300px;background:#16a085"></span><span class="barval">5</span></div>
+<div class="barrow"><span class="barlbl">bank_fee</span><span class="bar" style="width:240px;background:#2980b9"></span><span class="barval">4</span></div>
+<div class="barrow"><span class="barlbl">missing_in_bank</span><span class="bar" style="width:180px;background:#e67e22"></span><span class="barval">3</span></div>
+<div class="barrow"><span class="barlbl">amount_mismatch</span><span class="bar" style="width:180px;background:#8e44ad"></span><span class="barval">3</span></div>
+<div class="barrow"><span class="barlbl">duplicate_payment</span><span class="bar" style="width:120px;background:#c0392b"></span><span class="barval">2</span></div>
+<div class="barrow"><span class="barlbl">missing_in_gl</span><span class="bar" style="width:120px;background:#d35400"></span><span class="barval">2</span></div>
+ </section>
+
+ <section>
+  <h2>Source-to-report lineage</h2>
+  <p class="muted">Every figure below traces back through these hops. Left = raw extract, right = signed report.</p>
+  <svg viewBox="0 0 1100 178" class="lineage">
+<line x1="170" y1="30" x2="240" y2="30" stroke="#b0b8c4" stroke-width="1.5"/>
+<line x1="170" y1="76" x2="240" y2="30" stroke="#b0b8c4" stroke-width="1.5"/>
+<line x1="170" y1="122" x2="240" y2="30" stroke="#b0b8c4" stroke-width="1.5"/>
+<line x1="390" y1="30" x2="460" y2="30" stroke="#b0b8c4" stroke-width="1.5"/>
+<line x1="610" y1="30" x2="680" y2="30" stroke="#b0b8c4" stroke-width="1.5"/>
+<line x1="830" y1="30" x2="680" y2="76" stroke="#b0b8c4" stroke-width="1.5"/>
+<line x1="830" y1="76" x2="900" y2="30" stroke="#b0b8c4" stroke-width="1.5"/>
+<line x1="830" y1="30" x2="900" y2="76" stroke="#b0b8c4" stroke-width="1.5"/>
+<rect x="20" y="17" width="160" height="26" rx="5" fill="#eef2f7" stroke="#98a3b3"/><text x="28" y="34" font-size="10" fill="#2c3e50">ar_subledger_2024_01.csv</text>
+<rect x="240" y="17" width="160" height="26" rx="5" fill="#eef2f7" stroke="#98a3b3"/><text x="248" y="34" font-size="10" fill="#2c3e50">stg_transactions</text>
+<rect x="20" y="63" width="160" height="26" rx="5" fill="#eef2f7" stroke="#98a3b3"/><text x="28" y="80" font-size="10" fill="#2c3e50">bank_stmt_2024_01.csv</text>
+<rect x="20" y="109" width="160" height="26" rx="5" fill="#eef2f7" stroke="#98a3b3"/><text x="28" y="126" font-size="10" fill="#2c3e50">gl_journal_2024_01.csv</text>
+<rect x="460" y="17" width="160" height="26" rx="5" fill="#eef2f7" stroke="#98a3b3"/><text x="468" y="34" font-size="10" fill="#2c3e50">int_recon_keyed</text>
+<rect x="680" y="17" width="160" height="26" rx="5" fill="#eef2f7" stroke="#98a3b3"/><text x="688" y="34" font-size="10" fill="#2c3e50">recon_result</text>
+<rect x="680" y="63" width="160" height="26" rx="5" fill="#eef2f7" stroke="#98a3b3"/><text x="688" y="80" font-size="10" fill="#2c3e50">recon_summary</text>
+<rect x="900" y="17" width="160" height="26" rx="5" fill="#eef2f7" stroke="#98a3b3"/><text x="908" y="34" font-size="10" fill="#2c3e50">reconciliation_dashboard</text>
+<rect x="900" y="63" width="160" height="26" rx="5" fill="#eef2f7" stroke="#98a3b3"/><text x="908" y="80" font-size="10" fill="#2c3e50">exceptions_export.csv</text>
+</svg>
+ </section>
+
+ <section>
+  <h2>Exception register (25) — sorted by financial impact</h2>
+  <table><thead><tr><th>Ref</th><th>Type</th><th>GL</th><th>Bank</th><th>Sub-ledger</th><th>Variance</th><th>Detail</th></tr></thead>
+  <tbody><tr><td>INV-1125</td><td><span class="tag" style="background:#7f8c8d">timing_difference</span></td><td>11407.19</td><td>—</td><td>11407.19</td><td>+11407.19</td><td>GL receipt on day 27 clears bank next period</td></tr>
+<tr><td>INV-1123</td><td><span class="tag" style="background:#7f8c8d">timing_difference</span></td><td>10800.61</td><td>—</td><td>10800.61</td><td>+10800.61</td><td>GL receipt on day 31 clears bank next period</td></tr>
+<tr><td>INV-1122</td><td><span class="tag" style="background:#7f8c8d">timing_difference</span></td><td>9259.82</td><td>—</td><td>9259.82</td><td>+9259.82</td><td>GL receipt on day 29 clears bank next period</td></tr>
+<tr><td>INV-1137</td><td><span class="tag" style="background:#d35400">missing_in_gl</span></td><td>—</td><td>7492.08</td><td>—</td><td>+7492.08</td><td>Bank credit never booked to the general ledger</td></tr>
+<tr><td>INV-1131</td><td><span class="tag" style="background:#c0392b">duplicate_payment</span></td><td>7100.72</td><td>14201.44</td><td>7100.72</td><td>+7100.72</td><td>BANK has 2 entries for INV-1131</td></tr>
+<tr><td>INV-1136</td><td><span class="tag" style="background:#d35400">missing_in_gl</span></td><td>—</td><td>5346.62</td><td>—</td><td>+5346.62</td><td>Bank credit never booked to the general ledger</td></tr>
+<tr><td>INV-1121</td><td><span class="tag" style="background:#7f8c8d">timing_difference</span></td><td>5023.78</td><td>—</td><td>5023.78</td><td>+5023.78</td><td>GL receipt on day 28 clears bank next period</td></tr>
+<tr><td>INV-1132</td><td><span class="tag" style="background:#c0392b">duplicate_payment</span></td><td>4692.53</td><td>9385.06</td><td>4692.53</td><td>+4692.53</td><td>BANK has 2 entries for INV-1132</td></tr>
+<tr><td>INV-1133</td><td><span class="tag" style="background:#e67e22">missing_in_bank</span></td><td>4666.00</td><td>—</td><td>4666.00</td><td>+4666.00</td><td>GL cash receipt with no matching bank credit</td></tr>
+<tr><td>INV-1126</td><td><span class="tag" style="background:#7f8c8d">timing_difference</span></td><td>3501.86</td><td>—</td><td>3501.86</td><td>+3501.86</td><td>GL receipt on day 31 clears bank next period</td></tr>
+<tr><td>INV-1134</td><td><span class="tag" style="background:#e67e22">missing_in_bank</span></td><td>2382.11</td><td>—</td><td>2382.11</td><td>+2382.11</td><td>GL cash receipt with no matching bank credit</td></tr>
+<tr><td>INV-1135</td><td><span class="tag" style="background:#e67e22">missing_in_bank</span></td><td>1588.54</td><td>—</td><td>1588.54</td><td>+1588.54</td><td>GL cash receipt with no matching bank credit</td></tr>
+<tr><td>INV-1124</td><td><span class="tag" style="background:#7f8c8d">timing_difference</span></td><td>1538.64</td><td>—</td><td>1538.64</td><td>+1538.64</td><td>GL receipt on day 28 clears bank next period</td></tr>
+<tr><td>INV-1143</td><td><span class="tag" style="background:#8e44ad">amount_mismatch</span></td><td>9376.91</td><td>8045.44</td><td>9376.91</td><td>+1331.47</td><td>GL 9376.91 vs bank 8045.44, variance +1331.47</td></tr>
+<tr><td>INV-1144</td><td><span class="tag" style="background:#8e44ad">amount_mismatch</span></td><td>6525.21</td><td>5975.96</td><td>6525.21</td><td>+549.25</td><td>GL 6525.21 vs bank 5975.96, variance +549.25</td></tr>
+<tr><td>INV-1145</td><td><span class="tag" style="background:#8e44ad">amount_mismatch</span></td><td>2997.23</td><td>2549.93</td><td>2997.23</td><td>+447.30</td><td>GL 2997.23 vs bank 2549.93, variance +447.30</td></tr>
+<tr><td>INV-1129</td><td><span class="tag" style="background:#2980b9">bank_fee</span></td><td>5688.12</td><td>5649.81</td><td>5688.12</td><td>+38.31</td><td>Bank netted 38.31 (likely wire/processing fee)</td></tr>
+<tr><td>INV-1127</td><td><span class="tag" style="background:#2980b9">bank_fee</span></td><td>8009.77</td><td>7975.61</td><td>8009.77</td><td>+34.16</td><td>Bank netted 34.16 (likely wire/processing fee)</td></tr>
+<tr><td>INV-1130</td><td><span class="tag" style="background:#2980b9">bank_fee</span></td><td>6884.66</td><td>6858.23</td><td>6884.66</td><td>+26.43</td><td>Bank netted 26.43 (likely wire/processing fee)</td></tr>
+<tr><td>INV-1128</td><td><span class="tag" style="background:#2980b9">bank_fee</span></td><td>4438.64</td><td>4416.73</td><td>4438.64</td><td>+21.91</td><td>Bank netted 21.91 (likely wire/processing fee)</td></tr>
+<tr><td>INV-1140</td><td><span class="tag" style="background:#16a085">fx_rounding</span></td><td>1826.40</td><td>1826.43</td><td>1826.40</td><td>-0.03</td><td>Sub-cent drift -0.03</td></tr>
+<tr><td>INV-1141</td><td><span class="tag" style="background:#16a085">fx_rounding</span></td><td>5711.09</td><td>5711.06</td><td>5711.09</td><td>+0.03</td><td>Sub-cent drift +0.03</td></tr>
+<tr><td>INV-1138</td><td><span class="tag" style="background:#16a085">fx_rounding</span></td><td>4936.14</td><td>4936.12</td><td>4936.14</td><td>+0.02</td><td>Sub-cent drift +0.02</td></tr>
+<tr><td>INV-1139</td><td><span class="tag" style="background:#16a085">fx_rounding</span></td><td>2952.39</td><td>2952.37</td><td>2952.39</td><td>+0.02</td><td>Sub-cent drift +0.02</td></tr>
+<tr><td>INV-1142</td><td><span class="tag" style="background:#16a085">fx_rounding</span></td><td>1663.02</td><td>1663.00</td><td>1663.02</td><td>+0.02</td><td>Sub-cent drift +0.02</td></tr></tbody></table>
+ </section>
+
+ <section>
+  <h2>Audit log</h2>
+  <table><thead><tr><th>Timestamp (UTC)</th><th>Event</th><th>Detail</th></tr></thead>
+  <tbody><tr><td>2026-07-12T02:29:19+00:00</td><td>run_start</td><td>period=2024-01 cutoff_day=22</td></tr>
+<tr><td>2026-07-12T02:29:19+00:00</td><td>load_complete</td><td>424 rows across 3 source files</td></tr>
+<tr><td>2026-07-12T02:29:19+00:00</td><td>lineage_recorded</td><td>8 edges</td></tr>
+<tr><td>2026-07-12T02:29:19+00:00</td><td>reconcile_complete</td><td>matched=120 exceptions=25 exposure=$77,249.45</td></tr>
+<tr><td>2026-07-12T02:29:19+00:00</td><td>exception_bucket</td><td>amount_mismatch=3</td></tr>
+<tr><td>2026-07-12T02:29:19+00:00</td><td>exception_bucket</td><td>bank_fee=4</td></tr>
+<tr><td>2026-07-12T02:29:19+00:00</td><td>exception_bucket</td><td>duplicate_payment=2</td></tr>
+<tr><td>2026-07-12T02:29:19+00:00</td><td>exception_bucket</td><td>fx_rounding=5</td></tr>
+<tr><td>2026-07-12T02:29:19+00:00</td><td>exception_bucket</td><td>missing_in_bank=3</td></tr>
+<tr><td>2026-07-12T02:29:19+00:00</td><td>exception_bucket</td><td>missing_in_gl=2</td></tr>
+<tr><td>2026-07-12T02:29:19+00:00</td><td>exception_bucket</td><td>timing_difference=6</td></tr>
+<tr><td>2026-07-12T02:29:19+00:00</td><td>export_complete</td><td>/Users/rithvikillandula/Projects/foundry/reports/exceptions_export.csv</td></tr></tbody></table>
+ </section>
+</main></body></html>

@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://rithvikillandula.github.io/My-Portfolio/sitemap.xml
