@@ -42,6 +42,16 @@
       ],
       "port": 4600,
       "cwd": ".preview"
+    },
+    {
+      "name": "cinebase",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "tools/serve.py",
+        "5180"
+      ],
+      "port": 5180,
+      "cwd": ".cinebase"
     }
   ]
 }

@@ -58,7 +58,7 @@ export default function PosterHero({ onJump }) {
       {/* the figure — in front, occluding the middle letters */}
       <div className="figure">
         <Image
-          src={asset('/assets/portrait-cut.png')}
+          src={asset('/assets/portrait-ember.png')}
           alt="Rithvik Illandula"
           width={600}
           height={707}
@@ -130,7 +130,7 @@ export default function PosterHero({ onJump }) {
         }
         .figure :global(.cut) {
           width: 100%; height: 100%; object-fit: contain; object-position: bottom;
-          display: block; filter: contrast(1.12) saturate(0.92) brightness(0.97);
+          display: block;
         }
 
         .contact-shadow {

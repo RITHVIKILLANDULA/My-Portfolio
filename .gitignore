@@ -47,3 +47,6 @@ next-env.d.ts
 
 # local static-export preview staging
 .preview/
+
+# reference engine, studied locally — unlicensed upstream, never committed
+.cinebase/
