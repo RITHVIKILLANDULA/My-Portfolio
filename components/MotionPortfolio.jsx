@@ -8,6 +8,8 @@ import profile from '@/data/profile.json'
 import { RESUME, GH, LI, EMAIL, EXP, SKILLGROUPS, PROJECTS, CATEGORIES, IMPACT, NAV } from '@/data/portfolio-content'
 import CommandPalette from '@/components/CommandPalette'
 import PosterHero from '@/components/cine/PosterHero'
+import PipelineMachine from '@/components/cine/PipelineMachine'
+import ProjectTheatre from '@/components/cine/ProjectTheatre'
 import ThreadSpine from '@/components/pipeline/DagRail'
 import Warehouse from '@/components/pipeline/Warehouse'
 import { start as telemetryStart, sectionEnter, sectionExit, track, onEvent, getSessionId } from '@/lib/telemetry'
@@ -322,6 +324,11 @@ export default function MotionPortfolio() {
           })}
         </div>
         <p className="cat-blurb rise">{CATEGORIES.find((c) => c.key === cat)?.blurb}</p>
+
+        {/* the room turns; whatever lands in the light is the one you can open */}
+        <div className="theatre-band rise">
+          <ProjectTheatre onOpen={(proj) => setActive(proj)} />
+        </div>
         <div className="works">
           {PROJECTS.filter((p) => p.cat === cat).map((p, i) => (
             <button key={p.t} type="button" className="work" onClick={() => { track('case_study_open', p.t); setActive(p) }} aria-label={`Open case study: ${p.t}`}>
@@ -352,14 +359,23 @@ export default function MotionPortfolio() {
         </div>
       </section>
 
-      {/* WAREHOUSE — ink band */}
+      {/* WAREHOUSE — the operable machine, with the raw table underneath */}
       <section id="warehouse" className="band deep">
         <div className="band-inner">
-          <p className="micro gray rise">05 — THE WAREHOUSE</p>
-          <h2 className="band-state rise">You scrolled. We logged. <em>Now query yourself</em><em className="pd">.</em></h2>
-          <p className="wh-lead rise">Your whole visit lives in <code className="wh-code">visit.events</code> — next to my career tables.
-            Real SQL in your browser, or flip to AGENT and ask in plain English.</p>
-          <div className="rise"><Warehouse /></div>
+          <p className="micro gray rise">05 — THE MACHINE ROOM</p>
+          <h2 className="band-state rise">Don&apos;t read about the pipeline. <em>Run it</em><em className="pd">.</em></h2>
+          <p className="wh-lead rise">Press RUN and rows start moving: ingested, transformed, checked, landed.
+            Turn the throughput up. Then poison the source and watch the quality gate quarantine the bad rows —
+            the same five controls that guard 25+ datasets every night.</p>
+          <div className="rise"><PipelineMachine /></div>
+
+          <details className="raw rise">
+            <summary>
+              <span>OR QUERY THE RAW TABLES</span>
+              <i>your visit is in visit.events — real SQL, or ask my agent in plain English</i>
+            </summary>
+            <div className="raw-body"><Warehouse /></div>
+          </details>
         </div>
       </section>
 
@@ -512,6 +528,9 @@ export default function MotionPortfolio() {
         .xp-star { font-family: var(--serif); font-style: italic; font-size: 1.35rem; line-height: 1.3; text-align: right; }
         @media (max-width: 820px) { .xp-star { text-align: left; font-size: 1.15rem; } }
 
+        .theatre-band { background: var(--ink); color: var(--paper); margin: 1.6rem 0 2.4rem;
+          padding: clamp(1.2rem, 3vw, 2.2rem) clamp(1rem, 3vw, 2.2rem) clamp(1rem, 2.5vw, 1.6rem); }
+
         /* works rows */
         .works { display: flex; flex-direction: column; }
         .works :global(.work) { display: grid; grid-template-columns: 70px 1fr auto 50px; align-items: center; gap: 1rem;
@@ -551,6 +570,18 @@ export default function MotionPortfolio() {
         .cap-list .aux { font-family: var(--serif); font-style: italic; font-size: 1.05rem; color: var(--graphite); }
 
         /* warehouse band extras */
+        .raw { margin-top: 2.6rem; border-top: 1px solid rgba(252,252,252,0.16); }
+        .raw summary { display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap;
+          list-style: none; cursor: pointer; padding: 1rem 0; }
+        .raw summary::-webkit-details-marker { display: none; }
+        .raw summary span { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; color: var(--paper); }
+        .raw summary span::before { content: '+ '; color: var(--live); }
+        .raw[open] summary span::before { content: '– '; }
+        .raw summary i { font-family: var(--sans); font-style: normal; font-size: 0.78rem;
+          color: rgba(252,252,252,0.45); }
+        .raw summary:hover span { color: var(--live); }
+        .raw-body { padding-top: 0.6rem; }
+
         .wh-lead { font-family: var(--sans); font-size: 0.96rem; color: rgba(252,252,252,0.7); line-height: 1.7; max-width: 60ch; margin: -1.2rem 0 2rem; }
 
         /* contact */
